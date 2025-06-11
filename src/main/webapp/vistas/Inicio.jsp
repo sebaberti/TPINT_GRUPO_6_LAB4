@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<jsp:include page="Header.jsp" />
+<jsp:include page="/Header.jsp" />
 
 <main>
     <section class="hero text-center">
@@ -25,7 +25,7 @@
     </section>
 </main>
 
-<jsp:include page="Footer.jsp" />
+<jsp:include page="/Footer.jsp" />
 
 </body>
 </html>
