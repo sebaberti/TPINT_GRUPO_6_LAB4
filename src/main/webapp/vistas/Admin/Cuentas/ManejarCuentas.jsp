@@ -131,7 +131,7 @@
 
 </head>
 <body>
-	<jsp:include page="/Header.jsp" />
+	<jsp:include page="/vistas/Header.jsp" />
 
 	<main class="container">
 		<div class="form-card">
@@ -192,6 +192,6 @@
 		</div>
 	</main>
 
-	<jsp:include page="/Footer.jsp" />
+	<jsp:include page="/vistas/Footer.jsp" />
 </body>
 </html>

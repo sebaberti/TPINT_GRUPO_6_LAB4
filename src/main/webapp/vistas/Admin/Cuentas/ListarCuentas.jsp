@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <jsp:include page="/Header.jsp" />
+<jsp:include page="/vistas/Header.jsp" />
 
     <main class="container mt-5 mb-5">
         <h1 class="text-center mb-4">Listado de Cuentas</h1>
@@ -81,7 +81,7 @@
         </div>
     </main>
 
-    <jsp:include page="/Footer.jsp" />
+    <jsp:include page="/vistas/Footer.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
