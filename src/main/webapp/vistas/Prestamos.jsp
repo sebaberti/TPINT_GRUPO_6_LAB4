@@ -94,7 +94,7 @@
     	ArrayList<String> fechas = (ArrayList<String>) request.getAttribute("fechasCuotas");
     	if (fechas != null) {
   	%>
-  	<p>Valor de cuota: </p>
+  	<p>imoorte mensual: </p>
  	<p>Intereses: </p>
   	<p>Fecha de cuotas:</p>
     <ul>
