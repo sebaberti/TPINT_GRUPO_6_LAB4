@@ -170,6 +170,7 @@ if (tipoUsuario  == "administrador") {
     </div>
   </div>
 </section>
+
 <section class="py-5 bg-white">
   <div class="container text-center">
     <h2 class="mb-4 fw-bold">¿Por qué elegir Banco SIX?</h2>
