@@ -10,15 +10,19 @@
             <img src="https://img.icons8.com/ios-filled/30/ffffff/bank.png" alt="Logo" class="me-2">
             Banco SIX
         </a>
-        <div class="collapse navbar-collapse justify-content-end">
+        
+        <!-- Botón hamburguesa -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContenido" aria-controls="navbarContenido" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse justify-content-end" id="navbarContenido">
             <ul class="navbar-nav">
                 <% if (usuarioLogueado == null) { %>
                     <li class="nav-item">
                         <a class="nav-link" href="Login.jsp">Iniciar Sesión</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="registro.jsp">Registrarse</a>
-                    </li>
+                  
                 <% } else { %>
                     <li class="nav-item">
                         <span class="nav-link text-white">Bienvenido, <strong><%= usuarioLogueado %></strong> (<%= tipoUsuario %>)</span>
