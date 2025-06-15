@@ -18,7 +18,7 @@
 
         <!-- Botón Nueva Cuenta -->
         <div class="mb-4 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary btn-nueva-cuenta">
+            <button type="button" class="btn btn-primary btn-nueva-cuenta" onclick="location.href='AltaCuentas.jsp'">
                 <i class="bi bi-plus-circle me-2"></i> Nueva Cuenta
             </button>
         </div>

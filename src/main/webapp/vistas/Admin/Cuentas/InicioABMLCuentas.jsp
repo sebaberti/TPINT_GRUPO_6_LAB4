@@ -22,8 +22,7 @@
 	<main class="container py-4">
 		<div class="text-center mb-3">
 			<h4 class="fw-semibold">Gestión de Cuentas</h4>
-			<p class="text-muted small">Seleccione una opción para
-				administrar las cuentas.</p>
+			<p class="text-muted small">Seleccione una opción para administrar las cuentas.</p>
 		</div>
 
 		<div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
@@ -37,7 +36,7 @@
 							<h6 class="card-title mb-2">Alta de Cuenta</h6>
 						</div>
 						<button class="btn btn-success btn-sm w-100 btn-abml"
-							onclick="location.href='CrearCuenta.jsp'">Seleccionar</button>
+							onclick="location.href='AltaCuentas.jsp'">Seleccionar</button>
 					</div>
 				</div>
 			</div>

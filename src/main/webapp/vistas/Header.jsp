@@ -20,7 +20,7 @@
             <ul class="navbar-nav">
                 <% if (usuarioLogueado == null) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="Login.jsp">Iniciar Sesión</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/vistas/Login.jsp">Iniciar Sesión</a>
                     </li>
                   
                 <% } else { %>
