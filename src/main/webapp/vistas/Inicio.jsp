@@ -4,8 +4,11 @@
 <%@ page session="true"%>
 <%
 //Variables para manejar por ahora. Despues habría que conectarlo 
-String usuarioNombre = "Cliente Prueba";
-String tipoUsuario = "cliente";
+//String usuarioNombre = "Cliente Prueba";
+//String tipoUsuario = "cliente";
+
+String usuarioNombre = null; 
+String tipoUsuario = null;
 
 //Clase para poder iterar luego y poder renderizar los datos. Hermosa clase auxiliar. 
 class Tarjeta {
@@ -36,7 +39,7 @@ if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
 	tarjetas.add(new Tarjeta("Movimientos.jsp", "bi-journal-text", "text-success", "Movimientos"));
 	tarjetas.add(new Tarjeta("Transferencias.jsp", "bi-arrow-left-right", "text-info", "Transferencias"));
-	tarjetas.add(new Tarjeta("SolicitarPrestamo.jsp", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
+	tarjetas.add(new Tarjeta("Prestamos.jsp", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
 	tarjetas.add(new Tarjeta("PagarCuota.jsp", "bi-credit-card-2-back", "text-danger", "Pagar Cuotas"));
 }
 %>
@@ -121,16 +124,75 @@ if (tipoUsuario  == "administrador") {
 		<%
 		} else {
 		%>
-		<section
-			class="hero d-flex align-items-center justify-content-center text-center bg-light min-vh-100">
-			<div class="container">
-				<h1 class="display-4">Bienvenido a SIX</h1>
-				<p class="lead">Tu banco de confianza para operaciones seguras,
-					préstamos personales y más.</p>
-				<a href="Login.jsp" class="btn btn-primary btn-lg mt-3">Accedé
-					ahora</a>
-			</div>
-		</section>
+		
+<section class="hero bg-light py-2  d-flex align-items-center">
+  <div class="container">
+    <h3 class="display-4 text-center mb-4">
+  	<span class="fw-bold">¡Hola!</span>
+  	<span class="fw-normal"> ¿En qué podemos ayudarte?</span>
+	</h3>
+
+    <div id="bancoCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner rounded shadow-lg overflow-hidden">
+
+        <div class="carousel-item active" style="height: 350px; background:url('${pageContext.request.contextPath}/img/slider1.png') center center / cover no-repeat;">
+          
+        </div>
+
+        <div class="carousel-item" style="height: 350px;background:url('${pageContext.request.contextPath}/img/slider2.png') center center / cover no-repeat;">
+          
+        </div>
+
+        <div class="carousel-item" style="height: 350px; background:url('${pageContext.request.contextPath}/img/slider3.png') center center / cover no-repeat;">
+          <
+        </div>
+
+        <div class="carousel-item" style="height: 350px; background:url('${pageContext.request.contextPath}/img/slider4.png') center center / cover no-repeat;">
+          
+        </div>
+
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#bancoCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#bancoCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="Login.jsp" class="btn btn-primary btn-lg px-5">
+        Accedé ahora <i class="bi bi-box-arrow-in-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-white">
+  <div class="container text-center">
+    <h2 class="mb-4 fw-bold">¿Por qué elegir Banco SIX?</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <i class="bi bi-shield-lock display-4 text-primary mb-3"></i>
+        <h5 class="fw-semibold">Seguridad Garantizada</h5>
+        <p class="text-muted">Protección avanzada para tus transacciones.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-phone display-4 text-success mb-3"></i>
+        <h5 class="fw-semibold">Gestión 100% Online</h5>
+        <p class="text-muted">Hacé todo desde tu celular o computadora.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-piggy-bank display-4 text-warning mb-3"></i>
+        <h5 class="fw-semibold">Sin costos ocultos</h5>
+        <p class="text-muted">Transparencia total en todas nuestras operaciones.</p>
+      </div>
+    </div>
+  </div>
+</section>
 		<%
 		}
 		%>
@@ -140,7 +202,8 @@ if (tipoUsuario  == "administrador") {
 	<!-- Bootstrap icons y JS -->
 	<link rel="stylesheet"
 		href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/Inicio.js"></script>
 </body>
 </html>

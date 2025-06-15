@@ -17,17 +17,7 @@
             flex: 1;
         }
 
-        .hero {
-            background-image: url('https://images.unsplash.com/photo-1605902711622-cfb43c4437f2');
-            background-size: cover;
-            background-position: center;
-            color: black;
-            padding: 100px 20px;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
-        }
-
-        
-       
+             
         footer {
             background-color: #343a40;
             color: white;
