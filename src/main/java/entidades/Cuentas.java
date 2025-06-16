@@ -16,6 +16,7 @@ public class Cuentas {
     
     private static final double montoInicial=10000;
 
+    public Cuentas() {}
     
 	//opcion completa
     public Cuentas(Clientes cliente, String fechaCreacion, String tipoCuenta, String numeroCuenta, String CBU, double saldo, boolean estado) {
