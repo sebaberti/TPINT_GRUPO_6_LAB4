@@ -97,6 +97,7 @@ public class Cuentas {
 	@Override
 	 public String toString() {
 		return "Numero de Cuenta: " + numeroCuenta + ",\n cliente: " + cliente + ",\n tipo de Cuenta: " + tipoCuenta
-                + ",\n fecha_Creacion: " + fechaCreacion + ",\n CBU: " + CBU + ",\n saldo: $" + saldo;  }
-   }
+                + ",\n fecha_Creacion: " + fechaCreacion + ",\n CBU: " + CBU + ",\n saldo: $" + saldo;  
+		}
+   
 }
