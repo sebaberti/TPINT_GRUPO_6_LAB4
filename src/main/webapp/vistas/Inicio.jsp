@@ -39,7 +39,7 @@ if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
 	tarjetas.add(new Tarjeta("Movimientos.jsp", "bi-journal-text", "text-success", "Movimientos"));
 	tarjetas.add(new Tarjeta("Transferencias.jsp", "bi-arrow-left-right", "text-info", "Transferencias"));
-	tarjetas.add(new Tarjeta("Prestamos.jsp", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
+	tarjetas.add(new Tarjeta("SolicitarPrestamos.jsp", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
 	tarjetas.add(new Tarjeta("PagarCuota.jsp", "bi-credit-card-2-back", "text-danger", "Pagar Cuotas"));
 }
 %>

@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/servletPrestamos")
-public class servletPrestamos extends HttpServlet {
+@WebServlet("/servletSolicitarPrestamos")
+public class servletSolicitarPrestamos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public servletPrestamos() {
+    public servletSolicitarPrestamos() {
         super();
     }
 
@@ -79,7 +79,7 @@ public void simularPrestamo(HttpServletRequest request, HttpServletResponse resp
 	
 	if (!datosValidos) {
 	    request.setAttribute("mensajeError", mensajeError);
-	    request.getRequestDispatcher("/vistas/Prestamos.jsp").forward(request, response);
+	    request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp").forward(request, response);
 	    return;
 	}
 
@@ -93,7 +93,7 @@ for (int i = 1; i <= cantCuotas; i++) {
 }
 
 request.setAttribute("fechasCuotas", fechas);
-request.getRequestDispatcher("/vistas/Prestamos.jsp").forward(request, response);
+request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp").forward(request, response);
 }
 	
 }
