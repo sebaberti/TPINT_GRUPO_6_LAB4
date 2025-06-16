@@ -60,8 +60,6 @@ public class CuentasImplementacion implements CuentasDao {
 		return lista;	
 
 	}
-
-	
 	
 	public String manejarCaracterEspecial(String texto) {
 		try {
