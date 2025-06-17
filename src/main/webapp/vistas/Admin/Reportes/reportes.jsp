@@ -85,7 +85,6 @@
             </div>
         </div>
 
-        <!-- Paquetes contratados -->
         <div class="col-md-6">
             <div class="card text-center shadow-sm">
                 <div class="card-body">

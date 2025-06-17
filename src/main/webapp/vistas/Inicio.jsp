@@ -34,7 +34,7 @@ if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-bank2", "text-success", "Gestionar Cuentas"));
 	tarjetas.add(new Tarjeta("Usuarios.jsp", "bi-person-lock", "text-info", "Usuarios"));
 	tarjetas.add(new Tarjeta("AutorizarPrestamos.jsp", "bi-check2-circle", "text-warning", "Autorizar Préstamos"));
-	tarjetas.add(new Tarjeta("reportes.jsp", "bi-bar-chart-line", "text-danger", "Reportes"));
+	tarjetas.add(new Tarjeta("/TPINT_GRUPO_6_LAB4/vistas/Admin/Reportes/reportes.jsp", "bi-bar-chart-line", "text-danger", "Reportes"));
 } else if (tipoUsuario  == "cliente") {
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
 	tarjetas.add(new Tarjeta("Movimientos.jsp", "bi-journal-text", "text-success", "Movimientos"));

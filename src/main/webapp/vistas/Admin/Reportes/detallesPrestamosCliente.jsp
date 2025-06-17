@@ -68,6 +68,10 @@
                 <option value="TNA">TNA</option>
             </select>
         </div>
+           <div class="mb-3">
+                <label for="valorCuota" class="form-label">Cantidad Cuotas</label>
+                <input type="number" class="form-control" id="cantidadCuotas" name="cantidadCuotas" placeholder="Ej: 12" required>
+            </div>
 
         <div class="text-center">
             <button type="button" class="btn btn-warning" onclick="habilitarCampos()">Simular Refinanciación</button>
