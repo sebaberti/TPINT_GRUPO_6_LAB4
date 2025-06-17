@@ -71,12 +71,12 @@
                         <td>....</td>
                         <td>....</td>
                         <td>....</td>
-                        <td>Pendiente/Aprobado/Rechazado</td>
-                
-                <td>
-    			<a href="#">Ver...</a> 
-    			</button>
-				</td>
+                        <td>Pendiente/Aprobado/Rechazado</td>               
+    					<td>
+    					<a href="${pageContext.request.contextPath}/vistas/Admin/Reportes/reportes.jsp" class="btn btn-info btn-sm">Ver...</a>
+						</td> 
+    			
+				
 				
 				<td>
     			<button type="submit" name="accion" value="aprobar" class="btn btn-primary btn-sm">

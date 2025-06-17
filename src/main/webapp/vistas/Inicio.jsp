@@ -4,11 +4,11 @@
 <%@ page session="true"%>
 <%
 //Variables para manejar por ahora. Despues habría que conectarlo 
-//String usuarioNombre = "Cliente Prueba";
-//String tipoUsuario = "cliente";
+String usuarioNombre = "Administrador Prueba";
+String tipoUsuario = "administrador";
 
-String usuarioNombre = null; 
-String tipoUsuario = null;
+//String usuarioNombre = null; 
+//String tipoUsuario = null;
 
 //Clase para poder iterar luego y poder renderizar los datos. Hermosa clase auxiliar. 
 class Tarjeta {
@@ -34,7 +34,7 @@ if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-bank2", "text-success", "Gestionar Cuentas"));
 	tarjetas.add(new Tarjeta("Usuarios.jsp", "bi-person-lock", "text-info", "Usuarios"));
 	tarjetas.add(new Tarjeta("AutorizarPrestamos.jsp", "bi-check2-circle", "text-warning", "Autorizar Préstamos"));
-	tarjetas.add(new Tarjeta("Reportes.jsp", "bi-bar-chart-line", "text-danger", "Reportes"));
+	tarjetas.add(new Tarjeta("reportes.jsp", "bi-bar-chart-line", "text-danger", "Reportes"));
 } else if (tipoUsuario  == "cliente") {
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
 	tarjetas.add(new Tarjeta("Movimientos.jsp", "bi-journal-text", "text-success", "Movimientos"));
