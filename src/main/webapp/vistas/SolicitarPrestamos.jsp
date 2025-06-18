@@ -121,9 +121,26 @@
     <p>Simulá tu préstamo para ver el detalle.</p>
   <% } %>
 
-		<div>
-      <input type="submit" class="btn btn-primary" name="btnConfirmar" value="Confirmar" />
-      </div>
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  		Confrimar
+		</button>
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmar</h1>
+        				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      				</div>
+      				<div class="modal-body">
+       				 ¿Está seguro que desea confirmar este préstamos?
+      				</div>
+      				<div class="modal-footer">
+        				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        				<input type="submit" class="btn btn-primary" name="btnConfirmar" value="Confirmar" />
+      				</div>
+    			</div>
+  			</div>
+		</div>
       <div>
       <a href="Inicio.jsp" class="btn btn-link">Cancelar</a>
   	</div>
@@ -156,8 +173,7 @@ document.getElementById("Monto").addEventListener("input", function (e) {
   e.target.value = entero + decimal;
 });
 </script>
-  
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="${pageContext.request.contextPath}/js/modales.js"></script>
 </body>
 </html>

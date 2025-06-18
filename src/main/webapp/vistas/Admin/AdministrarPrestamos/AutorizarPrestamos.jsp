@@ -28,6 +28,7 @@
     	<div class="col-md-3">
         	<label for="ordenarPor" class="form-label">Ordenar por</label>
         		<select class="form-select" name="ordenarPor" id="ordenarPor">
+ 					<option value="ninguno">Ninguno</option>
             		<option value="importePedido">Importe pedido</option>
             		<option value="importeMensual">Importe mensual</option>
             		<option value="plazo">Plazo</option>
@@ -59,7 +60,7 @@
                         <th>Plazo (en meses)</th>
                         <th>Importe Mensual</th>
                         <th>Estado</th>
-                        <th>Estadisticas del cliente</th>
+                        <th>Reportes</th>
                         <th>Aprobar</th>
                         <th>Rechazar</th>                      
                     </tr>

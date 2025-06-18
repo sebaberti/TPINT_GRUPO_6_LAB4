@@ -33,14 +33,14 @@ if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Clientes.jsp", "bi-people-fill", "text-primary", "Gestionar Clientes"));
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-bank2", "text-success", "Gestionar Cuentas"));
 	tarjetas.add(new Tarjeta("Usuarios.jsp", "bi-person-lock", "text-info", "Usuarios"));
-	tarjetas.add(new Tarjeta("AutorizarPrestamos.jsp", "bi-check2-circle", "text-warning", "Autorizar Préstamos"));
-	tarjetas.add(new Tarjeta("/TPINT_GRUPO_6_LAB4/vistas/Admin/Reportes/reportes.jsp", "bi-bar-chart-line", "text-danger", "Reportes"));
+	tarjetas.add(new Tarjeta("vistas/Admin/AdministrarPrestamos/AutorizarPrestamos.jsp", "bi-check2-circle", "text-warning", "Autorizar Préstamos"));
+	tarjetas.add(new Tarjeta("vistas/Admin/Reportes/reportes.jsp", "bi-bar-chart-line", "text-danger", "Reportes"));
 } else if (tipoUsuario  == "cliente") {
-	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
-	tarjetas.add(new Tarjeta("Movimientos.jsp", "bi-journal-text", "text-success", "Movimientos"));
-	tarjetas.add(new Tarjeta("Transferencias.jsp", "bi-arrow-left-right", "text-info", "Transferencias"));
-	tarjetas.add(new Tarjeta("SolicitarPrestamos.jsp", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
-	tarjetas.add(new Tarjeta("PagarCuota.jsp", "bi-credit-card-2-back", "text-danger", "Pagar Cuotas"));
+	tarjetas.add(new Tarjeta("vistas/Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
+	tarjetas.add(new Tarjeta("vistas/Movimientos.jsp", "bi-journal-text", "text-success", "Movimientos"));
+	tarjetas.add(new Tarjeta("vistas/Transferencias.jsp", "bi-arrow-left-right", "text-info", "Transferencias"));
+	tarjetas.add(new Tarjeta("vistas/SolicitarPrestamos.jsp", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
+	tarjetas.add(new Tarjeta("vistas/PagarCuota.jsp", "bi-credit-card-2-back", "text-danger", "Pagar Cuotas"));
 }
 %>
 <!DOCTYPE html>
@@ -76,8 +76,8 @@ if (tipoUsuario  == "administrador") {
 					<%
 					for (Tarjeta t : tarjetas) {
 					%>
-					<div class="col-md-4">
-						<a href="<%=t.link%>"
+					<div class="col-md-4">					
+						<a href="${pageContext.request.contextPath}/<%=t.link%>"
 							class="card text-decoration-none text-dark shadow-sm border-0 h-100 hover-shadow">
 							<div class="card-body text-center">
 								<i class="bi <%=t.icono%> display-4 <%=t.color%>"></i>
@@ -108,7 +108,7 @@ if (tipoUsuario  == "administrador") {
 					for (Tarjeta t : tarjetas) {
 					%>
 					<div class="col-md-4">
-						<a href="<%=t.link%>"
+						<a href="${pageContext.request.contextPath}/<%=t.link%>"
 							class="card text-decoration-none text-dark shadow-sm border-0 h-100 hover-shadow">
 							<div class="card-body text-center">
 								<i class="bi <%=t.icono%> display-4 <%=t.color%>"></i>
