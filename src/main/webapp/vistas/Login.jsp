@@ -22,9 +22,14 @@
 	<main>
 		<div class="container mt-5">
 			<h2 class="text-center mb-4">Iniciar Sesión</h2>
+			<% if (request.getAttribute("error") != null) { %>
+    <div class="alert alert-danger text-center mt-3">
+        <%= request.getAttribute("error") %>
+    </div>
+<% } %>
 			<div class="row justify-content-center">
 				<div class="col-md-6">
-					<form action="LoginServlet" method="post">
+					<form action="${pageContext.request.contextPath}/LoginServlet" method="post">
 						<div class="mb-3">
 							<label for="usuario" class="form-label">Usuario</label> <input
 								type="text" class="form-control" id="usuario" name="usuario"

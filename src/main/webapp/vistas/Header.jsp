@@ -1,7 +1,7 @@
 <%@ page session="true" %>
 <%
-    String usuarioLogueado = (String) session.getAttribute("usuarioNombre"); 
-    String tipoUsuario = (String) session.getAttribute("usuarioTipo");
+    String usuarioLogueado = (String) session.getAttribute("nombreUsuario"); 
+	String tipoUsuario = (String) session.getAttribute("rol");
 %>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -18,17 +18,20 @@
         
         <div class="collapse navbar-collapse justify-content-end" id="navbarContenido">
             <ul class="navbar-nav">
-                <% if (usuarioLogueado == null) { %>
+                 <% if (usuarioLogueado == null || tipoUsuario == null) { %>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/vistas/Login.jsp">Iniciar Sesión</a>
                     </li>
                   
                 <% } else { %>
                     <li class="nav-item">
-                        <span class="nav-link text-white">Bienvenido, <strong><%= usuarioLogueado %></strong> (<%= tipoUsuario %>)</span>
+                        <span class="nav-link text-white">
+                            <strong><%= usuarioLogueado %></strong> 
+                            (<%= tipoUsuario.equals("administrador") ? "Administrador" : "Cliente" %>)
+                        </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="LogoutServlet">Cerrar Sesión</a>
+                      <a class="nav-link" href="${pageContext.request.contextPath}/LogoutServlet">Cerrar Sesión</a>
                     </li>
                 <% } %>
             </ul>

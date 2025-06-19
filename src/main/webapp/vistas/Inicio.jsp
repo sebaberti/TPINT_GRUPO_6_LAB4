@@ -3,12 +3,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page session="true"%>
 <%
-//Variables para manejar por ahora. Despues habría que conectarlo 
-String usuarioNombre = "Administrador Prueba";
-String tipoUsuario = "administrador";
 
-//String usuarioNombre = null; 
-//String tipoUsuario = null;
+String usuarioNombre = (String) session.getAttribute("nombreUsuario");
+String tipoUsuario = (String) session.getAttribute("rol");
 
 //Clase para poder iterar luego y poder renderizar los datos. Hermosa clase auxiliar. 
 class Tarjeta {
