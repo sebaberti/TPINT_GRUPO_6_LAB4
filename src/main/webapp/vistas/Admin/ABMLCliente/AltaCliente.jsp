@@ -21,85 +21,101 @@
 			<h2 class="fw-semibold">Alta nuevo Cliente</h2>
 		</div>
 		
+		<% if (request.getAttribute("error") != null) { %>
+    		<div class="alert alert-danger text-center mt-3">
+        		<%= request.getAttribute("error") %>
+    		</div>
+			<% }  %>
+		
+		<% if (request.getAttribute("clienteInsertado") != null) { %>
+    		<div class="alert alert-success text-center mt-3">
+        		<%= request.getAttribute("clienteInsertado") %>
+    		</div>
+			<% }  %>
+		
 		<div class="row justify-content-center mb-3">
-			<form class="" method="POST" action="">
+			<form method="POST" action="${pageContext.request.contextPath}/AltaClienteServlet">
 			
 			<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
 				<div class="col mb-3">
-						<label for="lblDNI" class="form-label">Número de documento</label> 
-						<input type="text" class="form-control" id="lblDNI" placeholder="Ingrese su número de DNI" required pattern="^\d+$" title="Solo se permiten números">
+						<label for="DNICliente" class="form-label">Número de documento</label> 
+						<input type="text" class="form-control" id="DNICliente" name="DNICliente" placeholder="Ingrese su número de DNI" required pattern="^\d+$" title="Solo se permiten números">
 					</div>
 					<div class="col mb-3">
-						<label for="lblCUIL" class="form-label">Número de CUIL</label>
-						<input type="text" class="form-control" id="lblCUIL" placeholder="Ingrese su número de CUIl" required pattern="^\d+$" title="Solo se permiten números">
+						<label for="CUILCliente" class="form-label">Número de CUIL</label>
+						<input type="text" class="form-control" id="CUILCliente" name="CUILCliente" placeholder="Ingrese su número de CUIl" required pattern="^\d+$" title="Solo se permiten números">
 					</div>
 					<div class="col mb-3">
-						<label for="lblNombre" class="form-label" >Nombre/s</label>
-						<input type="text" class="form-control" id="lblNombre" placeholder="Ingrese su nombre" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras">
+						<label for="nombreCliente" class="form-label" >Nombre/s</label>
+						<input type="text" class="form-control" id="nombreCliente" name="nombreCliente" placeholder="Ingrese su nombre" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras">
 					</div>
 					<div class="col mb-3">
-						<label for="lblApellido" class="form-label" >Apellido/s</label>
-						<input type="text" class="form-control" id="lblApellido" placeholder="Ingrese su apellido" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras">
+						<label for="apellidoCliente" class="form-label" >Apellido/s</label>
+						<input type="text" class="form-control" id="apellidoCliente" name="apellidoCliente" placeholder="Ingrese su apellido" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras">
 					</div>
 			
 			 		<div class="col mb-3">
-      					<label for="lblSelectSexo" class="form-label">Sexo</label>
-      					<select id="lblSelectSexo" class="form-select" required>
+      					<label for="selectSexo" class="form-label">Sexo</label>
+      					<select id="selectSexo" name="selectSexo" class="form-select" required>
         					<option value="" disabled selected>Seleccione un sexo</option>
         					<option>Femenino</option>
         					<option>Masculino</option>
       					</select>
       				</div>
     				<div class="col mb-3">
-						<label for="lblNacionalidad" class="form-label" >Nacionalidad</label>
-						<select id="lblNacionalidad" class="form-select" required>
+						<label for="selectNacionalidad" class="form-label" >Nacionalidad</label>
+						<select id="selectNacionalidad" name="selectNacionalidad" class="form-select" required>
         					<option value="" disabled selected>Seleccionar país</option>
-        					<!-- Cargar desde DB -->
+        					<option>Argentina</option>
       					</select>
 					</div>
 					<div class="col mb-3">
-						<label for="lblFechaNacimiento" class="form-label" >Fecha Nacimiento</label>
-						<input type="date" class="form-control" id="lblFechaNacimiento" required>
+						<label for="fechaNacimientoCliente" class="form-label" >Fecha Nacimiento</label>
+						<input type="date" class="form-control" id="fechaNacimientoCliente" name="fechaNacimientoCliente" required>
 					</div>
 			
 					<div class="col mb-3">
-						<label for="lblDireccion" class="form-label" >Dirección</label>
-						<input type="text" class="form-control" id="lblDireccion" placeholder="Ej: Calle 123" required>
+						<label for="direccionCliente" class="form-label" >Dirección</label>
+						<input type="text" class="form-control" id="direccionCliente" name="direccionCliente"  placeholder="Ej: Calle 123" required>
 					</div>
 					<div class="col mb-3">
-						<label for="lblProvincia" class="form-label" >Provincia</label>
-						<select id="lblProvincia" class="form-select" required>
+						<label for="selectProvincia" class="form-label" >Provincia</label>
+						<select id="selectProvincia" name="selectProvincia" class="form-select" required>
         					<option value="" disabled selected>Seleccionar provincia</option>
-        					<!-- Cargar desde DB -->
+        					<option>Buenos Aires</option>
       					</select>
 					</div>
 					<div class="col mb-3">
-						<label for="lblLocalidad" class="form-label" >Localidad</label>
-						<select id="lblLocalidad" class="form-select" required>
+						<label for="selectLocalidad" class="form-label" >Localidad</label>
+						<select id="selectLocalidad" name="selectLocalidad" class="form-select" required>
         					<option value="" disabled selected>Seleccionar localidad</option>
-        					<!-- Cargar desde DB -->
+        					<option>CABA</option>
       					</select>
 					</div>
 			
 					<div class="col mb-3">
-						<label for="lblEmail" class="form-label" >Correo electronico</label>
-						<input type="email" class="form-control" id="lblEmail" placeholder="Ej: ejemplo@proveedor.com" required>
+						<label for="emailCliente" class="form-label" >Correo electronico</label>
+						<input type="email" class="form-control" id="emailCliente" name="emailCliente" placeholder="Ej: ejemplo@proveedor.com" required>
 					</div>
 					<div class="col mb-3">
-						<label for="lblTelefono" class="form-label" >Teléfono</label>
-						<input type="text" class="form-control" id="lblTelefono" placeholder="Ej: 1126440749" required pattern="^\d+$" title="Solo se permiten números">
+						<label for="telefonoCliente" class="form-label" >Teléfono</label>
+						<input type="text" class="form-control" id="telefonoCliente" name="telefonoCliente" placeholder="Ej: 1126440749" required pattern="^\d+$" title="Solo se permiten números">
 					</div>
 			
 			</div>
     			
     			<div class="row">
     				<div class="col mb-3">
-						<button type="submit" class="btn btn-success btn-md w-100 .btn-abml">Registrar Cliente</button>
+						<button type="submit" id="btnAltaCliente" name="btnAltaCliente" class="btn btn-success btn-md w-100 .btn-abml">Registrar Cliente</button>
     				</div>
     			</div>
 			</form>
 		</div>
 	</main>
+	
+	
+		
+		
 <jsp:include page="../../Footer.jsp" />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
