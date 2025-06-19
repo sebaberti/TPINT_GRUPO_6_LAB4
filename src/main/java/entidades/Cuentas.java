@@ -2,11 +2,11 @@ package entidades;
 
 import java.util.Random;
 
-import entidades.Clientes;
+import entidades.Cliente;
 
 public class Cuentas {
 	
-    private Clientes cliente; 
+    private Cliente cliente; 
     private String fechaCreacion;
     private String tipoCuenta;
     private String numeroCuenta;
@@ -17,7 +17,7 @@ public class Cuentas {
     private static final double montoInicial=10000;
 
 	//opcion completa
-    public Cuentas(Clientes cliente, String fechaCreacion, String tipoCuenta, String numeroCuenta, String CBU, double saldo, boolean estado) {
+    public Cuentas(Cliente cliente, String fechaCreacion, String tipoCuenta, String numeroCuenta, String CBU, double saldo, boolean estado) {
 	  this.cliente = cliente;
 	  this.fechaCreacion = fechaCreacion;
 	  this.tipoCuenta = tipoCuenta;
@@ -28,7 +28,7 @@ public class Cuentas {
 	}
     
     //opcion con saldo iniciaal fijo
-    public Cuentas(Clientes cliente, String fechaCreacion, String tipoCuenta, String numeroCuenta, String CBU) {
+    public Cuentas(Cliente cliente, String fechaCreacion, String tipoCuenta, String numeroCuenta, String CBU) {
     	this.cliente = cliente;
   	  this.fechaCreacion = fechaCreacion;
   	  this.tipoCuenta = tipoCuenta;
@@ -38,11 +38,11 @@ public class Cuentas {
   	  this.estado = true;
 	}
 
-	public Clientes getCliente() {
+	public Cliente getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(Clientes cliente) {
+	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
 
