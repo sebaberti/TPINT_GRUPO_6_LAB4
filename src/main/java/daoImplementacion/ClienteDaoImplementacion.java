@@ -1,0 +1,65 @@
+package daoImplementacion;
+
+import java.sql.Connection;	
+import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import dao.ClienteDao;
+import entidades.Cliente;
+
+public class ClienteDaoImplementacion implements ClienteDao {
+
+	private String insertQuery = "INSERT INTO Clientes(dni, cuil ,nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	public Boolean insertar(Cliente cliente) {
+		int rows = 0;
+
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement statement = conexion.prepareStatement(insertQuery);
+			System.out.println(cliente.getDNI());
+			statement.setString(1, cliente.getDNI());
+			statement.setString(2, cliente.getCUIL());
+			statement.setString(3, cliente.getNombre());
+			statement.setString(4, cliente.getApellido());
+			statement.setString(5, "M"); // Sexo - Modificar por el valor del objeto.
+			statement.setInt(6, 1); // ID Nacionalidad - Modificar por el valor del objeto.
+			statement.setDate(7, java.sql.Date.valueOf(LocalDate.of(1999, 10, 10))); // Capturar el valor del objeto
+			statement.setInt(8, 1); // ID Domiclio Capturar el valor del objeto
+			statement.setString(9, cliente.getEmail());
+			statement.setString(10, cliente.getTelefono());
+			// El usuario deberia poder omitirse al crear el cliente?
+			statement.setInt(11, 3); // ID Usuario - Deberia ser nulo si se esta creando.
+			statement.setBoolean(12, true);
+			
+			if (statement.executeUpdate() > 0) {
+				conexion.commit();
+				return true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public Boolean modificar(Cliente cliente) {
+		return true;
+	}
+
+	public Boolean bajaLogica(int idCliente) {
+		return true;
+	}
+
+	public List<Cliente> listar() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		return lista;
+	}
+
+	public Boolean existe(int idCliente) {
+		return true;
+	}
+}
