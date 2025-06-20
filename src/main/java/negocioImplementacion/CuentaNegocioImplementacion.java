@@ -8,19 +8,16 @@ import negocio.CuentaNegocio;
 
 public class CuentaNegocioImplementacion implements CuentaNegocio {
 
-	@Override
 	public boolean insertarCuenta(Cuenta cuenta) {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 	        return cuentas.insertarCuenta(cuenta);
 	}
-	
-	@Override
+
 	public List<Cuenta> listarCuentas() {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 		return cuentas.listar();
 	}
 	
-	@Override
 	public List<Cuenta> listarCuentasPorDNI(int dni) {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 		return cuentas.listarPorDNI(dni);

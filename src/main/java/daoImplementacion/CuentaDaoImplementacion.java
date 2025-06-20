@@ -108,12 +108,12 @@ public class CuentaDaoImplementacion implements CuentaDao {
                 "t.descripcion AS tipo_descripcion FROM cuentas c "+
                 "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
                 "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id "+
-                "WHERE cl.dni = ?";
+                "WHERE cl.dni LIKE ?";
         
         try {
         	conexion = Conexion.getConexion().getSQLConexion();
         	 statement = conexion.prepareStatement(query);
-        	 statement.setInt(1, dni);
+        	 statement.setString(1, "%" + dni + "%");
         	 rs = statement.executeQuery();
         	 
             while (rs.next()) {

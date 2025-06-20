@@ -3,6 +3,7 @@ package daoImplementacion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -99,4 +100,30 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		}
 		return false;
 	}
+	
+	@Override
+    public Cliente clientePorDNI(int dni) {
+		Cliente cliente = null;
+		Connection conexion = null;
+		try {
+			conexion = Conexion.getConexion().getSQLConexion();
+			String query = "SELECT c.nombre, c.apellido, c.dni" +
+                    "FROM Clientes c " +
+                    "JOIN Usuario u ON c.id_usuario = u.id " +
+                    "WHERE c.DNI = ? AND u.Activo = 1";
+			PreparedStatement statement = conexion.prepareStatement(query);
+			statement.setInt(1, dni);
+			ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                cliente = new Cliente();
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setApellido(rs.getString("apellido"));
+                cliente.setDNI(rs.getString("dni"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cliente;
+    }
 }
