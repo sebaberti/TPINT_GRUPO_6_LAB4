@@ -4,7 +4,8 @@ import java.util.List;
 
 import entidades.Cuenta;
 
-public interface CuentasNegocio {
+public interface CuentaNegocio {
+	public boolean insertarCuenta(Cuenta cuenta);
 	public List<Cuenta> listarCuentas();
 	public boolean existeCuenta(Cuenta cuenta);
 }

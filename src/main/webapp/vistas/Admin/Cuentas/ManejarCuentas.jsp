@@ -1,135 +1,15 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Manejar Cuenta</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/estiloInicio.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/estiloManejarCuentas.css">
-
-<style>
-/* Contenedor principal centrado */
-.container {
-	max-width: 800px;
-	margin: 40px auto;
-	padding: 30px;
-}
-
-/* Tarjeta de formulario */
-.form-card {
-	background-color: #ffffff;
-	border-radius: 12px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	padding: 30px 40px;
-}
-
-/* Título del formulario */
-.form-title {
-	font-size: 1.8em;
-	font-weight: 600;
-	color: #333;
-	text-align: center;
-	margin-bottom: 25px;
-}
-
-/* Grupo de elementos del formulario */
-.form-group {
-	margin-bottom: 20px;
-}
-
-.form-group label {
-	display: block;
-	font-weight: 500;
-	margin-bottom: 6px;
-	color: #555;
-}
-
-.form-group input[type="text"], .form-group select {
-	width: 100%;
-	padding: 10px 14px;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	font-size: 1em;
-	background-color: #f9f9f9;
-	transition: border-color 0.3s ease;
-}
-
-.form-group input:focus, .form-group select:focus {
-	border-color: #007bff;
-	outline: none;
-	background-color: #fff;
-}
-
-/* Botones de acción */
-.form-buttons {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 30px;
-	gap: 15px;
-}
-
-.center-container {
-	justify-content: center;
-}
-
-/* Botones */
-.btn {
-	padding: 10px 20px;
-	border: none;
-	border-radius: 8px;
-	font-weight: 500;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
-	font-size: 1em;
-}
-
-/* Colores por tipo */
-.btn-danger {
-	background-color: #dc3545;
-	color: white;
-}
-
-.btn-danger:hover {
-	background-color: #c82333;
-}
-
-.btn-light {
-	background-color: #f8f9fa;
-	color: #333;
-	border: 1px solid #ccc;
-}
-
-.btn-light:hover {
-	background-color: #e2e6ea;
-}
-
-.btn-secondary {
-	background-color: #6c757d;
-	color: white;
-}
-
-.btn-secondary:hover {
-	background-color: #5a6268;
-}
-
-/* Responsive */
-@media ( max-width : 600px) {
-	.form-buttons {
-		flex-direction: column;
-		gap: 10px;
-	}
-}
-</style>
-
+    <meta charset="UTF-8">
+    <title>Manejar Cuentas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Cuentas/estiloManejarCuentas.css">
 </head>
+
 <body>
 	<jsp:include page="/vistas/Header.jsp" />
 
@@ -193,5 +73,6 @@
 	</main>
 
 	<jsp:include page="/vistas/Footer.jsp" />
+	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

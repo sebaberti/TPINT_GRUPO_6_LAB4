@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import dao.CuentasDao;
+import dao.CuentaDao;
 import entidades.Cliente;
 import entidades.Cuenta;
 import entidades.CuentaTipo;
 
-public class CuentasDaoImplementacion implements CuentasDao {
+public class CuentaDaoImplementacion implements CuentaDao {
 
 	@Override
 	public boolean insertarCuenta(Cuenta cuenta) {
