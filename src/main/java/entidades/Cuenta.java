@@ -4,11 +4,13 @@ import java.util.Random;
 
 import entidades.Cliente;
 
-public class Cuentas {
+public class Cuenta {
 	
-    private Cliente cliente; 
+	private int id;
+	private Cliente cliente; 
     private String fechaCreacion;
-    private String tipoCuenta;
+    //private Date FechaDeCreacion;   otra opcion
+    private CuentaTipo tipoCuenta;
     private String numeroCuenta;
     private String CBU;
     private double saldo;
@@ -16,8 +18,13 @@ public class Cuentas {
     
     private static final double montoInicial=10000;
 
+    public Cuenta() {
+    	this.cliente = new Cliente();
+    	this.tipoCuenta = new CuentaTipo();
+    }
+    
 	//opcion completa
-    public Cuentas(Cliente cliente, String fechaCreacion, String tipoCuenta, String numeroCuenta, String CBU, double saldo, boolean estado) {
+    public Cuenta(Cliente cliente, String fechaCreacion, CuentaTipo tipoCuenta, String numeroCuenta, String CBU, double saldo, boolean estado) {
 	  this.cliente = cliente;
 	  this.fechaCreacion = fechaCreacion;
 	  this.tipoCuenta = tipoCuenta;
@@ -28,7 +35,7 @@ public class Cuentas {
 	}
     
     //opcion con saldo iniciaal fijo
-    public Cuentas(Cliente cliente, String fechaCreacion, String tipoCuenta, String numeroCuenta, String CBU) {
+    public Cuenta(Cliente cliente, String fechaCreacion, CuentaTipo tipoCuenta, String numeroCuenta, String CBU) {
     	this.cliente = cliente;
   	  this.fechaCreacion = fechaCreacion;
   	  this.tipoCuenta = tipoCuenta;
@@ -38,6 +45,14 @@ public class Cuentas {
   	  this.estado = true;
 	}
 
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -54,11 +69,11 @@ public class Cuentas {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public String getTipoCuenta() {
+	public CuentaTipo getTipoCuenta() {
 		return tipoCuenta;
 	}
 
-	public void setTipoCuenta(String tipoCuenta) {
+	public void setTipoCuenta(CuentaTipo tipoCuenta) {
 		this.tipoCuenta = tipoCuenta;
 	}
 
@@ -96,7 +111,7 @@ public class Cuentas {
 	
 	@Override
 	 public String toString() {
-		return "Numero de Cuenta: " + numeroCuenta + ",\n cliente: " + cliente + ",\n tipo de Cuenta: " + tipoCuenta
+		return "Numero de Cuenta: " + numeroCuenta + ",\n cliente: " + cliente.toString() + ",\n tipo de Cuenta: " + tipoCuenta.toString()
                 + ",\n fecha_Creacion: " + fechaCreacion + ",\n CBU: " + CBU + ",\n saldo: $" + saldo;  
 		}
    

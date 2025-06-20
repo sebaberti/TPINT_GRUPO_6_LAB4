@@ -12,7 +12,7 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/estiloAltaCuentas.css">
+	href="${pageContext.request.contextPath}/css/Cuentas/estiloAltaCuentas.css">
 </head>
 <body>
 
