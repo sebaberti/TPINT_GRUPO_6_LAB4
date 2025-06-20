@@ -8,10 +8,17 @@ import entidades.Cliente;
 import negocio.ClienteNegocio;
 
 public class ClienteNegocioImplementacion implements ClienteNegocio {
+	
+	private ClienteDaoImplementacion clienteNegocio;
+	
+	public ClienteNegocioImplementacion() {
+		clienteNegocio = new ClienteDaoImplementacion();
+	}
+	
 	public Boolean insertar(Cliente cliente) {
 		
-			ClienteDaoImplementacion clienteAux = new ClienteDaoImplementacion();
-			return clienteAux.insertar(cliente);
+			ClienteDaoImplementacion clienteNegocio = new ClienteDaoImplementacion();
+			return clienteNegocio.insertar(cliente);
 	}
 
 	public Boolean modificar(Cliente cliente) {
@@ -27,7 +34,12 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 		return lista;
 	}
 
-	public Boolean existe(int idCliente) {
-		return true;
+	public Boolean existeDNI(String DNI) {
+		
+		return clienteNegocio.existeDNI(DNI);
+	}
+	
+	public Boolean existeCUIL(String CUIL) {
+		return clienteNegocio.existeCUIL(CUIL);
 	}
 }
