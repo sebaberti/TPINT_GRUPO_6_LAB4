@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@page import="entidades.Cliente" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,6 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloRegistro.css">
 <title>Alta Cliente</title>
-
 </head>
 <body>
 
@@ -20,6 +20,8 @@
 			<div class="row text-center">
 			<h2 class="fw-semibold">Alta nuevo Cliente</h2>
 		</div>
+		
+		<% Cliente cliente = new Cliente(); %>
 		
 		<% if (request.getAttribute("error") != null) { %>
     		<div class="alert alert-danger text-center mt-3">
@@ -33,17 +35,22 @@
     		</div>
 			<% }  %>
 		
+		<% if(request.getParameter("cliente") != null) {
+				cliente = (Cliente)request.getAttribute("cliente");
+			 } %>
+		
 		<div class="row justify-content-center mb-3">
 			<form method="POST" action="${pageContext.request.contextPath}/AltaClienteServlet">
 			
 			<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
 				<div class="col mb-3">
 						<label for="DNICliente" class="form-label">Número de documento</label> 
-						<input type="text" class="form-control" id="DNICliente" name="DNICliente" placeholder="Ingrese su número de DNI" required pattern="^\d+$" title="Solo se permiten números">
+						<input type="text" class="form-control" id="DNICliente" name="DNICliente" placeholder="Ingrese su número de DNI" required pattern="^\d+$" title="Solo se permiten números" value="${cliente != null ? cliente.getDNI() : ''}">
 					</div>
 					<div class="col mb-3">
 						<label for="CUILCliente" class="form-label">Número de CUIL</label>
-						<input type="text" class="form-control" id="CUILCliente" name="CUILCliente" placeholder="Ingrese su número de CUIl" required pattern="^\d+$" title="Solo se permiten números">
+						<input type="text" class="form-control" id="CUILCliente" name="CUILCliente" placeholder="20-43158994-6" required pattern="\d{2}-\d{8}-\d" title="Formato esperado XX-XXXXXXXX-XX" value="${cliente != null ? cliente.getCUIL() : ''}">
+
 					</div>
 					<div class="col mb-3">
 						<label for="nombreCliente" class="form-label" >Nombre/s</label>
@@ -112,11 +119,32 @@
 			</form>
 		</div>
 	</main>
-	
-	
-		
-		
+
+<!-- Formatea el campo CUIL a NN-NNNNNNNN-NN -->	
+<script>
+	document.getElementById('CUILCliente').addEventListener('input', function (e) {
+    	let input = e.target;
+    	let value = input.value;
+
+   		value = value.replace(/\D/g, '');
+
+    	if (value.length > 11) value = value.slice(0, 11);
+
+    	let formatted = '';
+    	if (value.length > 0) {
+       		formatted += value.substring(0, Math.min(2, value.length));
+    	}
+    	if (value.length >= 3) {
+       		 formatted += '-' + value.substring(2, Math.min(10, value.length));
+    	}
+    	if (value.length > 10) {
+       	 formatted += '-' + value.substring(10);
+   		 }
+    input.value = formatted;
+	});
+</script>		
 <jsp:include page="../../Footer.jsp" />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
