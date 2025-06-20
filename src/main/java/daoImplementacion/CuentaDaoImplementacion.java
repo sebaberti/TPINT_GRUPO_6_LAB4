@@ -41,15 +41,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
-            try {
-                if (statement != null) statement.close();
-                if (conexion != null) conexion.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
+		}
 		return false;
 	}
 	
@@ -98,14 +90,6 @@ public class CuentaDaoImplementacion implements CuentaDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (statement != null) statement.close();
-                if (conexion != null) conexion.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
         }
         return cuentas;
     }
@@ -131,7 +115,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
         	 statement = conexion.prepareStatement(query);
         	 statement.setInt(1, dni);
         	 rs = statement.executeQuery();
-
+        	 
             while (rs.next()) {
                 Cuenta cuenta = new Cuenta();
                 Cliente cliente = new Cliente();
@@ -157,14 +141,6 @@ public class CuentaDaoImplementacion implements CuentaDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (statement != null) statement.close();
-                if (conexion != null) conexion.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
         }
         return cuentas;
     }

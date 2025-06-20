@@ -30,24 +30,6 @@ public class ListarCuentasServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		try {
-			CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
-
-			// Listar todo
-			List<Cuenta> listaCuentas = cuentaDao.listar();
-			request.setAttribute("listaCuentas", listaCuentas);
-			request.getRequestDispatcher("/vistas/Admin/Cuentas/ListarCuentas.jsp").forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.getWriter().println("Error al obtener la lista de cuentas: " + e.getMessage());
-		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 
@@ -56,7 +38,6 @@ public class ListarCuentasServlet extends HttpServlet {
 			String btnBuscar = request.getParameter("btnBuscar");
 			String dniFiltro = request.getParameter("txtDniClientes");
 
-			System.out.println("DNI buscado: " + dniFiltro);
 			//buscar
 			if (btnBuscar != null && dniFiltro != null && !dniFiltro.trim().isEmpty()) {
 
@@ -76,8 +57,15 @@ public class ListarCuentasServlet extends HttpServlet {
 			request.getRequestDispatcher("/vistas/Admin/Cuentas/ListarCuentas.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().println("Error al filtrar la lista de cuentas: " + e.getMessage());
+			response.getWriter().println("Error al obtener la lista de cuentas: " + e.getMessage());
 		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
 	}
 
 }

@@ -5,7 +5,6 @@ public class Cuenta {
 	private int id;
 	private Cliente cliente; 
     private String fechaCreacion;
-    //private Date FechaDeCreacion;   otra opcion
     private CuentaTipo tipoCuenta;
     private String numeroCuenta;
     private String CBU;
