@@ -2,11 +2,11 @@ package negocio;
 
 import java.util.List;
 
-import entidades.Cuentas;
+import entidades.Cuenta;
 
 public interface CuentasNegocio {
-	public List<Cuentas> listarCuentas();
-	public boolean existeCuenta(Cuentas cuenta);
+	public List<Cuenta> listarCuentas();
+	public boolean existeCuenta(Cuenta cuenta);
 }
 
 

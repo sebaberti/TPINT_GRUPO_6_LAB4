@@ -3,20 +3,20 @@ package negocioImplementacion;
 import java.util.List;
 
 import daoImplementacion.CuentasImplementacion;
-import entidades.Cuentas;
+import entidades.Cuenta;
 import negocio.CuentasNegocio;
 
 public class CuentasNegocioImplementacion implements CuentasNegocio {
 
-	public List<Cuentas> listarCuentas() {
+	public List<Cuenta> listarCuentas() {
 		CuentasImplementacion cuentas = new CuentasImplementacion();
 		return cuentas.listarCuentas();
 	}
 
-	public boolean existeCuenta(Cuentas cuenta) {
-		List<Cuentas> cuentas = listarCuentas();
+	public boolean existeCuenta(Cuenta cuenta) {
+		List<Cuenta> cuentas = listarCuentas();
 		
-		for (Cuentas  cta : cuentas) {
+		for (Cuenta  cta : cuentas) {
 			if(cta.equals(cuenta))
 				return true;
 		}
