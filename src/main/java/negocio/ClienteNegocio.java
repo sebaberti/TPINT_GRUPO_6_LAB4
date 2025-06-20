@@ -9,5 +9,6 @@ public interface ClienteNegocio {
 	public Boolean modificar(Cliente cliente);
 	public Boolean bajaLogica(int idCliente);
 	public List<Cliente> listar();
-	public Boolean existe(int idCliente);
+	public Boolean existeDNI(String DNI);
+	public Boolean existeCUIL(String CUIL);
 }

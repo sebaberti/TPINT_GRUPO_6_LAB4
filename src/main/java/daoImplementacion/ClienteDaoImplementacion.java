@@ -1,7 +1,9 @@
 package daoImplementacion;
 
-import java.sql.Connection;	
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,9 +13,11 @@ import dao.ClienteDao;
 import entidades.Cliente;
 
 public class ClienteDaoImplementacion implements ClienteDao {
-
+	
 	private String insertQuery = "INSERT INTO Clientes(dni, cuil ,nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-
+	private String validarDNIQuery = "SELECT * FROM Clientes WHERE DNI = ?";
+	private String validarCUILQuery = "SELECT * FROM Clientes WHERE CUIL = ?";
+	
 	public Boolean insertar(Cliente cliente) {
 		int rows = 0;
 
@@ -34,12 +38,12 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			// El usuario deberia poder omitirse al crear el cliente?
 			statement.setInt(11, 3); // ID Usuario - Deberia ser nulo si se esta creando.
 			statement.setBoolean(12, true);
-			
+
 			if (statement.executeUpdate() > 0) {
 				conexion.commit();
 				return true;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,7 +63,40 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		return lista;
 	}
 
-	public Boolean existe(int idCliente) {
-		return true;
+	public Boolean existeDNI(String DNI) {
+
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		try {
+
+			PreparedStatement statement = conexion.prepareStatement(validarDNIQuery);
+			statement.setString(1, DNI);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if(resultSet.next()) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public Boolean existeCUIL(String CUIL) {
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		try {
+			
+			PreparedStatement statement = conexion.prepareStatement(validarCUILQuery);
+			statement.setString(1, CUIL);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if(resultSet.next()) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
