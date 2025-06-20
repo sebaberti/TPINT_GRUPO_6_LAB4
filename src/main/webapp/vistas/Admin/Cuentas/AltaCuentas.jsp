@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page import="entidades.Cliente"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,19 +20,26 @@
 
 	<jsp:include page="/vistas/Header.jsp" />
 
+		<%
+		Cliente cliente = (Cliente) request.getAttribute("cliente");
+		%>
+
+
 	<!-- Formulario -->
 	<div class="container my-5">
 		<form action="#" method="post" class="form-section">
 			<h5 class="form-title">Buscar Cliente</h5>
 			<div class="input-group mb-4">
 				<input type="text" class="form-control"
-					placeholder="Ingrese DNI del cliente" name="dniCliente" required>
-				<button class="btn btn-success" type="submit">&#128269;</button>
+					placeholder="Ingrese DNI del cliente" name="txtDniCliente" required>
+				<button class="btn btn-success" name="btnBuscar" type="submit">&#128269;</button>
 			</div>
 
 			<div class="mb-3">
-				<label for="usuario" class="form-label">Usuario:</label> <input
-					type="text" class="form-control" id="usuario" name="usuario"
+				<label for="usuario" class="form-label">Usuario:</label> 
+				<input
+					type="text" class="form-control" id="usuario" name="usuario" 
+					value="<%= (cliente != null && cliente.getUsuario() != null) ? cliente.getUsuario().getNombreUsuario() : "" %>"
 					readonly>
 			</div>
 
@@ -50,7 +59,7 @@
 			<div class="mt-4 mb-3">
 				<label for="tipoCuenta" class="form-label">Tipo de cuenta:</label> <select
 					class="form-select" id="tipoCuenta" name="tipoCuenta">
-					<option selected disabled>Seleccione una opción</option>
+					<option selected disabled>Seleccione una opciÃ³n</option>
 					<option value="1">Caja de Ahorro</option>
 					<option value="2">Cuenta Corriente</option>
 				</select>

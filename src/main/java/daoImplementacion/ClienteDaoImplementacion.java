@@ -109,8 +109,8 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			conexion = Conexion.getConexion().getSQLConexion();
 			String query = "SELECT c.nombre, c.apellido, c.dni" +
                     "FROM Clientes c " +
-                    "JOIN Usuario u ON c.id_usuario = u.id " +
-                    "WHERE c.DNI = ? AND u.Activo = 1";
+                    "JOIN Usuarios u ON c.id_usuario = u.id " +
+                    "WHERE c.dni = ? AND u.estado = 1";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, dni);
 			ResultSet rs = statement.executeQuery();
