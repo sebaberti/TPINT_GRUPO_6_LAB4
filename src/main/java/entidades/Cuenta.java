@@ -1,9 +1,5 @@
 package entidades;
 
-import java.util.Random;
-
-import entidades.Cliente;
-
 public class Cuenta {
 	
 	private int id;

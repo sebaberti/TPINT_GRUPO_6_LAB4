@@ -1,17 +1,16 @@
 package daoImplementacion;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import dao.CuentaDao;
 import entidades.Cliente;
 import entidades.Cuenta;
 import entidades.CuentaTipo;
+import utilidades.ManejoCaractEspecial;
 
 public class CuentaDaoImplementacion implements CuentaDao {
 
@@ -55,8 +54,8 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	}
 	
 	@Override
-    public ArrayList<Cuenta> listar() {
-        ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
+    public List<Cuenta> listar() {
+        List<Cuenta> cuentas = new ArrayList<Cuenta>();
         
         Connection conexion = null;
         PreparedStatement statement= null;
@@ -65,8 +64,9 @@ public class CuentaDaoImplementacion implements CuentaDao {
         String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
                 "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
         		"cl.nombre, cl.apellido, cl.dni, "+
-                "t.descripcion AS tipo_descripcion FROM cuentas c"+
-                "INNER JOIN Cliente cl ON c.id_cliente = cl.id";
+                "t.descripcion AS tipo_descripcion FROM cuentas c "+
+                "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
+                "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id";
         
         try {
         	conexion = Conexion.getConexion().getSQLConexion();
@@ -79,9 +79,14 @@ public class CuentaDaoImplementacion implements CuentaDao {
                 CuentaTipo tipoCuenta = new CuentaTipo();
 
                 cuenta.setId(rs.getInt("cuenta_id"));
-                cuenta.setSaldo(rs.getDouble("saldo"));
-                cuenta.setCBU(rs.getString("cbu"));
                 cuenta.setFechaCreacion(rs.getString("fecha_creacion"));
+                cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+
+                tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
+                cuenta.setTipoCuenta(tipoCuenta);
+                
+                cuenta.setCBU(rs.getString("cbu"));
+                cuenta.setSaldo(rs.getDouble("saldo"));
                 cuenta.setEstado(rs.getBoolean("estado"));
 
                 cliente.setNombre(rs.getString("nombre"));
@@ -89,8 +94,64 @@ public class CuentaDaoImplementacion implements CuentaDao {
                 cliente.setDNI(rs.getString("dni"));
                 cuenta.setCliente(cliente);
 
-                tipoCuenta.setDescripcion(rs.getString("tipo_descripcion"));
+                cuentas.add(cuenta);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (statement != null) statement.close();
+                if (conexion != null) conexion.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return cuentas;
+    }
+
+	@Override
+    public List<Cuenta> listarPorDNI(int dni) {
+        List<Cuenta> cuentas = new ArrayList<Cuenta>();
+        
+        Connection conexion = null;
+        PreparedStatement statement= null;
+   	 	ResultSet rs= null;
+       
+        String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
+                "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
+        		"cl.nombre, cl.apellido, cl.dni, "+
+                "t.descripcion AS tipo_descripcion FROM cuentas c "+
+                "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
+                "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id "+
+                "WHERE cl.dni = ?";
+        
+        try {
+        	conexion = Conexion.getConexion().getSQLConexion();
+        	 statement = conexion.prepareStatement(query);
+        	 statement.setInt(1, dni);
+        	 rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Cuenta cuenta = new Cuenta();
+                Cliente cliente = new Cliente();
+                CuentaTipo tipoCuenta = new CuentaTipo();
+
+                cuenta.setId(rs.getInt("cuenta_id"));
+                cuenta.setFechaCreacion(rs.getString("fecha_creacion"));
+                cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+
+                tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
                 cuenta.setTipoCuenta(tipoCuenta);
+                
+                cuenta.setCBU(rs.getString("cbu"));
+                cuenta.setSaldo(rs.getDouble("saldo"));
+                cuenta.setEstado(rs.getBoolean("estado"));
+
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setApellido(rs.getString("apellido"));
+                cliente.setDNI(rs.getString("dni"));
+                cuenta.setCliente(cliente);
 
                 cuentas.add(cuenta);
             }
@@ -108,15 +169,4 @@ public class CuentaDaoImplementacion implements CuentaDao {
         return cuentas;
     }
 	
-	public String manejarCaracterEspecial(String texto) {
-		try {
-			texto = new String(texto.getBytes("ISO-8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		return texto;
-	}
-
-
 }
