@@ -1,11 +1,11 @@
 package dao;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import entidades.Cuentas;
+import entidades.Cuenta;
 
 public interface CuentasDao {
-	public boolean insertarCuenta(Cuentas cuenta);
-	public List<Cuentas> listarCuentas();
+	public boolean insertarCuenta(Cuenta cuenta);
+	public ArrayList<Cuenta> listar();
 	public String manejarCaracterEspecial(String texto);
 }
