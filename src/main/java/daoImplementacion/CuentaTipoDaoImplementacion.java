@@ -19,13 +19,13 @@ public class CuentaTipoDaoImplementacion implements CuentaTipoDao {
         PreparedStatement statement= null;
    	 	ResultSet rs= null;
        
-        String query ="select id, descripcion from Tipos_Cuentas";
+        String query ="SELECT id, descripcion FROM Tipos_Cuentas";
         
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
 			statement = conexion.prepareStatement(query);
 			rs = statement.executeQuery();
-
+			
 			while (rs.next()) {
 				CuentaTipo tipoCuenta = new CuentaTipo();
 				tipoCuenta.setId(rs.getInt(1));

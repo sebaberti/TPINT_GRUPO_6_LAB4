@@ -32,25 +32,19 @@ public class AltaCuentaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Cliente cliente = null;
-		ArrayList<CuentaTipo> tiposCuenta=null;
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		try {
 			ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
 			CuentaTipoDaoImplementacion tipoCuentaDao = new CuentaTipoDaoImplementacion();
 
-			
+			Cliente cliente = null;
 			String btnBuscar = request.getParameter("btnBuscar");
 			String dniFiltro = request.getParameter("txtDniCliente");
 			
-			//traer tipos de Cuentas
-			 try {
-				 tiposCuenta = tipoCuentaDao.listar();
-			    } catch (Exception e) {
-			        request.setAttribute("errorTipoCuenta", "hubo un problema con el tipo de cuenta");
-			    }
-			
+			// traer tipos de Cuentas
+			ArrayList<CuentaTipo> tiposCuenta = tipoCuentaDao.listar();
+			request.setAttribute("tiposCuenta", tiposCuenta);
+
 			
 			//buscar por DNI
 			if (btnBuscar != null && dniFiltro != null && !dniFiltro.trim().isEmpty()) {
@@ -67,8 +61,8 @@ public class AltaCuentaServlet extends HttpServlet {
 			}
 
 			request.setAttribute("cliente", cliente);
-			request.setAttribute("tiposCuenta", tiposCuenta);
-
+			
+			System.out.println(tiposCuenta);
 			request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -33,7 +33,7 @@
 		<!-- Botón Nueva Cuenta -->
 		<div class="mb-4 d-flex justify-content-end">
 			<button type="button" class="btn btn-primary btn-nueva-cuenta"
-				onclick="location.href='${pageContext.request.contextPath}/vistas/Admin/Cuentas/AltaCuentas.jsp'">
+				onclick="location.href='${pageContext.request.contextPath}/AltaCuentaServlet'">
 				<i class="bi bi-plus-circle me-2"></i> Nueva Cuenta
 			</button>
 		</div>
