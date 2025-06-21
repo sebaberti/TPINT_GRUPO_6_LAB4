@@ -1,0 +1,9 @@
+package negocio;
+
+import java.util.ArrayList;
+
+import entidades.CuentaTipo;
+
+public interface CuentaTipoNegocio {
+	public ArrayList<CuentaTipo> listarTiposCuenta();
+}

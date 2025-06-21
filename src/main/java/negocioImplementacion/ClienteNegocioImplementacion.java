@@ -42,4 +42,8 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 	public Boolean existeCUIL(String CUIL) {
 		return clienteNegocio.existeCUIL(CUIL);
 	}
+
+	public Cliente clientePorDNI(int dni) {
+		return clienteNegocio.clientePorDNI(dni);
+	}
 }
