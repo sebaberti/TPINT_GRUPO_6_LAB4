@@ -2,29 +2,15 @@
 <%@page import="java.util.List"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page session="true"%>
+<%@page import="entidades.Cliente"%>
+<%@page import="javax.servlet.http.HttpSession"%>
+
 <%
-String usuarioNombre = "Cliente Prueba";
-String tipoUsuario = "cliente";
-
-//Clase para poder iterar luego y poder renderizar los datos. Hermosa clase auxiliar.     
-class Dato {
-	String campo;
-	String valor;
-
-	Dato(String campo, String valor) {
-		this.campo = campo;
-		this.valor = valor;
-	}
-}
-
-List<Dato> datos = new ArrayList<>();
-datos.add(new Dato("Correo electrónico", "cliente@utnpatxeco.com"));
-datos.add(new Dato("Teléfono", "11-1234-5678"));
-datos.add(new Dato("Dirección", "Calle Falsa 123, Patxeco"));
-datos.add(new Dato("Fecha de nacimiento", "1990-01-01"));
-datos.add(new Dato("Nacionalidad", "Argentina"));
-datos.add(new Dato("Sexo", "M"));
+HttpSession sesion = request.getSession(false);
+String usuarioNombre = (String) sesion.getAttribute("nombreUsuario");
+Cliente cliente = (Cliente) request.getAttribute("cliente");
 %>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -36,6 +22,11 @@ datos.add(new Dato("Sexo", "M"));
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	
+	
+	
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
 <body>
 
@@ -63,6 +54,8 @@ datos.add(new Dato("Sexo", "M"));
 						<form
 							action="${pageContext.request.contextPath}/CambiarPasswordServlet"
 							method="post">
+							<input type="hidden" name="accion" value="cambiarDesdePerfil">
+							
 
 							<div class="mb-3">
 								<label for="actual" class="form-label">Contraseña actual</label>
@@ -103,30 +96,60 @@ datos.add(new Dato("Sexo", "M"));
 		</div>
 
 		<div class="card mt-5 shadow-sm">
-			<div class="card-body">
-				<h5 class="card-title">Datos personales</h5>
-				<div class="row">
-					<div class="col-md-6 mb-3">
-						<strong>Nombre:</strong> <span class="text-muted"><%=usuarioNombre%></span>
-					</div>
-					<!-- Iteramos con los datos de arriba -->
-					<%
-					for (Dato d : datos) {
-					%>
-					<div class="col-md-6 mb-3">
-						<strong><%=d.campo%>:</strong> <span class="text-muted"><%=d.valor%></span>
-					</div>
-					<%
-					}
-					%>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="card-body">
+            <h5 class="card-title">Datos personales</h5>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <strong>Usuario:</strong> <span class="text-muted"><%= usuarioNombre %></span>
+                </div>
+               <% if (cliente != null) { %>
+                <div class="col-md-6 mb-3">
+                    <strong>Nombre completo:</strong> 
+                    <span class="text-muted">
+                        <%= (cliente.getNombre() != null ? cliente.getNombre() : "") + " " + 
+                             (cliente.getApellido() != null ? cliente.getApellido() : "") %>
+                    </span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>DNI:</strong> <span class="text-muted"><%= cliente.getDNI() != null ? cliente.getDNI() : "No disponible" %></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>CUIL:</strong> <span class="text-muted"><%= cliente.getCUIL() != null ? cliente.getCUIL() : "No disponible" %></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Email:</strong> <span class="text-muted"><%= cliente.getEmail() != null ? cliente.getEmail() : "No disponible" %></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Teléfono:</strong> <span class="text-muted"><%= cliente.getTelefono() != null ? cliente.getTelefono() : "No disponible" %></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Sexo:</strong> <span class="text-muted"><%= cliente.getSexo() != null ? cliente.getSexo() : "No disponible" %></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Fecha de nacimiento:</strong> 
+                    <span class="text-muted"><%= cliente.getFecha_nacimiento() != null ? cliente.getFecha_nacimiento() : "No disponible" %></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Nacionalidad:</strong> 
+                    <span class="text-muted">
+                        <%= (cliente.getNacionalidad() != null && cliente.getNacionalidad().getNombre() != null) 
+                                ? cliente.getNacionalidad().getNombre() 
+                                : "No disponible" %>
+                    </span>
+                </div>
+            <% } else { %>
+                <p class="text-danger">No se encontraron datos del cliente.</p>
+            <% } %>
+                
+            </div>
+        </div>
+    </div>
+</div>
 
 	<jsp:include page="Footer.jsp" />
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		
 </body>
 </html>

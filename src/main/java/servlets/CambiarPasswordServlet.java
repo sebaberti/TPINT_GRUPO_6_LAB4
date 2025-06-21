@@ -5,54 +5,126 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import negocio.UsuarioNegocio;
+import negocioImplementacion.UsuarioNegocioImpl;
+
 @WebServlet("/CambiarPasswordServlet")
 public class CambiarPasswordServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private UsuarioNegocio usuarioNeg = new UsuarioNegocioImpl();
 
-	public CambiarPasswordServlet() {
-		super();
-	}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        String accion = request.getParameter("accion");
+        String usuario = request.getParameter("usuario");
 
-		String actual = request.getParameter("actual");
-		String nueva = request.getParameter("nueva");
-		String confirmar = request.getParameter("confirmar");
+        if ("validarUsuario".equals(accion)) {
+            if (usuario == null || usuario.trim().isEmpty()) {
+                request.setAttribute("mensajeError", "Debe ingresar el usuario para validar.");
+                request.setAttribute("habilitarCampos", false);
+            } else {
+                boolean existe = usuarioNeg.existeUsuarioActivo(usuario);
+                if (existe) {
+                    request.setAttribute("mensaje", "Usuario válido, puede cambiar la contraseña.");
+                    request.setAttribute("habilitarCampos", true);
+                } else {
+                    request.setAttribute("mensajeError", "Usuario no existe o no está activo.");
+                    request.setAttribute("habilitarCampos", false);
+                }
+            }
+            request.getRequestDispatcher("/vistas/RecuperarContrasenia.jsp").forward(request, response);
+            return;
+        }
 
-		boolean datosValidos = true;
-		String mensajeError = "";
+        if ("cambiarPassword".equals(accion)) {
+            String nuevaClave = request.getParameter("nuevaClave");
+            String confirmarClave = request.getParameter("confirmarClave");
 
-		// Validaciones básicas
-		if (actual == null || actual.trim().isEmpty()) {
-			mensajeError += "Debe ingresar su contraseña actual.<br>";
-			datosValidos = false;
-		}
+            if (usuario == null || usuario.trim().isEmpty()) {
+                request.setAttribute("mensajeError", "Debe ingresar el usuario.");
+                request.getRequestDispatcher("/vistas/RecuperarContrasenia.jsp").forward(request, response);
+                return;
+            }
 
-		if (nueva == null || nueva.trim().isEmpty()) {
-			mensajeError += "Debe ingresar la nueva contraseña.<br>";
-			datosValidos = false;
-		}
+            if (nuevaClave == null || confirmarClave == null || !nuevaClave.equals(confirmarClave)) {
+                request.setAttribute("mensajeError", "Las contraseñas no coinciden.");
+                request.setAttribute("habilitarCampos", true);
+                request.getRequestDispatcher("/vistas/RecuperarContrasenia.jsp").forward(request, response);
+                return;
+            }
 
-		if (confirmar == null || confirmar.trim().isEmpty()) {
-			mensajeError += "Debe confirmar la nueva contraseña.<br>";
-			datosValidos = false;
-		}
+            boolean actualizada = usuarioNeg.actualizarPassword(usuario, nuevaClave);
 
-		if (nueva != null && confirmar != null && !nueva.equals(confirmar)) {
-			mensajeError += "La nueva contraseña y su confirmación no coinciden.<br>";
-			datosValidos = false;
-		}
+            if (actualizada) {
+                request.setAttribute("mensaje", "Contraseña actualizada correctamente. Ya puede iniciar sesión.");
+            } else {
+                request.setAttribute("mensajeError", "Error al actualizar la contraseña.");
+                request.setAttribute("habilitarCampos", true);
+            }
+            request.getRequestDispatcher("/vistas/RecuperarContrasenia.jsp").forward(request, response);
+        }
+        
+        
+        if ("cambiarDesdePerfil".equals(accion)) {
+            String actual = request.getParameter("actual");
+            String nueva = request.getParameter("nueva");
+            String confirmar = request.getParameter("confirmar");
 
-		if (!datosValidos) {
-			request.setAttribute("mensajeError", mensajeError);
-			request.getRequestDispatcher("/vistas/Perfil.jsp").forward(request, response);
-			return;
-		}
+            boolean datosValidos = true;
+            String mensajeError = "";
 
-		String mensajeInformativo = "Contraseña cambiada correctamente. NO FUE A LA DB - Prueba de Servlet";
-		request.setAttribute("mensajeInformativo", mensajeInformativo);
-		request.getRequestDispatcher("/vistas/Perfil.jsp").forward(request, response);
+            if (actual == null || actual.trim().isEmpty()) {
+                mensajeError += "Debe ingresar su contraseña actual.<br>";
+                datosValidos = false;
+            }
+            if (nueva == null || nueva.trim().isEmpty()) {
+                mensajeError += "Debe ingresar la nueva contraseña.<br>";
+                datosValidos = false;
+            }
+            if (confirmar == null || confirmar.trim().isEmpty()) {
+                mensajeError += "Debe confirmar la nueva contraseña.<br>";
+                datosValidos = false;
+            }
+            if (!nueva.equals(confirmar)) {
+                mensajeError += "La nueva contraseña y su confirmación no coinciden.<br>";
+                datosValidos = false;
+            }
 
-	}
+            if (!datosValidos) {
+                request.setAttribute("mensajeError", mensajeError);
+                request.getRequestDispatcher("/vistas/Perfil.jsp").forward(request, response);
+                return;
+            }
+
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("nombreUsuario") == null) {
+                request.setAttribute("mensajeError", "Debe iniciar sesión para cambiar su contraseña.");
+                request.getRequestDispatcher("/vistas/Login.jsp").forward(request, response);
+                return;
+            }
+
+            String nombreUsuarioSesion = (String) session.getAttribute("nombreUsuario");
+
+            boolean passCorrecta = usuarioNeg.validarPassword(nombreUsuarioSesion, actual);
+
+            if (!passCorrecta) {
+                request.setAttribute("mensajeError", "La contraseña actual es incorrecta.");
+                request.getRequestDispatcher("/vistas/Perfil.jsp").forward(request, response);
+                return;
+            }
+
+            boolean cambiada = usuarioNeg.actualizarPassword(nombreUsuarioSesion, nueva);
+
+            if (cambiada) {
+                session.setAttribute("mensajeInformativo", "Contraseña cambiada correctamente.");
+            } else {
+                session.setAttribute("mensajeError", "No se pudo cambiar la contraseña.");
+            }
+
+            response.sendRedirect("PerfilServlet");
+        }
+    }
 }
+;
+

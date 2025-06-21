@@ -243,18 +243,60 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, dni);
 			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				cliente = new Cliente();
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setDNI(rs.getString("dni"));
-				Usuario usuario = new Usuario();
-				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
-				cliente.setUsuario(usuario);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return cliente;
+            while (rs.next()) {
+                cliente = new Cliente();
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setApellido(rs.getString("apellido"));
+                cliente.setDNI(rs.getString("dni"));
+                Usuario usuario = new Usuario();
+                usuario.setNombreUsuario(rs.getString("nombre_usuario"));
+                cliente.setUsuario(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cliente;
+    }
+	
+	@Override
+	public Cliente obtenerClientePorIdUsuario(int idUsuario) {
+	    Cliente cliente = null;
+	    Connection conexion = null;
+	   
+
+	    try {
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	String query = "SELECT c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad " +
+	                   "FROM Clientes c " +
+	                   "JOIN Paises p ON c.id_nacionalidad = p.id " +
+	                   "WHERE c.id_usuario = ?";
+	    	PreparedStatement statement = conexion.prepareStatement(query);
+	    	statement.setInt(1, idUsuario);
+	    	ResultSet rs = statement.executeQuery();
+	      
+
+	        if (rs.next()) {
+	            cliente = new Cliente();
+	            cliente.setNombre(rs.getString("nombre"));
+	            cliente.setApellido(rs.getString("apellido"));
+	            cliente.setDNI(rs.getString("dni"));
+	            cliente.setCUIL(rs.getString("cuil"));
+	            cliente.setTelefono(rs.getString("telefono"));
+	            cliente.setEmail(rs.getString("correo_electronico"));
+	            cliente.setSexo(rs.getString("sexo"));
+	            cliente.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
+	            Pais nacionalidad = new Pais();
+	            nacionalidad.setId(rs.getInt("id_nacionalidad"));
+	            nacionalidad.setNombre(rs.getString("nacionalidad"));
+	            cliente.setNacionalidad(nacionalidad);
+	            
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cliente;
 	}
+	
 }
