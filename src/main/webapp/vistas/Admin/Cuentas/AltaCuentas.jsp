@@ -31,7 +31,8 @@
 	<!-- Formulario -->
 	<div class="container my-5">
 		<form action="${pageContext.request.contextPath}/AltaCuentaServlet"
-			" method="post" class="form-section">
+		id="formAltaCuenta"
+			method="post" class="form-section">
 			<h5 class="form-title">Buscar Cliente</h5>
 			<div class="input-group mb-4">
 				<input type="text" class="form-control"
@@ -78,10 +79,45 @@
 			</div>
 
 			<div class="d-flex justify-content-end gap-2">
-				<button type="submit" class="btn btn-primary">Crear Cuenta</button>
+				<!-- <button type="button" class="btn btn-primary" onclick="validarYCrearCuenta()">Crear Cuenta</button> -->
+				<input type="submit" class="btn-crear" value="Crear Cuenta">
 			</div>
 		</form>
 	</div>
+	
+	<!-- Modal si el usuario está vacío -->
+<div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usuarioModalLabel">Atención</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        El campo "Usuario" está vacío. Por favor, busque un cliente antes de crear la cuenta.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+	
+	<script>
+  function validarYCrearCuenta() {
+    var usuario = document.getElementById("usuario").value.trim();
+
+    if (usuario === "") {
+      // Abrir modal si el campo está vacío
+      var modal = new bootstrap.Modal(document.getElementById('usuarioModal'));
+      modal.show();
+    } else {
+      // Enviar formulario si está todo bien
+      document.getElementById("formAltaCuenta").submit();
+    }
+  }
+</script>
+	
 
 	<jsp:include page="/vistas/Footer.jsp" />
 	<script

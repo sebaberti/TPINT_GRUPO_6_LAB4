@@ -13,6 +13,7 @@ import daoImplementacion.ClienteDaoImplementacion;
 import daoImplementacion.CuentaTipoDaoImplementacion;
 import entidades.Cliente;
 import entidades.CuentaTipo;
+import validaciones.ValidacionesCuentas;
 
 /**
  * Servlet implementation class AltaCuentaServlet
@@ -21,6 +22,7 @@ import entidades.CuentaTipo;
 public class AltaCuentaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	private ValidacionesCuentas validarCampo = new ValidacionesCuentas();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -74,7 +76,13 @@ public class AltaCuentaServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
+			request.setAttribute("error", "Debe seleccionar un Cliente");
+			request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
+			return;
+		}
+		
+		
 		doGet(request, response);
 	}
 
