@@ -74,7 +74,6 @@
             </div>
         </div>
     </div>
-
     <div class="card mt-5 shadow-sm">
         <div class="card-body">
             <h5 class="card-title">Datos personales</h5>
