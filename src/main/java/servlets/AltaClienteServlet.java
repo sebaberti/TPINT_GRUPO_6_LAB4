@@ -6,6 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import entidades.Cliente;
 import negocioImplementacion.ClienteNegocioImplementacion;
 
@@ -13,6 +15,7 @@ import negocioImplementacion.ClienteNegocioImplementacion;
 public class AltaClienteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ClienteNegocioImplementacion clienteNegocio;
+	HttpSession session;
 
 	private String rutaAltaClienteJSP = "/vistas/Admin/ABMLCliente/AltaCliente.jsp";
 
@@ -23,34 +26,28 @@ public class AltaClienteServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
+		session = request.getSession();
+		
 		Cliente cliente = new Cliente();
 		cliente = capturarCampos(request);
+		
+		if(cliente != null) 
+			session.setAttribute("cliente", cliente);
+		
 		request.setAttribute("cliente", cliente);
 
+		existeCliente(request, response, cliente);
+		
 		if (cliente.getId() != 1) {
 			redirigir(request, response, "error", "Error al capturar los campos", rutaAltaClienteJSP);
 		}
 		
-		existeCliente(request, response, cliente);
-
-//		try {
-//			clienteNegocio.insertar(cliente);
-//			redirigir(request, response, "clienteInsertado",
-//					"El cliente " + cliente.getNombre() + " " + cliente.getApellido() + " se inserto correctamente",
-//					rutaAltaClienteJSP);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			redirigir(request, response, "error", "Error al insertar", rutaAltaClienteJSP);
-//		}
-
-		
+		response.sendRedirect(request.getContextPath() + "/vistas/Admin/ABMLUsuario/AltaUsuario.jsp");
 	};
 
 	private Cliente capturarCampos(HttpServletRequest request) {
