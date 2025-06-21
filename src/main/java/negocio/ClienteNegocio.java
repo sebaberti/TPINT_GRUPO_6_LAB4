@@ -12,4 +12,5 @@ public interface ClienteNegocio {
 	public Boolean existeDNI(String DNI);
 	public Boolean existeCUIL(String CUIL);
 	public Cliente clientePorDNI(int dni);
+	public Cliente obtenerClientePorIdUsuario(int idUsuario);
 }
