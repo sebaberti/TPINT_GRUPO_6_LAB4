@@ -39,13 +39,14 @@
 				cliente = (Cliente)request.getAttribute("cliente");
 			 } %>
 		
+		
 		<div class="row justify-content-center mb-3">
 			<form method="POST" action="${pageContext.request.contextPath}/AltaClienteServlet">
 			
 			<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
 				<div class="col mb-3">
 						<label for="DNICliente" class="form-label">Número de documento</label> 
-						<input type="text" class="form-control" id="DNICliente" name="DNICliente" placeholder="Ingrese su número de DNI" required pattern="^\d+$" title="Solo se permiten números" value="${cliente != null ? cliente.getDNI() : ''}">
+						<input type="text" class="form-control" id="DNICliente" name="DNICliente" placeholder="Ingrese su número de DNI" required pattern="^\d{8}$" title="Solo se permiten números" value="${cliente != null ? cliente.getDNI() : ''}">
 					</div>
 					<div class="col mb-3">
 						<label for="CUILCliente" class="form-label">Número de CUIL</label>
@@ -120,31 +121,44 @@
 		</div>
 	</main>
 
-<!-- Formatea el campo CUIL a NN-NNNNNNNN-NN -->	
-<script>
-	document.getElementById('CUILCliente').addEventListener('input', function (e) {
-    	let input = e.target;
-    	let value = input.value;
-
-   		value = value.replace(/\D/g, '');
-
-    	if (value.length > 11) value = value.slice(0, 11);
-
-    	let formatted = '';
-    	if (value.length > 0) {
-       		formatted += value.substring(0, Math.min(2, value.length));
-    	}
-    	if (value.length >= 3) {
-       		 formatted += '-' + value.substring(2, Math.min(10, value.length));
-    	}
-    	if (value.length > 10) {
-       	 formatted += '-' + value.substring(10);
-   		 }
-    input.value = formatted;
+	<!-- Formatea el campo CUIL a NN-NNNNNNNN-NN -->	
+	<script>
+		document.getElementById('CUILCliente').addEventListener('input', function (e) {
+	    	let input = e.target;
+	    	let value = input.value;
+	
+	   		value = value.replace(/\D/g, '');
+	
+	    	if (value.length > 11) value = value.slice(0, 11);
+	
+	    	let formatted = '';
+	    	if (value.length > 0) {
+	       		formatted += value.substring(0, Math.min(2, value.length));
+	    	}
+	    	if (value.length >= 3) {
+	       		 formatted += '-' + value.substring(2, Math.min(10, value.length));
+	    	}
+	    	if (value.length > 10) {
+	       	 formatted += '-' + value.substring(10);
+	   		 }
+	    input.value = formatted;
+		});
+	</script>	
+	
+	<script>
+		document.getElementById("DNICliente").addEventListener("input", function (e) {
+	    let digitsOnly = e.target.value.replace(/\D/g, '');
+	    
+	    if (digitsOnly.length > 8) {
+	        digitsOnly = digitsOnly.slice(0, 8);
+	    }
+	
+	    e.target.value = digitsOnly;
 	});
-</script>		
-<jsp:include page="../../Footer.jsp" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	</script>
+
+	<jsp:include page="../../Footer.jsp" />
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
