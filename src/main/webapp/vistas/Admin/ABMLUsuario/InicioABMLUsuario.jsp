@@ -52,9 +52,9 @@
 							</div>
 							<h6 class="card-title mb-2">Listar y editar Usuarios</h6>
 						</div>
-						<button href=""
-							class="btn btn-primary btn-sm w-100 btn-abml" onclick="location.href='ListarUsuario.jsp'">Seleccionar</button>
-					</div>
+						<a href="${pageContext.request.contextPath}/ListarUsuariosServlet"
+							class="btn btn-primary btn-sm w-100 btn-abml">Seleccionar</a>
+						</div>
 				</div>
 			</div>
 		</div>

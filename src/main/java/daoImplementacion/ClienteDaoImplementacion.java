@@ -62,7 +62,11 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	public List<Cliente> listar() {
 		List<Cliente> lista = new ArrayList<>();
-		String query = "SELECT id, dni, cuil, nombre, apellido, estado FROM Clientes";
+		String query = "SELECT c.id, c.dni, c.cuil, c.nombre, c.apellido, c.estado, "+
+		"u.nombre_usuario "+
+		"FROM Clientes c "+
+		"INNER JOIN Usuarios u ON c.id_usuario = u.id";
+		
 
 		try {
 			Connection conexion = Conexion.getConexion().getSQLConexion();
@@ -77,6 +81,11 @@ public class ClienteDaoImplementacion implements ClienteDao {
 				c.setNombre(rs.getString("nombre"));
 				c.setApellido(rs.getString("apellido"));
 				c.setEstado(rs.getBoolean("estado"));
+				
+				Usuario usuario= new Usuario();
+				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
+				c.setUsuario(usuario);
+				
 				lista.add(c);
 			}
 		} catch (Exception e) {

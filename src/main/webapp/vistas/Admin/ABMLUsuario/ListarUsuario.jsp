@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.List"%>
+<%@ page import="entidades.Cliente"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,6 +16,10 @@
 <jsp:include page="/vistas/Header.jsp" />
 
     <main class="container mt-5 mb-5">
+    <%
+		List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
+		%>
+    
         <h1 class="text-center mb-4">Listado de Usuarios</h1>
 
         <!-- Botón Nueva Cuenta -->
@@ -26,7 +32,7 @@
         <!-- Formulario de búsqueda -->
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form method="post" action="#">
+                <form method="post" action="${pageContext.request.contextPath}/ListarUsuariosServlet">
                     <div class="mb-3">
                         <label for="dniCliente" class="form-label">Nombre de Usuario</label>
                         <input type="text" class="form-control shadow-sm" id="dniCliente" name="txtDniClientes" placeholder="Ingrese el nombre de usuario" required>
@@ -61,12 +67,21 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>....</td>
-                        <td>....</td>
-                        <td>....</td>
-                        <td>....</td>
-                        <td>....</td>
-                        <td>Activo/Inactivo</td>
+                        <%
+					if (listaClientes != null && !listaClientes.isEmpty()) {
+						for (Cliente c : listaClientes) {
+					%>
+					<tr>
+						<td><%=c.getUsuario().getNombreUsuario()%></td>
+						<td><%=c.getDNI()%></td>
+						<td><%=c.getCUIL()%></td>
+						<td><%=c.getNombre()%></td>
+						<td><%=c.getApellido()%></td>
+						<% if (c.getEstado()) {%>
+						<td>Activo</td>
+						<% } else { %>
+						<td>Inactivo</td>
+						<% } %>
                         <td>
                             <button type="button" class="btn btn-warning btn-sm" onclick="location.href='ModificarUsuario.jsp'">
                                 <i class="bi bi-pencil-square"></i>
@@ -78,6 +93,16 @@
                             </button>
                         </td>
                     </tr>
+                    <%
+					}
+					} else {
+					%>
+					<tr>
+						<td colspan="5">No hay usuarios cargados.</td>
+					</tr>
+					<%
+					}
+					%>
                 </tbody>
             </table>
         </div>
