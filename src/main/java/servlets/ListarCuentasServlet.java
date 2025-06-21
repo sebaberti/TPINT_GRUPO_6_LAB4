@@ -37,7 +37,6 @@ public class ListarCuentasServlet extends HttpServlet {
 
 			String btnBuscar = request.getParameter("btnBuscar");
 			String dniFiltro = request.getParameter("txtDniClientes");
-
 			//buscar
 			if (btnBuscar != null && dniFiltro != null && !dniFiltro.trim().isEmpty()) {
 

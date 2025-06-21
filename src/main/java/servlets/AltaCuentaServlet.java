@@ -1,7 +1,7 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import daoImplementacion.ClienteDaoImplementacion;
-import daoImplementacion.CuentaDaoImplementacion;
+import daoImplementacion.CuentaTipoDaoImplementacion;
 import entidades.Cliente;
-import entidades.Cuenta;
+import entidades.CuentaTipo;
 
 /**
  * Servlet implementation class AltaCuentaServlet
@@ -33,19 +33,31 @@ public class AltaCuentaServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Cliente cliente = null;
+		ArrayList<CuentaTipo> tiposCuenta=null;
+		
 		try {
 			ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
+			CuentaTipoDaoImplementacion tipoCuentaDao = new CuentaTipoDaoImplementacion();
 
-			Cliente cliente = null;
+			
 			String btnBuscar = request.getParameter("btnBuscar");
 			String dniFiltro = request.getParameter("txtDniCliente");
-
-			//buscar
+			
+			//traer tipos de Cuentas
+			 try {
+				 tiposCuenta = tipoCuentaDao.listar();
+			    } catch (Exception e) {
+			        request.setAttribute("errorTipoCuenta", "hubo un problema con el tipo de cuenta");
+			    }
+			
+			
+			//buscar por DNI
 			if (btnBuscar != null && dniFiltro != null && !dniFiltro.trim().isEmpty()) {
 
 				    try {
 				        int dni = Integer.parseInt(dniFiltro); //valido que sea un int
-
+				        
 				        cliente = clienteDao.clientePorDNI(dni);
 
 				    } catch (NumberFormatException e) {
@@ -55,6 +67,7 @@ public class AltaCuentaServlet extends HttpServlet {
 			}
 
 			request.setAttribute("cliente", cliente);
+			request.setAttribute("tiposCuenta", tiposCuenta);
 
 			request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
 		} catch (Exception e) {
