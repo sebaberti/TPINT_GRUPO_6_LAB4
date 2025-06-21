@@ -6,7 +6,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="Inicio.jsp">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/vistas/Inicio.jsp">
             <img src="https://img.icons8.com/ios-filled/30/ffffff/bank.png" alt="Logo" class="me-2">
             Banco SIX
         </a>

@@ -11,4 +11,5 @@ public interface ClienteDao {
 	public List<Cliente> listar();
 	public Boolean existeDNI(String DNI);
 	public Boolean existeCUIL(String CUIL);
+	public Cliente clientePorDNI(int dni);
 }

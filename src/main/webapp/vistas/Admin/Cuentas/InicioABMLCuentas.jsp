@@ -50,7 +50,7 @@
 							</div>
 							<h6 class="card-title mb-2">Listar y editar Cuentas</h6>
 						</div>
-						<a href="ListarCuentas.jsp"
+						<a href="${pageContext.request.contextPath}/ListarCuentasServlet"
 							class="btn btn-primary btn-sm w-100 btn-abml">Seleccionar</a>
 					</div>
 				</div>
