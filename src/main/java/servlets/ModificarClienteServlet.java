@@ -23,28 +23,42 @@ public class ModificarClienteServlet extends HttpServlet {
 
 		ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
 
-		// Tomamos los parámetros del formulario
-		String dni = request.getParameter("dni");
-		String cuil = request.getParameter("cuil");
-		String nombre = request.getParameter("nombre");
-		String apellido = request.getParameter("apellido");
-		String email = request.getParameter("email");
-		String telefono = request.getParameter("telefono");
+		try {
+			int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+			String cuil = request.getParameter("cuil");
+			String nombre = request.getParameter("nombre");
+			String apellido = request.getParameter("apellido");
+			String email = request.getParameter("email");
+			String telefono = request.getParameter("telefono");
+			String dni = request.getParameter("dni");
 
-		Cliente cliente = new Cliente();
-		cliente.setDNI(dni);
-		cliente.setCUIL(cuil);
-		cliente.setNombre(nombre);
-		cliente.setApellido(apellido);
-		cliente.setEmail(email);
-		cliente.setTelefono(telefono);
+			
+			System.out.println(cuil + " <- ");
+			System.out.println(nombre + " <- ");
+			System.out.println(apellido + " <- ");
+			System.out.println(email + " <- ");
+			System.out.println(telefono + " <- ");
 
-		boolean exito = clienteDao.modificar(cliente);
+			Cliente cliente = new Cliente();
+			cliente.setId(idCliente);
+			cliente.setCUIL(cuil);
+			cliente.setNombre(nombre);
+			cliente.setApellido(apellido);
+			cliente.setEmail(email);
+			cliente.setTelefono(telefono);
+			cliente.setDNI(dni);
 
-		if (exito) {
-			response.sendRedirect("ListarClientesServlet"); 
-		} else {
-			request.setAttribute("error", "No se pudo modificar el cliente.");
+			boolean exito = clienteDao.modificar(cliente);
+
+			if (exito) {
+				response.sendRedirect("ListarClientesServlet");
+			} else {
+				request.setAttribute("error", "No se pudo modificar el cliente.");
+				request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("error", "Ocurrió un error inesperado.");
 			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
 		}
 	}

@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import dao.ClienteDao;
 import entidades.Cliente;
+import entidades.Direccion;
+import entidades.Localidad;
+import entidades.Pais;
 import entidades.Usuario;
 
 public class ClienteDaoImplementacion implements ClienteDao {
@@ -53,7 +56,31 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	}
 
 	public Boolean modificar(Cliente cliente) {
-		return true;
+		String query = """
+					UPDATE Clientes
+					SET cuil = ?, nombre = ?, apellido = ?, correo_electronico = ?, telefono = ?
+					WHERE id = ?
+				""";
+
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement stmt = conexion.prepareStatement(query);
+
+			stmt.setString(1, cliente.getCUIL());
+			stmt.setString(2, cliente.getNombre());
+			stmt.setString(3, cliente.getApellido());
+			stmt.setString(4, cliente.getEmail());
+			stmt.setString(5, cliente.getTelefono());
+			stmt.setInt(6, cliente.getId());
+
+			if (stmt.executeUpdate() > 0) {
+				conexion.commit();
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public Boolean bajaLogica(String dni) {
@@ -115,15 +142,26 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	public List<Cliente> buscar(String dni, String cuil) {
 		List<Cliente> lista = new ArrayList<>();
-		String queryBase = "SELECT id, dni, cuil, nombre, apellido, estado FROM Clientes";
+
+		String queryBase = """
+				    SELECT c.id AS cliente_id, c.dni, c.cuil, c.nombre, c.apellido, c.sexo,
+				           c.id_nacionalidad, c.fecha_nacimiento, c.correo_electronico,
+				           c.telefono, c.estado,
+				           d.id AS domicilio_id, d.direccion,
+				           l.id AS localidad_id, l.nombre AS nombre_localidad
+				    FROM clientes c
+				    INNER JOIN domicilios d ON c.id_domicilio = d.id
+				    INNER JOIN localidades l ON d.id_localidad = l.id
+				""";
+
 		String query = queryBase;
 		List<String> condiciones = new ArrayList<>();
 
 		if (dni != null && !dni.trim().isEmpty()) {
-			condiciones.add("dni = ?");
+			condiciones.add("c.dni = ?");
 		}
 		if (cuil != null && !cuil.trim().isEmpty()) {
-			condiciones.add("REPLACE(cuil, '-', '') = ?");
+			condiciones.add("REPLACE(c.cuil, '-', '') = ?");
 		}
 
 		if (!condiciones.isEmpty()) {
@@ -145,12 +183,30 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Cliente c = new Cliente();
-				c.setId(rs.getInt("id"));
+				c.setId(rs.getInt("cliente_id"));
 				c.setDNI(rs.getString("dni"));
 				c.setCUIL(rs.getString("cuil"));
 				c.setNombre(rs.getString("nombre"));
 				c.setApellido(rs.getString("apellido"));
+				c.setSexo(rs.getString("sexo"));
+				c.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
+				c.setEmail(rs.getString("correo_electronico"));
+				c.setTelefono(rs.getString("telefono"));
 				c.setEstado(rs.getBoolean("estado"));
+
+				// Domicilio
+				Direccion d = new Direccion();
+				d.setId(rs.getInt("domicilio_id"));
+				d.setDireccion(rs.getString("direccion"));
+
+				// Localidad
+				Localidad l = new Localidad();
+				l.setId(rs.getInt("localidad_id"));
+				l.setNombre(rs.getString("nombre_localidad"));
+
+				d.setLocalidad(l);
+				c.setDomicilio(d);
+
 				lista.add(c);
 			}
 
@@ -232,7 +288,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		Connection conexion = null;
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
-			String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.id_usuario, u.nombre_usuario " + "FROM Clientes c "
+			String query = "SELECT c.nombre, c.apellido, c.dni, c.id_usuario, u.nombre_usuario " + "FROM Clientes c "
 					+ "JOIN Usuarios u ON c.id_usuario = u.id " + "WHERE c.dni = ? AND u.estado = 1";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, dni);
@@ -251,5 +307,46 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			e.printStackTrace();
 		}
 		return cliente;
+	}
+	
+	@Override
+	public Cliente obtenerClientePorIdUsuario(int idUsuario) {
+	    Cliente cliente = null;
+	    Connection conexion = null;
+	   
+
+	    try {
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	String query = "SELECT c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad " +
+	                   "FROM Clientes c " +
+	                   "JOIN Paises p ON c.id_nacionalidad = p.id " +
+	                   "WHERE c.id_usuario = ?";
+	    	PreparedStatement statement = conexion.prepareStatement(query);
+	    	statement.setInt(1, idUsuario);
+	    	ResultSet rs = statement.executeQuery();
+	      
+
+	        if (rs.next()) {
+	            cliente = new Cliente();
+	            cliente.setNombre(rs.getString("nombre"));
+	            cliente.setApellido(rs.getString("apellido"));
+	            cliente.setDNI(rs.getString("dni"));
+	            cliente.setCUIL(rs.getString("cuil"));
+	            cliente.setTelefono(rs.getString("telefono"));
+	            cliente.setEmail(rs.getString("correo_electronico"));
+	            cliente.setSexo(rs.getString("sexo"));
+	            cliente.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
+	            Pais nacionalidad = new Pais();
+	            nacionalidad.setId(rs.getInt("id_nacionalidad"));
+	            nacionalidad.setNombre(rs.getString("nacionalidad"));
+	            cliente.setNacionalidad(nacionalidad);
+	            
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cliente;
 	}
 }

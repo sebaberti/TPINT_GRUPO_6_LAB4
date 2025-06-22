@@ -6,7 +6,7 @@ public class Usuario {
     private int idRol;
     private boolean estado;
 
-    // Getters y Setters
+
     public int getId() {
         return id;
     }

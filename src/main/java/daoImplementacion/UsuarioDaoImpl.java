@@ -17,7 +17,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
         ResultSet resultSet = null;
 
         try {
-            // OBTENER SIEMPRE UNA NUEVA CONEXIÓN
+            
             conexion = Conexion.getConexion().getSQLConexion();
 
             statement = conexion.prepareStatement("SELECT * FROM usuarios WHERE nombre_usuario=? AND contrasenia=?");
@@ -40,4 +40,89 @@ public class UsuarioDaoImpl implements UsuarioDao {
 
         return usuario;
     }
+    
+    
+    @Override
+    public boolean existeUsuarioActivo(String nombreUsuario) {
+        boolean existe = false;
+        
+        Connection conexion = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conexion = Conexion.getConexion().getSQLConexion();
+            ps = conexion.prepareStatement("SELECT 1 FROM usuarios WHERE nombre_usuario = ? AND estado = true");
+            ps.setString(1, nombreUsuario);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                existe = true;
+            }
+
+        }  catch (Exception e) {
+                e.printStackTrace();
+            }
+        return existe;
+    }
+    
+    
+    
+    @Override
+    public boolean actualizarPassword(String usuario, String nuevaClave) {
+        Connection conexion = null;
+        PreparedStatement statement = null;
+        boolean exito = false;
+
+        try {
+            conexion = Conexion.getConexion().getSQLConexion();
+            conexion.setAutoCommit(false); 
+
+            statement = conexion.prepareStatement("UPDATE usuarios SET contrasenia=? WHERE nombre_usuario=? AND estado=true");
+            statement.setString(1, nuevaClave);
+            statement.setString(2, usuario);
+
+            int filas = statement.executeUpdate();
+            if (filas > 0) {
+                conexion.commit(); 
+                exito = true;
+            } else {
+                conexion.rollback(); 
+            }
+
+        } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        return exito;
+    }
+    
+    
+    
+    @Override
+    public boolean validarPassword(String nombreUsuario, String password) {
+        boolean valido = false;
+        Connection conexion = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conexion = Conexion.getConexion().getSQLConexion();
+            String sql = "SELECT 1 FROM usuarios WHERE nombre_usuario = ? AND contrasenia = ? AND estado = true";
+            ps = conexion.prepareStatement(sql);
+            ps.setString(1, nombreUsuario);
+            ps.setString(2, password); 
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                valido = true;
+            }
+
+        }  catch (Exception e) {
+                e.printStackTrace();
+            }
+   
+        return valido;
+    }
+    
 }

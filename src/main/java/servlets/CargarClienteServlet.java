@@ -8,7 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import daoImplementacion.ClienteDaoImplementacion;
+import daoImplementacion.LocalidadDaoImplementacion;
 import entidades.Cliente;
+import entidades.Localidad;
 
 @WebServlet("/CargarClienteServlet")
 public class CargarClienteServlet extends HttpServlet {
@@ -18,9 +20,15 @@ public class CargarClienteServlet extends HttpServlet {
 		super();
 	}
 
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doPost(request, response);
+	}
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		request.setCharacterEncoding("UTF-8");
 		String dni = request.getParameter("dni");
 		String cuil = request.getParameter("cuil");
 
@@ -28,12 +36,26 @@ public class CargarClienteServlet extends HttpServlet {
 		List<Cliente> lista = clienteDao.buscar(dni, cuil);
 
 		if (lista != null && !lista.isEmpty()) {
-			Cliente cliente = lista.get(0); 
+			Cliente cliente = lista.get(0);
 			request.setAttribute("cliente", cliente);
-			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
 		} else {
 			request.setAttribute("error", "No se encontró ningún cliente con los datos ingresados.");
-			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
 		}
+
+		LocalidadDaoImplementacion localidadDao = new LocalidadDaoImplementacion();
+
+		if ((dni == null || dni.trim().isEmpty()) && (cuil == null || cuil.trim().isEmpty())) {
+			request.setAttribute("error", "Debe ingresar al menos un DNI o CUIL para buscar.");
+			List<Localidad> localidadesBsAs = localidadDao.listarLocalidadesBuenosAires();
+			request.setAttribute("localidades", localidadesBsAs);
+			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
+			return;
+		}
+
+		List<Localidad> localidadesBsAs = localidadDao.listarLocalidadesBuenosAires();
+
+		request.setAttribute("localidades", localidadesBsAs);
+
+		request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
 	}
 }

@@ -50,4 +50,10 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 	public Cliente clientePorDNI(int dni) {
 		return clienteNegocio.clientePorDNI(dni);
 	}
+	
+	
+	public Cliente obtenerClientePorIdUsuario(int idUsuario) {
+	    return clienteNegocio.obtenerClientePorIdUsuario(idUsuario);
+	}
+	
 }

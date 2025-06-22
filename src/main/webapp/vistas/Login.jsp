@@ -40,6 +40,9 @@
 								type="password" class="form-control" id="clave" name="clave"
 								required>
 						</div>
+						<div class="mb-3 text-center">
+  						<a href="${pageContext.request.contextPath}/vistas/RecuperarContrasenia.jsp">¿Olvidaste tu contraseña?</a>
+						</div>
 						<div class="d-grid">
 							<button type="submit" class="btn btn-primary">Ingresar</button>
 						</div>
