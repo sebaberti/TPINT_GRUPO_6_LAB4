@@ -25,8 +25,8 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 		return true;
 	}
 
-	public Boolean bajaLogica(int idCliente) {
-		return true;
+	public Boolean bajaLogica(String dni) {
+		return clienteNegocio.bajaLogica(dni);
 	}
 
 	public List<Cliente> listar() {
@@ -43,7 +43,17 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 		return clienteNegocio.existeCUIL(CUIL);
 	}
 
+	public Cliente clientePorDNI(String dni) {
+		return clienteNegocio.clientePorDNI(dni);
+	}
+	
 	public Cliente clientePorDNI(int dni) {
 		return clienteNegocio.clientePorDNI(dni);
 	}
+	
+	
+	public Cliente obtenerClientePorIdUsuario(int idUsuario) {
+	    return clienteNegocio.obtenerClientePorIdUsuario(idUsuario);
+	}
+	
 }

@@ -18,6 +18,7 @@ public class Cliente {
 	Usuario usuario;
 	Boolean estado;
 	
+	
 	public int getId() {
 		return id;
 	}
@@ -96,6 +97,7 @@ public class Cliente {
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
 	}
+
 	
 	@Override
 	public String toString() {
