@@ -1,19 +1,19 @@
 package daoImplementacion;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import dao.ClienteDao;
 import entidades.Cliente;
 import entidades.Direccion;
 import entidades.Localidad;
+import entidades.Pais;
 import entidades.Usuario;
 
 public class ClienteDaoImplementacion implements ClienteDao {
@@ -21,6 +21,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	private String insertQuery = "INSERT INTO Clientes(dni, cuil ,nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	private String validarDNIQuery = "SELECT * FROM Clientes WHERE DNI = ?";
 	private String validarCUILQuery = "SELECT * FROM Clientes WHERE CUIL = ?";
+	private String bajaQuery = "UPDATE Clientes SET estado = 0 WHERE id=?";
 
 	public Boolean insertar(Cliente cliente) {
 		int rows = 0;
@@ -82,7 +83,28 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		return false;
 	}
 
-	public Boolean bajaLogica(int idCliente) {
+	public Boolean bajaLogica(String dni) {
+
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			CallableStatement preparedCall;
+			preparedCall = conexion.prepareCall("CALL SP_BAJA_CLIENTE(?)");
+			preparedCall.setString(1, dni);
+			preparedCall.execute();
+
+			ResultSet resultSet = preparedCall.getResultSet();
+
+			if (!resultSet.next())
+				return false;
+
+			int resultado = resultSet.getInt(1);
+			
+			if(!(resultado == 2))
+				return false;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -233,6 +255,35 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	}
 
 	@Override
+
+	public Cliente clientePorDNI(String dni) {
+		Cliente cliente = null;
+		Connection conexion = null;
+		try {
+			conexion = Conexion.getConexion().getSQLConexion();
+			// Obtengo todos los clientes sin importar su estado
+			String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.id_usuario, c.estado, u.nombre_usuario FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE c.dni = ?";
+			PreparedStatement statement = conexion.prepareStatement(query);
+			statement.setString(1, dni);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				cliente = new Cliente();
+				cliente.setId(rs.getInt("c.id"));
+				cliente.setNombre(rs.getString("nombre"));
+				cliente.setApellido(rs.getString("apellido"));
+				cliente.setDNI(rs.getString("dni"));
+				cliente.setEstado(rs.getBoolean("c.estado"));
+				Usuario usuario = new Usuario();
+				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
+				cliente.setUsuario(usuario);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cliente;
+	}
+	
+	@Override
 	public Cliente clientePorDNI(int dni) {
 		Cliente cliente = null;
 		Connection conexion = null;
@@ -257,6 +308,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
         }
         return cliente;
     }
+			
 	
 	@Override
 	public Cliente obtenerClientePorIdUsuario(int idUsuario) {
@@ -298,5 +350,4 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	    return cliente;
 	}
-	
 }
