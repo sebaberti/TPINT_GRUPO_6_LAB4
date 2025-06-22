@@ -1,5 +1,6 @@
 package daoImplementacion;
 
+import java.sql.Connection;
 import java.util.List;
 
 import dao.PrestamoDao;
@@ -8,11 +9,30 @@ import entidades.Prestamo;
 public class PrestamoDaoImplementacion implements PrestamoDao{
 
 	@Override
-	public boolean insertar(Prestamo prestamo) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean ejecutarSPsolicitarPrestamoar(Prestamo prestamo) {
+	
+		 try
+		  {
+			 Connection conexion = Conexion.getConexion().getSQLConexion();
+			 CallableStatement cst = conexion.prepareCall("CALL crearUsuario(?,?)");
+			 cst.setString(1, usuario.getNombre());
+			 cst.setString(2, usuario.getApellido());
+			 cst.execute();
+			 
+		  }
+		  catch (Exception e) {
+			e.printStackTrace();
+		}
+		  finally {
+				try {
+					cn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 	}
-
+/*
 	@Override
 	public boolean modificar(Prestamo prestamo) {
 		// TODO Auto-generated method stub
@@ -30,5 +50,8 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 		// TODO Auto-generated method stub
 		return null;
 	}
+*/
+
+
 
 }

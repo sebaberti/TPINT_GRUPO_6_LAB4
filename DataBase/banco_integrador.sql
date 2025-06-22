@@ -298,3 +298,39 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+
+DELIMITER $$
+CREATE PROCEDURE SP_BAJA_CLIENTE(IN dni_cliente VARCHAR(8))
+BEGIN
+    DECLARE id_usuario INT;
+    DECLARE fila_cliente INT DEFAULT 0;
+    DECLARE fila_usuario INT DEFAULT 0;
+    DECLARE resultado INT DEFAULT 0;
+
+	START TRANSACTION;
+    
+    IF EXISTS (SELECT 1 FROM Clientes WHERE dni = dni_cliente) THEN 
+		
+		SELECT C.id_usuario INTO id_usuario FROM  Clientes AS C WHERE dni = dni_cliente;
+        
+        IF EXISTS(SELECT 1 FROM Usuarios WHERE id = id_usuario) THEN
+   
+			UPDATE Clientes SET estado = false WHERE dni = dni_cliente;
+            SET fila_cliente = ROW_COUNT();
+			UPDATE Usuarios SET estado = false WHERE id = id_usuario;
+            SET fila_usuario = ROW_COUNT();
+		ELSE
+			ROLLBACK;
+		END IF;
+
+	COMMIT;
+    
+    SET resultado = fila_cliente + fila_usuario;
+    SELECT resultado;
+    
+    ELSE
+		ROLLBACK;
+	END IF;
+END$$
+DELIMITER ;

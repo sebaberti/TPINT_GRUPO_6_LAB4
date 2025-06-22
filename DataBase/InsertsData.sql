@@ -153,8 +153,8 @@ INSERT INTO Opciones_Plazo (cantidad_cuotas, tasaAnual) VALUES
 (24, 50.00),
 (30, 52.00),
 (36, 54.00),
-(48, 56.00),
-(60, 58.00),
+(42, 56.00),
+(48, 58.00),
 (60, 60.00);
 
 INSERT INTO Prestamos (id_cliente, id_cuenta, fecha_alta, importe_pedido, id_opcion_plazo, estado)

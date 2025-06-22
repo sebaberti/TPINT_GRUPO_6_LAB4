@@ -101,7 +101,7 @@
 								<%
 								PlazoNegocioImplementacion pni = new PlazoNegocioImplementacion();
 								ArrayList<Plazo> listaPlazos = pni.listarOpcionesPlazo();								
-										int idSeleccionado = -1; // valor por defecto por si no hay selección
+										int idSeleccionado = -1;
 										BigDecimal tna = BigDecimal.ZERO;
 										if (request.getAttribute("idPlazoSeleccionado") != null) {
 										    idSeleccionado = Integer.parseInt(String.valueOf(request.getAttribute("idPlazoSeleccionado")));
@@ -156,7 +156,7 @@
 							if (fechas != null) {
 							%>
 							<p>importe mensual:</p>
-							<p>Tasa Anual: <%= tna %></p>
+							<p>Tasa Anual: <%= tna %>%</p>
 							<p>Fecha de cuotas:</p>
 							<ul>
 								<%
