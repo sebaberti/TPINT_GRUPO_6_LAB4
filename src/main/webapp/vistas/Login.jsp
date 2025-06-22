@@ -2,9 +2,6 @@
 <%@ page session="true"%>
 <!DOCTYPE html>
 <html lang="es">
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<!DOCTYPE html>
-<html lang="es">
 <head>
 <meta charset="UTF-8">
 <title>Login - Banco SIX</title>
@@ -39,8 +36,7 @@
                 }
             %>
 			
-			
-			
+		
 			<% if (request.getAttribute("error") != null) { %>
     <div class="alert alert-danger text-center mt-3">
         <%= request.getAttribute("error") %>

@@ -22,6 +22,12 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 		return cuentas.listarPorDNI(dni);
 	}
+	
+	@Override
+	public List<Cuenta> listarCuentasPorClienteId(int clienteId) {
+	    CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
+	    return cuentas.listarCuentasPorClienteId(clienteId); 
+	}
 
 	public boolean existeCuenta(Cuenta cuenta) {
 		List<Cuenta> cuentas = listarCuentas();
@@ -32,5 +38,18 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		}
 		return false;
 	}
+	
+	
+	public Cuenta obtenerCuentaPorCBU(String cbu) {
+	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
+	    return cuentaDao.obtenerCuentaPorCBU(cbu);
+	}
+
+	
+	public Cuenta obtenerCuentaPorId(int id) {
+	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
+	    return cuentaDao.obtenerCuentaPorId(id);
+	}
+
 
 }

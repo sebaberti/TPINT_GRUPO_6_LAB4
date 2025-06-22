@@ -145,4 +145,117 @@ public class CuentaDaoImplementacion implements CuentaDao {
         return cuentas;
     }
 	
+	
+
+ 	
+	public List<Cuenta> listarCuentasPorClienteId(int clienteId) {
+	    List<Cuenta> lista = new ArrayList<>();
+	    
+	    Connection conexion = null;
+        PreparedStatement statement= null;
+   	 	ResultSet rs= null;
+	   
+	    String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, " +
+                "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " +
+                "FROM cuentas c " +
+                "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id " +
+                "WHERE c.id_cliente = ? AND c.estado = 1 AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
+
+	    try {
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	    	statement.setInt(1, clienteId);
+	    	rs = statement.executeQuery();
+
+	        while (rs.next()) {
+	        	 Cuenta cuenta = new Cuenta();
+	             cuenta.setId(rs.getInt("id"));
+	             cuenta.setCBU(rs.getString("cbu"));
+	             cuenta.setSaldo(rs.getDouble("saldo"));
+	             cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+	             cuenta.setFechaCreacion(rs.getString("fecha_creacion"));
+	             cuenta.setEstado(rs.getBoolean("estado"));
+	            
+	            CuentaTipo tipoCuenta = new CuentaTipo();
+	            tipoCuenta.setId(rs.getInt("id_tipo_cuenta")); // Asegurate que esta columna está en el SELECT
+	            tipoCuenta.setDescripcion(rs.getString("tipo_descripcion"));
+	            cuenta.setTipoCuenta(tipoCuenta);
+
+	            lista.add(cuenta);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
+	}
+	
+	
+	@Override
+	public Cuenta obtenerCuentaPorCBU(String cbu) {
+	    Cuenta cuenta = null;
+	    Connection conexion = null;
+        PreparedStatement statement= null;
+   	 	ResultSet rs= null;
+   	 	
+	    String query = "SELECT * FROM cuentas WHERE cbu = ? AND estado = true";
+
+	    try { 
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	    	statement.setString(1, cbu);
+	    	rs = statement.executeQuery();
+
+	        if (rs.next()) {
+	            cuenta = new Cuenta();
+	            cuenta.setId(rs.getInt("id"));
+	            cuenta.setCBU(rs.getString("cbu"));
+	            cuenta.setSaldo(rs.getDouble("saldo"));
+	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+	            cuenta.setEstado(rs.getBoolean("estado"));
+	            // Aquí podrías cargar más datos si los necesitas
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cuenta;
+	}
+
+	@Override
+	public Cuenta obtenerCuentaPorId(int id) {
+	    Cuenta cuenta = null;
+	    Connection conexion = null;
+        PreparedStatement statement= null;
+   	 	ResultSet rs= null;
+   	 	
+	    String query = "SELECT * FROM cuentas WHERE id = ?";
+
+	    try{ 
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	        
+	    	statement.setInt(1, id);
+	    	rs = statement.executeQuery();
+
+	        if (rs.next()) {
+	            cuenta = new Cuenta();
+	            cuenta.setId(rs.getInt("id"));
+	            cuenta.setCBU(rs.getString("cbu"));
+	            cuenta.setSaldo(rs.getDouble("saldo"));
+	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+	            cuenta.setEstado(rs.getBoolean("estado"));
+	            // Cargar más atributos si es necesario
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cuenta;
+	}
+
+	
 }

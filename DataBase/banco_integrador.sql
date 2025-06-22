@@ -120,9 +120,12 @@ CREATE TABLE `Movimientos` (
     `fecha_movimiento` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `importe` DECIMAL(10,2) NOT NULL,
     `detalle` VARCHAR(255),
+    `id_transferencia` INT NULL,
+
     CONSTRAINT `FK_tipo_movimiento` FOREIGN KEY (`id_tipo_movimiento`) REFERENCES `Tipos_Movimientos`(`id`),
     CONSTRAINT `FK_cuenta_movimiento` FOREIGN KEY (`id_cuenta`) REFERENCES `Cuentas`(`id`),
-    CONSTRAINT `FK_cliente_movimiento` FOREIGN KEY (`id_cliente`) REFERENCES `Clientes`(`id`)
+    CONSTRAINT `FK_cliente_movimiento` FOREIGN KEY (`id_cliente`) REFERENCES `Clientes`(`id`),
+    CONSTRAINT `FK_movimiento_transferencia` FOREIGN KEY (`id_transferencia`) REFERENCES `Transferencias`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Opciones_Plazo` (
