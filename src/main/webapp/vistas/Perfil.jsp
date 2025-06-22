@@ -46,49 +46,6 @@ Cliente cliente = (Cliente) request.getAttribute("cliente");
 				</form>
 			</div>
 
-<<<<<<< HEAD
-        <!-- Columna derecha para cambiar passwords -->
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Cambiar contraseña</h5>
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Contraseña actual</label>
-                            <input type="password" class="form-control" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Nueva contraseña</label>
-                            <input type="password" class="form-control" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Confirmar nueva contraseña</label>
-                            <input type="password" class="form-control" disabled>
-                        </div>
-                        <button type="submit" class="btn btn-primary" disabled>Guardar cambios</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card mt-5 shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title">Datos personales</h5>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <strong>Nombre:</strong> <span class="text-muted"><%= usuarioNombre %></span>
-                </div>
-                <!-- Iteramos con los datos de arriba -->
-                <% for (Dato d : datos) { %>
-                    <div class="col-md-6 mb-3">
-                        <strong><%= d.campo %>:</strong> <span class="text-muted"><%= d.valor %></span>
-                    </div>
-                <% } %>
-            </div>
-        </div>
-    </div>
-</div>
-=======
 			<!-- Columna derecha para cambiar passwords -->
 			<div class="col-md-8">
 				<div class="card shadow-sm">
@@ -116,7 +73,6 @@ Cliente cliente = (Cliente) request.getAttribute("cliente");
 							</div>
 							<button type="submit" class="btn btn-primary">Guardar
 								cambios</button>
->>>>>>> 7d24b7944be792b6264fd5bf6c0b0df998dbf3f2
 
 							<%
 							String mensajeError = (String) request.getAttribute("mensajeError");
