@@ -44,7 +44,7 @@
 			<form method="POST" action="${pageContext.request.contextPath}/AltaClienteServlet">
 			
 			<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
-				<div class="col mb-3">
+					<div class="col mb-3">
 						<label for="DNICliente" class="form-label">Número de documento</label> 
 						<input type="text" class="form-control" id="DNICliente" name="DNICliente" placeholder="Ingrese su número de DNI" required pattern="^\d{8}$" title="Solo se permiten números" value="${cliente != null ? cliente.getDNI() : ''}">
 					</div>
