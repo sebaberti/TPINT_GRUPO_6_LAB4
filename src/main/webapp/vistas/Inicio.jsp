@@ -24,7 +24,6 @@ class Tarjeta {
 
 List<Tarjeta> tarjetas = new ArrayList<>();
 
-//Rellenamos la lista con esto asi no estamos tocando en el layout si necesitamos hacer cambios.. 
 
 if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Clientes.jsp", "bi-people-fill", "text-primary", "Gestionar Clientes"));

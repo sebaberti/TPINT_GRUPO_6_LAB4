@@ -9,10 +9,6 @@ public class Transferencia {
     private double monto;
     private LocalDateTime fecha;
     
-    
-
-    // Getters y Setters
-
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

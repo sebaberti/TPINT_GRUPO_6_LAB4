@@ -177,7 +177,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	             cuenta.setEstado(rs.getBoolean("estado"));
 	            
 	            CuentaTipo tipoCuenta = new CuentaTipo();
-	            tipoCuenta.setId(rs.getInt("id_tipo_cuenta")); // Asegurate que esta columna está en el SELECT
+	            tipoCuenta.setId(rs.getInt("id_tipo_cuenta")); 
 	            tipoCuenta.setDescripcion(rs.getString("tipo_descripcion"));
 	            cuenta.setTipoCuenta(tipoCuenta);
 
@@ -214,7 +214,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	            cuenta.setSaldo(rs.getDouble("saldo"));
 	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
 	            cuenta.setEstado(rs.getBoolean("estado"));
-	            // Aquí podrías cargar más datos si los necesitas
+	           
 	        }
 
 	    } catch (SQLException e) {
@@ -247,7 +247,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	            cuenta.setSaldo(rs.getDouble("saldo"));
 	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
 	            cuenta.setEstado(rs.getBoolean("estado"));
-	            // Cargar más atributos si es necesario
+	            
 	        }
 
 	    } catch (SQLException e) {

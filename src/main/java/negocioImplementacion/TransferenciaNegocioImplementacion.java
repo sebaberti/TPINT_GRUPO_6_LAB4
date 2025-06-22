@@ -17,36 +17,32 @@ public class TransferenciaNegocioImplementacion implements TransferenciaNegocio 
 
     @Override
     public boolean realizarTransferencia(Transferencia transferencia) {
-        // Validaciones básicas:
         if (transferencia.getMonto() <= 0) {
-            return false; // monto inválido
+            return false;
         }
 
         Cuenta cuentaOrigen = transferencia.getCuentaOrigen();
         Cuenta cuentaDestino = transferencia.getCuentaDestino();
 
-        // Obtener datos actualizados de cuentas (opcional, para validar saldos)
-        // Podés implementar métodos para obtener cuenta por id con saldo actualizado.
-
-        // Validar fondos disponibles
+        
         if (cuentaOrigen.getSaldo() < transferencia.getMonto()) {
-            return false; // fondos insuficientes
+            return false; 
         }
 
-        // Actualizar saldo de ambas cuentas
+       
         cuentaOrigen.setSaldo(cuentaOrigen.getSaldo() - transferencia.getMonto());
         cuentaDestino.setSaldo(cuentaDestino.getSaldo() + transferencia.getMonto());
 
-        // Guardar la transferencia
+       
         transferencia.setFecha(LocalDateTime.now());
 
-        // Importante: el proceso debe ser transaccional (commit/rollback)
+      
         boolean insertOk = transferenciaDao.insertarTransferencia(transferencia);
         if (!insertOk) {
             return false;
         }
 
-        // Actualizar saldos en base de datos
+  
         boolean actualizoOrigen = actualizarSaldoCuenta(cuentaOrigen);
         boolean actualizoDestino = actualizarSaldoCuenta(cuentaDestino);
 
@@ -54,8 +50,6 @@ public class TransferenciaNegocioImplementacion implements TransferenciaNegocio 
     }
 
     private boolean actualizarSaldoCuenta(Cuenta cuenta) {
-        // Podés implementar en CuentaDao un método para actualizar el saldo
-        // Ejemplo simple aquí:
         String query = "UPDATE cuentas SET saldo = ? WHERE id = ?";
         try {
             var conexion = Conexion.getConexion().getSQLConexion();

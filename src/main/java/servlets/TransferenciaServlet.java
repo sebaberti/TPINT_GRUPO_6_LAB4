@@ -90,7 +90,7 @@ public class TransferenciaServlet extends HttpServlet {
             request.setAttribute("error", "Error en los datos ingresados.");
         }
 
-        // Cargar las cuentas para mostrar en el desplegable (igual que en doGet)
+    
         List<Cuenta> cuentasCliente = cuentaNegocio.listarCuentasPorClienteId(idCliente);
 
         System.out.println("DEBUG: cuentasCliente.size() = " + (cuentasCliente != null ? cuentasCliente.size() : "null"));
