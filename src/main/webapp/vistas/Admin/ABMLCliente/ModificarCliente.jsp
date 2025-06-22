@@ -1,9 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="entidades.Cliente"%>
+<%@ page import="entidades.Localidad"%>
+<%@ page import="java.util.List"%>
+
+<%
+Cliente cliente = (Cliente) request.getAttribute("cliente");
+List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
+
+String cuilFormateado = "";
+if (cliente != null && cliente.getCUIL() != null) {
+	String cuil = cliente.getCUIL().replaceAll("-", "");
+	if (cuil.matches("\\d{11}")) {
+		cuilFormateado = cuil.replaceAll("(\\d{2})(\\d{8})(\\d{1})", "$1-$2-$3");
+	} else {
+		cuilFormateado = cliente.getCUIL();
+	}
+}
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Modificar Cliente</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -12,121 +33,157 @@
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloRegistro.css">
-<title>Modificar Cliente</title>
-
 </head>
 <body>
-
-
 	<jsp:include page="../../Header.jsp" />
 
-	<main
-		class="container py-4 mb-4 d-flex flex-column justify-content-center">
-		<div class="row text-center">
+	<main class="container py-4 mb-4">
+		<div class="row text-center mb-4">
 			<h2 class="fw-semibold">Modificar Cliente</h2>
 		</div>
 
-		<div class="row justify-content-center mb-3">
+		<%
+		String mensajeError = (String) request.getAttribute("error");
+		if (mensajeError != null) {
+		%>
+		<div class="alert alert-warning alert-dismissible fade show"
+			role="alert">
+			<%=mensajeError%>
+			<button type="button" class="btn-close" data-bs-dismiss="alert"
+				aria-label="Close"></button>
+		</div>
+		<%
+		}
+		%>
+
+		<!-- Formulario de búsqueda -->
+		<div class="border rounded p-4 mb-4 bg-light shadow-sm">
+			<h5 class="mb-3">Buscar Cliente</h5>
 			<form method="POST"
-				action="${pageContext.request.contextPath}/ModificarClienteServlet">
-
-				<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
-					<div class="col mb-3">
-						<label for="lblDNI" class="form-label">Número de documento</label>
-						<input type="text" class="form-control" id="lblDNI"
-							placeholder="Ingrese su número de DNI" required pattern="^\d+$"
-							title="Solo se permiten números">
-					</div>
-					<div class="col mb-3">
-						<label for="lblCUIL" class="form-label">Número de CUIL</label> <input
-							type="text" class="form-control" id="lblCUIL"
-							placeholder="Ingrese su número de CUIl" required pattern="^\d+$"
-							title="Solo se permiten números">
-					</div>
-					<div class="col mb-3 d-flex flex-column justify-content-end">
-						<button type="submit"
-							class="btn btn-secondary btn-md w-25 .btn-abml">Buscar</button>
-					</div>
-					<div class="col mb-3">
-						<label for="lblNombre" class="form-label">Nombre/s</label> <input
-							type="text" class="form-control" id="lblNombre"
-							placeholder="Ingrese su nombre" required
-							pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras"
-							disabled>
-					</div>
-					<div class="col mb-3">
-						<label for="lblApellido" class="form-label">Apellido/s</label> <input
-							type="text" class="form-control" id="lblApellido"
-							placeholder="Ingrese su apellido" required
-							pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras"
-							disabled>
-					</div>
-
-					<div class="col mb-3">
-						<label for="lblSelectSexo" class="form-label">Sexo</label> <select
-							id="lblSelectSexo" class="form-select" required disabled>
-							<option value="" disabled selected>Seleccione un sexo</option>
-							<option>Femenino</option>
-							<option>Masculino</option>
-						</select>
-					</div>
-					<div class="col mb-3">
-						<label for="lblNacionalidad" class="form-label">Nacionalidad</label>
-						<select id="lblNacionalidad" class="form-select" required disabled>
-							<option value="" disabled selected>Seleccionar país</option>
-							<!-- Cargar desde DB -->
-						</select>
-					</div>
-					<div class="col mb-3">
-						<label for="lblFechaNacimiento" class="form-label">Fecha
-							Nacimiento</label> <input type="date" class="form-control"
-							id="lblFechaNacimiento" required disabled>
-					</div>
-
-					<div class="col mb-3">
-						<label for="lblDireccion" class="form-label">Dirección</label> <input
-							type="text" class="form-control" id="lblDireccion"
-							placeholder="Ej: Calle 123" required disabled>
-					</div>
-					<div class="col mb-3">
-						<label for="lblProvincia" class="form-label">Provincia</label> <select
-							id="lblProvincia" class="form-select" required disabled>
-							<option value="" disabled selected>Seleccionar provincia</option>
-							<!-- Cargar desde DB -->
-						</select>
-					</div>
-					<div class="col mb-3">
-						<label for="lblLocalidad" class="form-label">Localidad</label> <select
-							id="lblLocalidad" class="form-select" required disabled>
-							<option value="" disabled selected>Seleccionar localidad</option>
-							<!-- Cargar desde DB -->
-						</select>
-					</div>
-
-					<div class="col mb-3">
-						<label for="lblEmail" class="form-label">Correo
-							electronico</label> <input type="email" class="form-control"
-							id="lblEmail" placeholder="Ej: ejemplo@proveedor.com" required
-							disabled>
-					</div>
-					<div class="col mb-3">
-						<label for="lblTelefono" class="form-label">Teléfono</label> <input
-							type="text" class="form-control" id="lblTelefono"
-							placeholder="Ej: 1126440749" required pattern="^\d+$"
-							title="Solo se permiten números" disabled>
-					</div>
-
+				action="${pageContext.request.contextPath}/CargarClienteServlet"
+				class="row g-3">
+				<div class="col-md-4">
+					<label for="buscarDNI" class="form-label">DNI</label> <input
+						type="text" class="form-control" id="buscarDNI" name="dni"
+						value="<%=cliente != null ? cliente.getDNI() : ""%>">
 				</div>
-
-				<div class="row">
-					<div class="col mb-3">
-						<button type="submit"
-							class="btn btn-warning btn-md w-100 .btn-abml">Modificar</button>
-					</div>
+				<div class="col-md-4">
+					<label for="buscarCUIL" class="form-label">CUIL</label> <input
+						type="text" class="form-control" id="buscarCUIL" name="cuil"
+						value="<%=cuilFormateado%>">
+				</div>
+				<div class="col-md-4 d-flex align-items-end">
+					<button type="submit" class="btn btn-secondary w-100">Buscar</button>
 				</div>
 			</form>
 		</div>
+
+		<%
+		if (cliente != null) {
+		%>
+		<!-- Formulario de modificación -->
+		<div class="border rounded p-4 bg-white shadow-sm">
+			<h5 class="mb-3">Modificar Cliente</h5>
+			<form method="POST"
+				action="${pageContext.request.contextPath}/ModificarClienteServlet"
+				class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+
+				<input type="hidden" name="idCliente" value="<%=cliente.getId()%>">
+
+				<div class="col">
+					<label class="form-label">DNI</label> <input type="text" name="dni"
+						class="form-control" required value="<%=cliente.getDNI()%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">CUIL</label> <input type="text"
+						name="cuil" class="form-control" required
+						value="<%=cuilFormateado%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Nombre/s</label> <input type="text"
+						name="nombre" class="form-control" required
+						pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" value="<%=cliente.getNombre()%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Apellido/s</label> <input type="text"
+						name="apellido" class="form-control" required
+						pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+						value="<%=cliente.getApellido()%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Sexo</label> <select name="sexo"
+						class="form-select" required>
+						<option value="" disabled>Seleccione un sexo</option>
+						<option value="M"
+							<%="M".equals(cliente.getSexo()) ? "selected" : ""%>>Masculino</option>
+						<option value="F"
+							<%="F".equals(cliente.getSexo()) ? "selected" : ""%>>Femenino</option>
+					</select>
+				</div>
+
+				<div class="col">
+					<label class="form-label">Fecha de Nacimiento</label> <input
+						type="date" name="fechaNacimiento" class="form-control"
+						value="<%=cliente.getFecha_nacimiento() != null ? cliente.getFecha_nacimiento().toString() : ""%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Dirección</label> <input type="text"
+						name="direccion" class="form-control" required
+						value="<%=cliente.getDomicilio() != null ? cliente.getDomicilio().getDireccion() : ""%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Localidad</label> <select
+						name="localidad" class="form-select" required>
+						<option value="" disabled>Seleccionar localidad</option>
+						<%
+						if (localidades != null) {
+							for (Localidad loc : localidades) {
+								boolean selected = cliente.getDomicilio() != null && cliente.getDomicilio().getLocalidad() != null
+								&& loc.getId() == cliente.getDomicilio().getLocalidad().getId();
+						%>
+						<option value="<%=loc.getId()%>" <%=selected ? "selected" : ""%>><%=loc.getNombre()%></option>
+						<%
+						}
+						}
+						%>
+					</select>
+				</div>
+
+				<div class="col">
+					<label class="form-label">Teléfono</label> <input type="text"
+						name="telefono" class="form-control" required
+						value="<%=cliente.getTelefono()%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Correo electrónico</label> <input
+						type="email" name="email" class="form-control" required
+						value="<%=cliente.getEmail()%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Provincia</label> <input type="text"
+						class="form-control" value="Buenos Aires" readonly>
+				</div>
+
+				<div class="col-12 d-flex justify-content-center mt-4">
+					<button type="submit" class="btn btn-warning px-5">
+						<i class="bi bi-pencil-square me-2"></i>Modificar
+					</button>
+				</div>
+			</form>
+		</div>
+		<%
+		}
+		%>
 	</main>
+
 	<jsp:include page="../../Footer.jsp" />
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
