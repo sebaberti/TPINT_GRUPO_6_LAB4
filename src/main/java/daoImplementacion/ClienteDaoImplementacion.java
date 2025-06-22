@@ -255,6 +255,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	}
 
 	@Override
+
 	public Cliente clientePorDNI(String dni) {
 		Cliente cliente = null;
 		Connection conexion = null;
@@ -293,21 +294,21 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, dni);
 			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				cliente = new Cliente();
-				cliente.setId(rs.getInt("c.id"));
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setDNI(rs.getString("dni"));
-				Usuario usuario = new Usuario();
-				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
-				cliente.setUsuario(usuario);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return cliente;
-	}
+            while (rs.next()) {
+                cliente = new Cliente();
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setApellido(rs.getString("apellido"));
+                cliente.setDNI(rs.getString("dni"));
+                Usuario usuario = new Usuario();
+                usuario.setNombreUsuario(rs.getString("nombre_usuario"));
+                cliente.setUsuario(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cliente;
+    }
+			
 	
 	@Override
 	public Cliente obtenerClientePorIdUsuario(int idUsuario) {
