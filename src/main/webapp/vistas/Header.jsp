@@ -30,6 +30,11 @@
                             (<%= tipoUsuario.equals("administrador") ? "Administrador" : "Cliente" %>)
                         </span>
                     </li>
+                    <% if ("cliente".equals(tipoUsuario)) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/PerfilServlet">Mi Perfil</a>
+                    </li>
+                    <% } %>
                     <li class="nav-item">
                       <a class="nav-link" href="${pageContext.request.contextPath}/LogoutServlet">Cerrar Sesión</a>
                     </li>

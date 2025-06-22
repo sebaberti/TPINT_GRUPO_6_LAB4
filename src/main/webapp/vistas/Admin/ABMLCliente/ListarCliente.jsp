@@ -97,7 +97,7 @@
 						<td><%=(c.getEstado() != null && c.getEstado()) ? "Activo" : "Inactivo"%></td>
 						<td>
 							<button type="button" class="btn btn-warning btn-sm"
-								onclick="location.href='ModificarCliente.jsp?dni=<%=c.getDNI()%>'">
+								onclick="location.href='${pageContext.request.contextPath}/CargarClienteServlet?dni=<%=c.getDNI()%>'">
 								<i class="bi bi-pencil-square"></i>
 							</button>
 
