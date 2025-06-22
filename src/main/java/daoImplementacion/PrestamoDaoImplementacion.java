@@ -1,5 +1,6 @@
 package daoImplementacion;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 	public boolean ejecutarSPsolicitarPrestamoar(Prestamo prestamo) {
 	
 		 try
-		  {
+		  {/*
 			 Connection conexion = Conexion.getConexion().getSQLConexion();
 			 CallableStatement cst = conexion.prepareCall("CALL crearUsuario(?,?)");
 			 cst.setString(1, usuario.getNombre());
@@ -29,7 +30,7 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 			}
 	}
 /*
