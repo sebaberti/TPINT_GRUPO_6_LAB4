@@ -24,8 +24,6 @@ public class TransferenciaDaoImplementacion implements TransferenciaDao {
      	
         String query = "INSERT INTO transferencias (cuenta_origen, cuenta_destino, monto, fecha) VALUES (?, ?, ?, ?)";
 
-  
-
         try {
             conexion = Conexion.getConexion().getSQLConexion();
             statement = conexion.prepareStatement(query);
@@ -86,8 +84,6 @@ public class TransferenciaDaoImplementacion implements TransferenciaDao {
                 transferencia.setCuentaDestino(cuentaDestino);
 
                 transferencia.setMonto(rs.getDouble("monto"));
-
-                // Convert Timestamp a LocalDateTime
                 transferencia.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
 
                 transferencias.add(transferencia);
