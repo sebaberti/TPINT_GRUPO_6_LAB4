@@ -141,7 +141,7 @@ if (tipoUsuario  == "administrador") {
         </div>
 
         <div class="carousel-item" style="height: 350px; background:url('${pageContext.request.contextPath}/img/slider3.png') center center / cover no-repeat;">
-          <
+          
         </div>
 
         <div class="carousel-item" style="height: 350px; background:url('${pageContext.request.contextPath}/img/slider4.png') center center / cover no-repeat;">
