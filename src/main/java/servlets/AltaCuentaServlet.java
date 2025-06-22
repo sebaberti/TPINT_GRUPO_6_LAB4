@@ -53,16 +53,14 @@ public class AltaCuentaServlet extends HttpServlet {
 
 				    try {
 				        int dni = Integer.parseInt(dniFiltro); //valido que sea un int
-				        
 				        cliente = clienteDao.clientePorDNI(dni);
-
+				        request.setAttribute("cliente", cliente);
 				    } catch (NumberFormatException e) {
 				        request.setAttribute("errorDni", "El DNI ingresado no es válido.");
 				    }
-
 			}
 
-			request.setAttribute("cliente", cliente);
+			//request.setAttribute("cliente", cliente);
 			
 			System.out.println(tiposCuenta);
 			request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
@@ -76,11 +74,11 @@ public class AltaCuentaServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
-			request.setAttribute("error", "Debe seleccionar un Cliente");
-			request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
-			return;
-		}
+//		if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
+//			request.setAttribute("error", "Debe seleccionar un Cliente");
+//			request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
+//			return;
+//		}
 		
 		
 		doGet(request, response);
