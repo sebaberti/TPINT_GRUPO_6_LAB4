@@ -14,4 +14,10 @@ public class CuentaTipoNegocioImplementacion implements CuentaTipoNegocio{
 		return tsi.listar();
 	}
 
+	@Override
+	public CuentaTipo buscarPorId(int tipoCuentaId) {
+		CuentaTipoDaoImplementacion tsi= new CuentaTipoDaoImplementacion();
+		return tsi.buscarPorId(tipoCuentaId);
+	}
+
 }

@@ -14,4 +14,5 @@ public interface ClienteNegocio {
 	public Cliente clientePorDNI(String dni);
 	public Cliente clientePorDNI(int dni);
 	public Cliente obtenerClientePorIdUsuario(int idUsuario);
+	boolean admiteNuevaCuenta(int idCliente);
 }

@@ -285,29 +285,31 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	
 	@Override
 	public Cliente clientePorDNI(int dni) {
+		// Obtengo el cliente solo si está activo (este es apra alta de cuenta)
 		Cliente cliente = null;
 		Connection conexion = null;
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
-			String query = "SELECT c.nombre, c.apellido, c.dni, c.id_usuario, u.nombre_usuario " + "FROM Clientes c "
+			String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.id_usuario, u.nombre_usuario " + "FROM Clientes c "
 					+ "JOIN Usuarios u ON c.id_usuario = u.id " + "WHERE c.dni = ? AND u.estado = 1";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, dni);
 			ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                cliente = new Cliente();
-                cliente.setNombre(rs.getString("nombre"));
-                cliente.setApellido(rs.getString("apellido"));
-                cliente.setDNI(rs.getString("dni"));
-                Usuario usuario = new Usuario();
-                usuario.setNombreUsuario(rs.getString("nombre_usuario"));
-                cliente.setUsuario(usuario);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return cliente;
-    }
+			while (rs.next()) {
+				cliente = new Cliente();
+				cliente.setId(rs.getInt("id"));
+				cliente.setNombre(rs.getString("nombre"));
+				cliente.setApellido(rs.getString("apellido"));
+				cliente.setDNI(rs.getString("dni"));
+				Usuario usuario = new Usuario();
+				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
+				cliente.setUsuario(usuario);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cliente;
+	}
 			
 	
 	@Override

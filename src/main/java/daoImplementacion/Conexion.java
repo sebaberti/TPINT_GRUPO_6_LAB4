@@ -13,7 +13,9 @@ public class Conexion {
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver"); 
-			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/banco?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8", "root", "root");
+			//this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/banco?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8", "root", "root");
+			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/banco?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8", "root", "root");
+
 			try {
 			    // Asegurar que la base de datos esté en UTF-8
 			    this.connection.createStatement().execute("SET NAMES 'utf8mb4'");

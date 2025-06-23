@@ -28,8 +28,8 @@ public class CuentaTipoDaoImplementacion implements CuentaTipoDao {
 			
 			while (rs.next()) {
 				CuentaTipo tipoCuenta = new CuentaTipo();
-				tipoCuenta.setId(rs.getInt(1));
-				tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString(2)));
+				tipoCuenta.setId(rs.getInt("id"));
+				tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("descripcion")));
 				listaTiposCuentas.add(tipoCuenta);
 			}
 
@@ -37,5 +37,32 @@ public class CuentaTipoDaoImplementacion implements CuentaTipoDao {
 			e.printStackTrace();
 		}
 		return listaTiposCuentas;
+	}
+
+	@Override
+	public CuentaTipo buscarPorId(int tipoCuentaId) {
+		Connection conexion = null;
+        PreparedStatement statement= null;
+   	 	ResultSet rs= null;
+       
+        String query ="SELECT id, descripcion FROM Tipos_Cuentas WHERE id= ?";
+        
+		try {
+			conexion = Conexion.getConexion().getSQLConexion();
+			statement = conexion.prepareStatement(query);
+			statement.setInt(1,tipoCuentaId);
+			rs = statement.executeQuery();
+			
+			while (rs.next()) {
+				CuentaTipo tipoCuenta = new CuentaTipo();
+				tipoCuenta.setId(rs.getInt("id"));
+				tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("descripcion")));
+				return tipoCuenta;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

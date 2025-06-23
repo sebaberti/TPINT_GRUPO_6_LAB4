@@ -1,5 +1,6 @@
 package daoImplementacion;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,12 +76,12 @@ public class TransferenciaDaoImplementacion implements TransferenciaDao {
 
                 Cuenta cuentaOrigen = new Cuenta();
                 cuentaOrigen.setId(rs.getInt("id_cuenta_origen"));
-                cuentaOrigen.setCBU(rs.getString("cbu_origen"));
+                cuentaOrigen.setCBU(new BigInteger(rs.getString("cbu_origen")));
                 transferencia.setCuentaOrigen(cuentaOrigen);
 
                 Cuenta cuentaDestino = new Cuenta();
                 cuentaDestino.setId(rs.getInt("id_cuenta_destino"));
-                cuentaDestino.setCBU(rs.getString("cbu_destino"));
+                cuentaDestino.setCBU(new BigInteger(rs.getString("cbu_destino")));
                 transferencia.setCuentaDestino(cuentaDestino);
 
                 transferencia.setMonto(rs.getDouble("monto"));
