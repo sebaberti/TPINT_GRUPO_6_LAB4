@@ -8,6 +8,7 @@
 <!--  <meta charset="UTF-8"> -->
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Listar Cuentas</title>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> <!-- jQuery (requerido por DataTables) -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -18,6 +19,16 @@
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/Cuentas/estiloListarCuentas.css">
+    <script>
+  $(document).ready(function () {
+    $('#tabla_cuentas').DataTable({
+    searching: false,
+      language: {
+    	  url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
 </head>
 
 <body>
@@ -71,7 +82,7 @@
 
 		<!-- Tabla de cuentas -->
 		<div class="table-responsive mt-5">
-			<table
+			<table id="tabla_cuentas"
 				class="table table-bordered table-hover align-middle text-center tabla-cuentas">
 				<thead class="table-light">
 					<tr>
@@ -134,6 +145,10 @@
 	</main>
 
 	<jsp:include page="/vistas/Footer.jsp" />
+		<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
