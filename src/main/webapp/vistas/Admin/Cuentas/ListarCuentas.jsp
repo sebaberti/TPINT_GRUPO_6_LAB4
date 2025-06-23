@@ -94,7 +94,7 @@
 						<td><%=c.getNumeroCuenta()%></td>
 						<td><%=c.getCliente().getDNI()%></td>
 						<td><%=c.getTipoCuenta().getDescripcion()%></td>
-						<td><%=c.getCBU()%></td>
+						<td><%=c.getCBU().toString()%></td>
 						<td><%=c.getSaldo()%></td>
 						<%
 						if (c.isEstado()) {
@@ -138,4 +138,3 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

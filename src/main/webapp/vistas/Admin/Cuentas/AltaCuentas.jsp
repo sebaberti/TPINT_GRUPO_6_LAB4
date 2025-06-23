@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="negocioImplementacion.CuentaTipoNegocioImplementacion" %>
 <%@ page import="entidades.Cliente"%>
 <%@ page import="entidades.CuentaTipo"%>
 <!DOCTYPE html>
@@ -24,7 +25,6 @@
 
 	<%
 		Cliente cliente = (Cliente) request.getAttribute("cliente");
-		List<CuentaTipo> tiposCuenta = (List<CuentaTipo>)request.getAttribute("tiposCuenta");
 		%>
 
 
@@ -38,10 +38,22 @@
 				<input type="text" class="form-control"
 					placeholder="Ingrese DNI del cliente"
 					value="<%= (cliente != null) ? cliente.getDNI() : "" %>"
-					name="txtDniCliente" required>
+					name="DniCliente" required>
 				<button class="btn btn-success" name="btnBuscar" type="submit">&#128269;</button>
 			</div>
+			 <% String error = (String) request.getAttribute("error");
+			 String  exito = (String) request.getAttribute("exito");
 
+   if (error != null) {
+%>
+<div class="mb-3">
+   <p style="color:red;"><%= error %></p>
+   </div>
+<% } else if(exito!=null){%>
+<div class="mb-3">
+   <p style="color:green;"><%= exito %></p>
+   </div>
+   <% }%>
 			<div class="mb-3">
 				<label for="usuario" class="form-label">Usuario:</label> <input
 					type="text" class="form-control bg-light" id="usuario"
@@ -51,6 +63,8 @@
 			</div>
 
 			<div class="row g-3">
+			<!-- Campo oculto con ID cliente -->
+    		<input type="hidden" name="idCliente" value="<%=(cliente != null) ? cliente.getId() :""%>">
 				<div class="col-md-6">
 					<label for="nombre" class="form-label">Nombre:</label> <input
 						type="text" class="form-control bg-light" id="nombre"
@@ -68,21 +82,39 @@
 			</div>
 
 			<div class="mt-4 mb-3">
-				<label for="tipoCuenta" class="form-label">Tipo de cuenta:</label> <select
-					class="form-select" id="tipoCuenta" name="tipoCuenta">
+				<label for="tipoCuenta" class="form-label">Tipo de cuenta:</label> 
+				<select class="form-select" id="tipoCuenta" name="tipoCuenta">
 					<option selected disabled>Seleccione una opción</option>
-					<%for (CuentaTipo t : tiposCuenta) {%>
+					<% 
+					 CuentaTipoNegocioImplementacion tsi= new CuentaTipoNegocioImplementacion();
+					  ArrayList<CuentaTipo> tiposCuenta= tsi.listarTiposCuenta();
+					if(tiposCuenta!=null){
+					for (CuentaTipo t : tiposCuenta) {%>
 					<option value="<%=t.getId()%>"><%=t.getDescripcion()%></option>
-					<%}%>
-
+					<%}}%>
 				</select>
+			<%	String errorTipoCuenta = (String) request.getAttribute("errorTipoCuenta");
+			if (errorTipoCuenta != null) {%>
+<div class="mb-3">
+   <p style="color:red;"><%= errorTipoCuenta %></p>
+   </div>
+<% } %>
+
+			<%	String mensajeError = (String) request.getAttribute("mensajeError");
+			if (mensajeError != null) {%>
+<div class="mb-3">
+   <p style="color:red;"><%= mensajeError %></p>
+   </div>
+<% } %>
+
 			</div>
 
 			<div class="d-flex justify-content-end gap-2">
 				<!-- <button type="button" class="btn btn-primary" onclick="validarYCrearCuenta()">Crear Cuenta</button> -->
-				<input type="submit" class="btn-crear" value="Crear Cuenta">
+				<input type="submit" class="btn-crear" name="btnCrear" value="Crear Cuenta">
 			</div>
 		</form>
+
 	</div>
 	
 	<!-- Modal si el usuario está vacío -->
