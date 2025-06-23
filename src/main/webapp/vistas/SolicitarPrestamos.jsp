@@ -1,8 +1,23 @@
+<%
+    session = request.getSession(false);
+	int idUsuario=0;
+    if (session == null || session.getAttribute("usuarioId") == null) {
+        response.sendRedirect("Login.jsp");
+        return;
+    } else {
+    	idUsuario= (int)session.getAttribute("usuarioId");   
+
+    }
+%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.time.*, java.time.format.*, java.util.*, java.math.BigDecimal"%>
+<%@ page import="entidades.Cliente"%>
 <%@ page import="entidades.Plazo"%>
+<%@ page import="entidades.Cuenta"%>
 <%@ page import="negocioImplementacion.PlazoNegocioImplementacion"%>
+<%@ page import= "negocioImplementacion.ClienteNegocioImplementacion" %>
+<%@ page import= "negocioImplementacion.CuentaNegocioImplementacion" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +34,6 @@
 
 	<div class="container mt-5 mb-5">
 		<h2 class="mb-4">Simulá tu Prestamo Personal</h2>
-
 
 		<div class="card">
 			<div class="card-body">
@@ -67,13 +81,48 @@
 					<div class="bordes">
 						<form method="post"
 							action="${pageContext.request.contextPath}/SolicitarPrestamosServlet">
+<% 
+Cliente clienteActivo=null;
+
+if(idUsuario!=0){
+	ClienteNegocioImplementacion clni= new ClienteNegocioImplementacion();
+	clienteActivo= clni.obtenerClientePorIdUsuario(idUsuario);
+
+}
+	CuentaNegocioImplementacion cni= new CuentaNegocioImplementacion();
+	ArrayList<Cuenta> listaCuentasCliente= (ArrayList<Cuenta>) cni.listarCuentasPorClienteId(clienteActivo.getId());
+
+
+	if (listaCuentasCliente == null || listaCuentasCliente.isEmpty()) {
+	    out.println("<div style='color:red;'>No se encontraron cuentas para el cliente con ID: " + clienteActivo.getId() + "</div>");
+	} else {
+	    out.println("<div style='color:green;'>Cantidad de cuentas encontradas: " + listaCuentasCliente.size() + "</div>");
+	}
+	
+	int idCuentaSeleccionada = -1;
+	if (request.getAttribute("idCuentaSeleccionada") != null) {
+		idCuentaSeleccionada = Integer.parseInt(String.valueOf(request.getAttribute("idCuentaSeleccionada")));
+	}
+
+%>
 
 							<div class="mb-3">
-								<label for="" class="form-label">Seleccione una cuenta:</label>
+								<label for="" class="form-label">Cuenta a acreditar: </label>
 								<select name="cuenta" class="form-select">
-									<option value="cuenta 1">cuenta 1</option>
-									<option value="cuenta 2">cuenta 2</option>
-									<option value="cuenta 3">cuenta 3</option>
+									<option value="">-- Seleccione una cuenta --</option>
+									<%
+									for (Cuenta c : listaCuentasCliente) {
+										String selected="";
+										if(c.getId() == idCuentaSeleccionada){
+											selected="selected";											
+										}
+									%>
+									    <option value="<%=c.getId()%>" <%=selected%>>
+        								<%= c.getNumeroCuenta() %>
+    									</option>				
+									<%
+									}
+									%>
 								</select>
 
 								<div id="avisoCuenta" class="form-text">En esta cuenta se

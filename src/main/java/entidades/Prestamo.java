@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 public class Prestamo {
 	private int id;
-	private Cliente cliente;
 	private Cuenta cuenta;
 	private LocalDate fechaAlta;
 	private BigDecimal importePedido;
@@ -15,12 +14,10 @@ public class Prestamo {
 	public Prestamo() {
 	}
 	
-	public Prestamo(int id, Cliente cliente, Cuenta cuenta, LocalDate fechaAlta, BigDecimal importePedido, Plazo plazo,
-			boolean estado) {
-		super();
+	public Prestamo(int id, Cuenta cuenta, LocalDate fechaAlta, BigDecimal importePedido, Plazo plazo,
+			boolean estado) {	
 		this.id = id;
-		this.cliente = cliente;
-		this.cuenta = cuenta;
+		this.cuenta= cuenta;
 		this.fechaAlta = fechaAlta;
 		this.importePedido = importePedido;
 		this.plazo = plazo;
@@ -35,22 +32,14 @@ public class Prestamo {
 		this.id = id;
 	}
 
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
 	public Cuenta getCuenta() {
 		return cuenta;
 	}
-
+	
 	public void setCuenta(Cuenta cuenta) {
-		this.cuenta = cuenta;
+		this.cuenta= cuenta;
 	}
-
+	
 	public LocalDate getFechaAlta() {
 		return fechaAlta;
 	}
@@ -83,12 +72,5 @@ public class Prestamo {
 		this.estado = estado;
 	}
 
-	@Override
-	public String toString() {
-		return "Prestamo [id=" + id + ", cliente=" + cliente + ", cuenta=" + cuenta + ", fechaAlta=" + fechaAlta
-				+ ", importePedido=" + importePedido + ", plazo=" + plazo + ", estado=" + estado + "]";
-	}
-	
-	
 	
 }

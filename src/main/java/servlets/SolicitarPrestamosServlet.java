@@ -50,11 +50,24 @@ public void simularPrestamo(HttpServletRequest request, HttpServletResponse resp
 	boolean datosValidos = true;			
 	double monto = 0.0;			
 	int cantCuotas = 0;
+	String cuentaParam;
 	String montoParam;
 	String cuotasParam;
 	String mensajeError = "";
 
-	
+
+    try {
+    	if (request.getParameter("cuenta") != null && !request.getParameter("cuenta").isEmpty()) {
+    	cuentaParam = request.getParameter("cuenta");		
+		request.setAttribute("idCuentaSeleccionada", cuentaParam);
+    	} else {
+    		mensajeError+= "Debe seleccionar una cuenta<br>";
+    		datosValidos=false;
+    	}
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+    
 	    try {
 	    	if (request.getParameter("monto") != null && !request.getParameter("monto").isEmpty()) {
 	    	montoParam = request.getParameter("monto");		

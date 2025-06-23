@@ -1,38 +1,39 @@
 package daoImplementacion;
 
-/*import java.sql.CallableStatement;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.util.List;
 
 import dao.PrestamoDao;
+import entidades.Cliente;
+import entidades.Cuenta;
 import entidades.Prestamo;
 
 public class PrestamoDaoImplementacion implements PrestamoDao{
 
 	@Override
-	public boolean ejecutarSPsolicitarPrestamoar(Prestamo prestamo) {
-	
-		/* try
-		  {/*
+	public boolean ejecutarSPsolicitarPrestamo(Prestamo prestamo, Cliente cliente) {
+	boolean estado= false;
+		 try
+		  {
 			 Connection conexion = Conexion.getConexion().getSQLConexion();
-			 CallableStatement cst = conexion.prepareCall("CALL crearUsuario(?,?)");
-			 cst.setString(1, usuario.getNombre());
-			 cst.setString(2, usuario.getApellido());
-			 cst.execute();
+			 CallableStatement cst = conexion.prepareCall("CALL SolicitarPrestamo(?,?,?,?)");
+			 cst.setInt(1, cliente.getId());  
+			 Cuenta aux= prestamo.getCuenta();
+		     cst.setInt(2, aux.getId());             
+		     cst.setBigDecimal(3, prestamo.getImportePedido()); 
+		     cst.setInt(4, prestamo.getPlazo().getId());  
+			 estado=cst.execute();		
 			 
+			 conexion.commit();
+
+		    return estado;
 		  }
 		  catch (Exception e) {
 			e.printStackTrace();
-		}
-		  finally {
-				try {
-					cn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-/*}/*
-	}/*
+			return false;
+		  }
+	}
 /*
 	@Override
 	public boolean modificar(Prestamo prestamo) {
@@ -53,3 +54,6 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 	}
 */
 
+
+
+}
