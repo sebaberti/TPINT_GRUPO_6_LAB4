@@ -320,7 +320,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	    try {
 	    	conexion = Conexion.getConexion().getSQLConexion();
-	    	String query = "SELECT c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad " +
+	    	String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad " +
 	                   "FROM Clientes c " +
 	                   "JOIN Paises p ON c.id_nacionalidad = p.id " +
 	                   "WHERE c.id_usuario = ?";
@@ -331,6 +331,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	        if (rs.next()) {
 	            cliente = new Cliente();
+	            cliente.setId(rs.getInt("c.id"));
 	            cliente.setNombre(rs.getString("nombre"));
 	            cliente.setApellido(rs.getString("apellido"));
 	            cliente.setDNI(rs.getString("dni"));
