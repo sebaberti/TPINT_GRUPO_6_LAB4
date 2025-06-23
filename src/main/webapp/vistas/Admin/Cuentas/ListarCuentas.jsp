@@ -105,7 +105,7 @@
 						<td><%=c.getNumeroCuenta()%></td>
 						<td><%=c.getCliente().getDNI()%></td>
 						<td><%=c.getTipoCuenta().getDescripcion()%></td>
-						<td><%=c.getCBU().toString()%></td>
+						<td><%=c.getCBU()%></td>
 						<td><%=c.getSaldo()%></td>
 						<%
 						if (c.isEstado()) {
