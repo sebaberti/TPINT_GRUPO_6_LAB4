@@ -103,8 +103,8 @@
 
 						</td>
 						<td>
-							<button type="button" class="btn btn-danger btn-sm"
-								onclick="location.href='EliminarCliente.jsp'">
+							<button type="submit" class="btn btn-danger btn-sm"
+								onclick="location.href='${pageContext.request.contextPath}/BajaClienteServlet?dni=<%=c.getDNI()%>&cuil=<%=c.getCUIL()%>&vieneDeListar=btnEliminar'">
 								<i class="bi bi-trash"></i>
 							</button>
 						</td>
