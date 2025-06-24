@@ -1,5 +1,6 @@
 package servlets;
 
+import entidades.Cliente;
 import entidades.Usuario;
 import java.io.IOException;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import negocio.UsuarioNegocio;
+import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.UsuarioNegocioImpl;
 
 @WebServlet("/LoginServlet")
@@ -33,7 +35,11 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("usuarioId", usuario.getId());
             session.setAttribute("nombreUsuario", usuario.getNombreUsuario());
             session.setAttribute("rol", usuario.getIdRol() == 1 ? "administrador" : "cliente");
-
+            
+            ClienteNegocioImplementacion clni = new ClienteNegocioImplementacion();
+            Cliente clienteActivo = clni.obtenerClientePorIdUsuario(idUsuario);
+            session.setAttribute("clienteActivo", clienteActivo);
+            
             response.sendRedirect(request.getContextPath() + "/vistas/Inicio.jsp");
         	
         } else {

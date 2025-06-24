@@ -112,6 +112,17 @@ CREATE TABLE `Tipos_Movimientos` (
     `descripcion` VARCHAR(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `Transferencias` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `cuenta_origen` INT NOT NULL,
+    `cuenta_destino` INT NOT NULL,
+    `monto` DECIMAL(15,2) NOT NULL CHECK (monto > 0),
+    `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `descripcion` VARCHAR(255),
+    CONSTRAINT `FK_transferencia_origen` FOREIGN KEY (`cuenta_origen`) REFERENCES `Cuentas`(`id`),
+    CONSTRAINT `FK_transferencia_destino` FOREIGN KEY (`cuenta_destino`) REFERENCES `Cuentas`(`id`)
+);
+
 CREATE TABLE `Movimientos` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `id_cuenta` INT NOT NULL,
@@ -157,18 +168,6 @@ CREATE TABLE `Cuotas` (
     `estado` BOOLEAN NOT NULL DEFAULT 0,
     CONSTRAINT `FK_prestamo_cuota` FOREIGN KEY (`id_prestamo`) REFERENCES `Prestamos`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `Transferencias` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `cuenta_origen` INT NOT NULL,
-    `cuenta_destino` INT NOT NULL,
-    `monto` DECIMAL(15,2) NOT NULL CHECK (monto > 0),
-    `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `descripcion` VARCHAR(255),
-    CONSTRAINT `FK_transferencia_origen` FOREIGN KEY (`cuenta_origen`) REFERENCES `Cuentas`(`id`),
-    CONSTRAINT `FK_transferencia_destino` FOREIGN KEY (`cuenta_destino`) REFERENCES `Cuentas`(`id`)
-);
-
 
 DROP TRIGGER IF EXISTS `crear_cuenta_con_saldo`;
 
