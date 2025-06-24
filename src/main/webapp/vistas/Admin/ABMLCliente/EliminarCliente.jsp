@@ -12,7 +12,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/estiloRegistro.css">
+	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 <title>Eliminar cliente</title>
 
 </head>
@@ -189,7 +189,7 @@
 			%>
 		</div>
 	</main>
-	<jsp:include page="../../Footer.jsp" />
+	
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/Validaciones/validaciones.js"></script>

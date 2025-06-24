@@ -94,6 +94,10 @@ public class Cuenta {
 	public double getSaldo() {
 		return saldo;
 	}
+	
+	 public boolean getEstado() {
+			return estado;
+		}
 
 	public void setSaldo(double saldo) {
 		this.saldo = saldo;

@@ -33,14 +33,6 @@ public class TransferenciaServlet extends HttpServlet {
 
         List<Cuenta> cuentasCliente = cuentaNegocio.listarCuentasPorClienteId(idCliente);
 
-        System.out.println("DEBUG: cuentasCliente.size() = " + (cuentasCliente != null ? cuentasCliente.size() : "null"));
-        if (cuentasCliente != null) {
-            for (Cuenta c : cuentasCliente) {
-                System.out.println("Cuenta: ID=" + c.getId() + ", CBU=" + c.getCBU() + ", Saldo=" + c.getSaldo() +
-                    ", Tipo=" + (c.getTipoCuenta() != null ? c.getTipoCuenta().getDescripcion() : "null"));
-            }
-        }
-
         request.setAttribute("cuentasCliente", cuentasCliente);
         request.getRequestDispatcher("/vistas/Transferencia.jsp").forward(request, response);
     }
@@ -50,7 +42,6 @@ public class TransferenciaServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession sesion = request.getSession();
         Integer idCliente = (Integer) sesion.getAttribute("usuarioId");
-        System.out.println("DEBUG: idCliente desde sesión = " + idCliente);
 
         try {
             int cuentaOrigenId = Integer.parseInt(request.getParameter("cuentaOrigen"));
@@ -64,10 +55,14 @@ public class TransferenciaServlet extends HttpServlet {
 
                 if (cuentaDestino == null) {
                     request.setAttribute("error", "El CBU de destino no existe.");
+                } else if (cuentaDestino.getEstado() != true) {
+                    request.setAttribute("error", "La cuenta de destino está inactiva.");
                 } else {
                     Cuenta cuentaOrigen = cuentaNegocio.obtenerCuentaPorId(cuentaOrigenId);
-
-                    if (cuentaOrigen.getSaldo() < monto) {
+                	
+                    if (cuentaOrigen.getEstado() != true) {
+                        request.setAttribute("error", "La cuenta de origen está inactiva.");
+                    } else if (cuentaOrigen.getSaldo() < monto) {
                         request.setAttribute("error", "Saldo insuficiente.");
                     } else {
                         Transferencia transferencia = new Transferencia();
@@ -93,13 +88,6 @@ public class TransferenciaServlet extends HttpServlet {
     
         List<Cuenta> cuentasCliente = cuentaNegocio.listarCuentasPorClienteId(idCliente);
 
-        System.out.println("DEBUG: cuentasCliente.size() = " + (cuentasCliente != null ? cuentasCliente.size() : "null"));
-        if (cuentasCliente != null) {
-            for (Cuenta c : cuentasCliente) {
-                System.out.println("Cuenta: ID=" + c.getId() + ", CBU=" + c.getCBU() + ", Saldo=" + c.getSaldo() +
-                    ", Tipo=" + (c.getTipoCuenta() != null ? c.getTipoCuenta().getDescripcion() : "null"));
-            }
-        }
 
         request.setAttribute("cuentasCliente", cuentasCliente);
         request.getRequestDispatcher("/vistas/Transferencia.jsp").forward(request, response);

@@ -32,7 +32,7 @@ if (cliente != null && cliente.getCUIL() != null) {
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/estiloRegistro.css">
+	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
 <body>
 	<jsp:include page="../../Header.jsp" />

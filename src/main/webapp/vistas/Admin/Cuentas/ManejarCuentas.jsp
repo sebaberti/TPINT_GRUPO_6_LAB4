@@ -6,8 +6,8 @@
     <title>Manejar Cuentas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Cuentas/estiloManejarCuentas.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
 
 <body>
@@ -72,7 +72,7 @@
 		</div>
 	</main>
 
-	<jsp:include page="/vistas/Footer.jsp" />
+	<jsp:include page="../../Footer.jsp" />
 	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

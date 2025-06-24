@@ -195,7 +195,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
         PreparedStatement statement= null;
    	 	ResultSet rs= null;
    	 	
-	    String query = "SELECT * FROM cuentas WHERE cbu = ? AND estado = true";
+	    String query = "SELECT * FROM cuentas WHERE cbu = ?";
 
 	    try { 
 	    	conexion = Conexion.getConexion().getSQLConexion();
