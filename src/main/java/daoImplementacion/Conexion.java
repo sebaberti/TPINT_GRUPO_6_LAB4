@@ -38,13 +38,17 @@ public class Conexion {
 	}
 	
 	
-	public static Conexion getConexion()   
-	{								
-		if(instancia == null)
+	public static Conexion getConexion() 
+	{	
+		try {
+			if (instancia == null || instancia.connection == null || instancia.connection.isClosed()) {
+				instancia = new Conexion();
+			}	 
+		} catch(SQLException e)
 		{
-			instancia = new Conexion();
+			e.printStackTrace();
 		}
-		return instancia;
+		 return instancia;	
 	}
 
 	public Connection getSQLConexion() 

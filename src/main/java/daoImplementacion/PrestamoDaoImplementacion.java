@@ -20,7 +20,7 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 		 try
 		  {
 			 Connection conexion = Conexion.getConexion().getSQLConexion();
-			 CallableStatement cst = conexion.prepareCall("CALL SolicitarPrestamo(?,?,?,?)");
+			 CallableStatement cst = conexion.prepareCall("CALL banco.SolicitarPrestamo(?,?,?,?)");
 			 cst.setInt(1, idCliente);  		
 		     cst.setInt(2, idCuenta);             
 		     cst.setBigDecimal(3, monto); 

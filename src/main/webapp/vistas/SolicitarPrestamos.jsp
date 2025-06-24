@@ -3,11 +3,16 @@
 <%@ page import="java.time.*, java.time.format.*, java.util.*, java.math.BigDecimal"%>
 <%@ page import="entidades.Plazo"%>
 <%@ page import="entidades.Cuenta"%>
+<%@ page import="entidades.Cliente"%>
 <%
     if (session == null || session.getAttribute("usuarioId") == null) {
         response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
         return;
     }
+Cliente clienteActivo = null;
+if (session != null && session.getAttribute("clienteActivo") != null) {
+    clienteActivo = (Cliente) session.getAttribute("clienteActivo");
+}
 %>
 <!DOCTYPE html>
 <html>

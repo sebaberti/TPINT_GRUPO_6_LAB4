@@ -69,6 +69,7 @@ public class SolicitarPrestamosServlet extends HttpServlet {
 		if(request.getParameter("btnConfirmar") != null) {
 		    try {
 		        Cliente clienteActivo = (Cliente) request.getSession().getAttribute("clienteActivo");
+		        int idCliente= clienteActivo.getId();
 		        int idCuenta = Integer.parseInt(request.getParameter("cuenta"));
 		        BigDecimal monto = new BigDecimal(request.getParameter("monto").replace(".", "").replace(",", "."));
 		        int idPlazo = Integer.parseInt(request.getParameter("OpcionesPlazo"));
@@ -95,13 +96,12 @@ public class SolicitarPrestamosServlet extends HttpServlet {
 
 public void cargarFormulario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	 HttpSession session = request.getSession(false);
-     int idUsuario = (int) session.getAttribute("usuarioId");
-     
-    ClienteNegocioImplementacion clni = new ClienteNegocioImplementacion();
-    Cliente clienteActivo = clni.obtenerClientePorIdUsuario(idUsuario);
-    session.setAttribute("clienteActivo", clienteActivo);
+	 Cliente clienteActivo = null;
 
-    
+	 if (session != null && session.getAttribute("clienteActivo") != null) {
+	     clienteActivo = (Cliente) session.getAttribute("clienteActivo");
+	 }
+
     if (clienteActivo != null) {
         CuentaNegocioImplementacion cni = new CuentaNegocioImplementacion();
         ArrayList<Cuenta> listaCuentas = (ArrayList<Cuenta>) cni.listarCuentasPorClienteId(clienteActivo.getId());
