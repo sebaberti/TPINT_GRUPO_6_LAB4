@@ -304,33 +304,34 @@ DELIMITER $$
 CREATE PROCEDURE SP_BAJA_CLIENTE(IN dni_cliente VARCHAR(8), IN cuil_cliente VARCHAR(20))
 BEGIN
     DECLARE id_usuario INT;
+    DECLARE id_cliente INT;
     DECLARE fila_cliente INT DEFAULT 0;
     DECLARE fila_usuario INT DEFAULT 0;
     DECLARE resultado INT DEFAULT 0;
 
 	START TRANSACTION;
     
-    IF EXISTS (SELECT 1 FROM Clientes WHERE dni = dni_cliente AND cuil = cuil_cliente) THEN 
+    SELECT C.id, C.id_usuario INTO id_cliente, id_usuario 
+    FROM  Clientes AS C 
+    WHERE C.dni = C.dni_cliente AND cuil = cuil_cliente;
+    
+    IF id_cliente IS NOT NULL THEN 
 		
-		SELECT C.id_usuario INTO id_usuario FROM  Clientes AS C WHERE dni = dni_cliente AND cuil = cuil_cliente;
+		UPDATE Clientes AS C SET estado = false WHERE C.id = id_cliente;
+		SET fila_cliente = ROW_COUNT();
+	
+        UPDATE Usuarios AS U SET estado = false WHERE U.id = id_usuario;
+		SET fila_usuario = ROW_COUNT();
         
-        IF EXISTS(SELECT 1 FROM Usuarios WHERE id = id_usuario) THEN
-   
-			UPDATE Clientes SET estado = false WHERE dni = dni_cliente AND cuil = cuil_cliente;
-            SET fila_cliente = ROW_COUNT();
-			UPDATE Usuarios SET estado = false WHERE id = id_usuario;
-            SET fila_usuario = ROW_COUNT();
+        UPDATE Cuentas AS C SET C.estado = false WHERE C.id_cliente = id_cliente;
+            
 		ELSE
 			ROLLBACK;
 		END IF;
-
+			
 	COMMIT;
     
     SET resultado = fila_cliente + fila_usuario;
     SELECT resultado;
-    
-    ELSE
-		ROLLBACK;
-	END IF;
 END$$
 DELIMITER ;
