@@ -8,7 +8,8 @@
 <!--  <meta charset="UTF-8"> -->
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Listar Cuentas</title>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> <!-- jQuery (requerido por DataTables) -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<!-- jQuery (requerido por DataTables) -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -19,15 +20,19 @@
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/Cuentas/estiloListarCuentas.css">
-    <script>
-  $(document).ready(function () {
-    $('#tabla_cuentas').DataTable({
-    searching: false,
-      language: {
-    	  url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-      }
-    });
-  });
+<script>
+	$(document)
+			.ready(
+					function() {
+						$('#tabla_cuentas')
+								.DataTable(
+										{
+											searching : false,
+											language : {
+												url : "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+											}
+										});
+					});
 </script>
 </head>
 
@@ -118,16 +123,20 @@
 						<%
 						}
 						%>
-						<td>
-							<button type="button" class="btn btn-warning btn-sm">
-								<i class="bi bi-pencil-square"></i>
-							</button>
-						</td>
-						<td>
-							<button type="button" class="btn btn-danger btn-sm">
-								<i class="bi bi-trash"></i>
-							</button>
-						</td>
+						<form method="post" action="ManejarCuentaServlet">
+							<td><input type="hidden" name="idCuenta"
+								value="<%=c.getId()%>">
+								<button type="submit" name="btnModificar" value="modificar"
+									class="btn btn-warning btn-sm">
+									<i class="bi bi-pencil-square"></i>
+								</button></td>
+							<td><input type="hidden" name="idCuenta"
+								value="<%=c.getId()%>">
+								<button type="submit" name="btnEliminar" value="eliminar"
+									class="btn btn-danger btn-sm">
+									<i class="bi bi-trash"></i>
+								</button></td>
+						</form>
 					</tr>
 					<%
 					}
@@ -145,9 +154,11 @@
 	</main>
 
 	<jsp:include page="/vistas/Footer.jsp" />
-		<!-- DataTables -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+	<!-- DataTables -->
+	<script
+		src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
