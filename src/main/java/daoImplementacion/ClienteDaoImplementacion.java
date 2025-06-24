@@ -14,14 +14,15 @@ import entidades.Cliente;
 import entidades.Direccion;
 import entidades.Localidad;
 import entidades.Pais;
+import entidades.Provincia;
 import entidades.Usuario;
 
 public class ClienteDaoImplementacion implements ClienteDao {
-
+	
 	private String insertQuery = "INSERT INTO Clientes(dni, cuil ,nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-	private String validarDNIQuery = "SELECT * FROM Clientes WHERE DNI = ?";
+	private String validarDNIQuery = "SELECT * FROM CLIENTES WHERE DNI = ?";
 	private String validarCUILQuery = "SELECT * FROM Clientes WHERE CUIL = ?";
-	private String bajaQuery = "UPDATE Clientes SET estado = 0 WHERE id=?";
+	private String tienePrestamoQuery = "SELECT COUNT(id_cliente) FROM Prestamos WHERE id_cliente = ? AND estado = 1;";
 
 	public Boolean insertar(Cliente cliente) {
 		int rows = 0;
@@ -83,13 +84,14 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		return false;
 	}
 
-	public Boolean bajaLogica(String dni) {
+	public Boolean bajaLogica(String dni, String cuil) {
 
 		try {
 			Connection conexion = Conexion.getConexion().getSQLConexion();
 			CallableStatement preparedCall;
-			preparedCall = conexion.prepareCall("CALL SP_BAJA_CLIENTE(?)");
+			preparedCall = conexion.prepareCall("CALL SP_BAJA_CLIENTE(?, ?)");
 			preparedCall.setString(1, dni);
+			preparedCall.setString(2, cuil);
 			preparedCall.execute();
 
 			ResultSet resultSet = preparedCall.getResultSet();
@@ -255,26 +257,66 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	}
 
 	@Override
-	public Cliente clientePorDNI(String dni) {
+	public Cliente getCliente(String dni, String cuil) {
 		Cliente cliente = null;
 		Connection conexion = null;
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
-			// Obtengo todos los clientes sin importar su estado
-			String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.id_usuario, c.estado, u.nombre_usuario FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE c.dni = ?";
+			String query = """
+					SELECT
+						c.id, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, c.dni, c.id_nacionalidad, pa.nombre as nacionalidad, c.fecha_nacimiento, c.id_domicilio, c.correo_electronico, c.telefono ,c.id_usuario, c.estado, 
+				        u.nombre_usuario, 
+				        d.id as id_direccion, d.direccion as nombre_direccion, 
+				        l.id as id_localidad, l.nombre as nombre_localidad,
+				        p.id as id_provincia, p.nombre as nombre_provincia,
+				        pa.id as id_pais, pa.nombre as nombre_pais
+					FROM 
+						Clientes c 
+					JOIN Usuarios u 
+						ON c.id_usuario = u.id
+					INNER JOIN domicilios d 
+						ON c.id_domicilio = d.id
+					INNER JOIN localidades l 
+						ON d.id_localidad = l.id
+					INNER JOIN provincias as p
+						ON p.id = d.id_provincia
+					INNER JOIN paises as pa
+						ON pa.id = p.id_pais
+					WHERE c.dni = ? AND c.cuil = ?;
+					""";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setString(1, dni);
+			statement.setString(2, cuil);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				cliente = new Cliente();
 				cliente.setId(rs.getInt("c.id"));
+				cliente.setDNI(rs.getString("dni"));
+				cliente.setCUIL(rs.getString("c.cuil"));
 				cliente.setNombre(rs.getString("nombre"));
 				cliente.setApellido(rs.getString("apellido"));
-				cliente.setDNI(rs.getString("dni"));
+				cliente.setSexo(rs.getString("c.sexo"));
+				cliente.setNacionalidad(new Pais(rs.getInt("c.id_nacionalidad"), rs.getString("nacionalidad")));
+				cliente.getNacionalidad().setId(rs.getInt("c.id_nacionalidad"));
+				cliente.getNacionalidad().setNombre(rs.getString("nacionalidad"));
+				cliente.setFecha_nacimiento(rs.getDate("c.fecha_nacimiento"));
+				cliente.setEmail(rs.getString("correo_electronico"));
+				cliente.setTelefono(rs.getString("c.telefono"));
 				cliente.setEstado(rs.getBoolean("c.estado"));
+				
 				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt("c.id_usuario"));
 				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
 				cliente.setUsuario(usuario);
+				
+				Pais pais = new Pais(rs.getInt("id_pais"), rs.getString("nombre_pais"));
+				Provincia provincia = new Provincia(rs.getInt("id_provincia"), rs.getString("nombre_provincia"), pais);
+				Localidad localidad = new Localidad(rs.getInt("id_localidad"), rs.getString("nombre_localidad"), provincia);
+				Direccion direccion = new Direccion(rs.getInt("id_direccion"), rs.getString("nombre_direccion"));
+				cliente.setDomicilio(direccion);
+				cliente.getDomicilio().setProvincia(provincia);
+				cliente.getDomicilio().setLocalidad(localidad);
+				cliente.getDomicilio().getProvincia().setPais(pais);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -348,5 +390,33 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	    }
 
 	    return cliente;
+	}
+	
+	public Boolean tienePrestamoActivo(int idCliente) {
+		
+		Conexion conexion = Conexion.getConexion();
+		Connection connection = conexion.getSQLConexion();
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		int count = 0;
+		try {
+			
+			statement = connection.prepareStatement(tienePrestamoQuery);
+			statement.setInt(1, idCliente);
+			resultSet = statement.executeQuery();
+
+			if (!resultSet.next())
+				return false;
+			
+			count = resultSet.getInt(1);
+			return count > 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			conexion.cerrarResultSet(resultSet);
+			conexion.cerrarPrepared(statement);
+		}
+		return false;
 	}
 }
