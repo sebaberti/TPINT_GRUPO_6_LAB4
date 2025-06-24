@@ -189,12 +189,11 @@
 
 				<ul class="list-group mb-4">
 					<li class="list-group-item"><strong>DNI Cliente:</strong> <%=cuentaAEliminar.getCliente().getDNI()%></li>
-					<li class="list-group-item"><strong>Usuario:</strong> <%=cuentaAEliminar.getCliente().getUsuario().getNombreUsuario()%></li>
 					<li class="list-group-item"><strong>Tipo de Cuenta:</strong> <%=cuentaAEliminar.getTipoCuenta().getDescripcion()%></li>
 					<li class="list-group-item"><strong>CBU:</strong> <%=cuentaAEliminar.getCBU().toString()%></li>
 					<li class="list-group-item"><strong>N° Cuenta:</strong> <%=cuentaAEliminar.getNumeroCuenta()%></li>
-					<li class="list-group-item"><strong>Saldo Inicial:</strong> $<%=cuentaAEliminar.getSaldo()%></li>
-					<%-- <li class="list-group-item"><strong>Fecha de Creación:</strong> <%=cuentaAEliminar.getFechaCreacion().toString()%></li> --%>
+					<li class="list-group-item"><strong>Saldo:</strong> $<%=cuentaAEliminar.getSaldo()%></li>
+					<li class="list-group-item"><strong>Fecha de Creación:</strong> <%=cuentaAEliminar.getFechaCreacion().toString()%></li>
 					<li class="list-group-item"><strong>Estado:</strong> <%=cuentaAEliminar.isEstado() ? "Activa" : "Inactiva"%></li>
 				</ul>
 			</div>
