@@ -1,13 +1,16 @@
 package entidades;
 
+import java.math.BigInteger;
+import java.util.Date;
+
 public class Cuenta {
-	
+
 	private int id;
 	private Cliente cliente; 
-    private String fechaCreacion;
+    private Date fechaCreacion;
     private CuentaTipo tipoCuenta;
     private String numeroCuenta;
-    private String CBU;
+    private BigInteger CBU;
     private double saldo;
     private boolean estado;
     
@@ -19,7 +22,7 @@ public class Cuenta {
     }
     
 	//opcion completa
-    public Cuenta(Cliente cliente, String fechaCreacion, CuentaTipo tipoCuenta, String numeroCuenta, String CBU, double saldo, boolean estado) {
+    public Cuenta(Cliente cliente, Date fechaCreacion, CuentaTipo tipoCuenta, String numeroCuenta, BigInteger CBU, double saldo, boolean estado) {
 	  this.cliente = cliente;
 	  this.fechaCreacion = fechaCreacion;
 	  this.tipoCuenta = tipoCuenta;
@@ -30,7 +33,7 @@ public class Cuenta {
 	}
     
     //opcion con saldo iniciaal fijo
-    public Cuenta(Cliente cliente, String fechaCreacion, CuentaTipo tipoCuenta, String numeroCuenta, String CBU) {
+    public Cuenta(Cliente cliente, Date fechaCreacion, CuentaTipo tipoCuenta, String numeroCuenta, BigInteger CBU) {
     	this.cliente = cliente;
   	  this.fechaCreacion = fechaCreacion;
   	  this.tipoCuenta = tipoCuenta;
@@ -56,11 +59,11 @@ public class Cuenta {
 		this.cliente = cliente;
 	}
 
-	public String getFechaCreacion() {
+	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
-	public void setFechaCreacion(String fechaCreacion) {
+	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 
@@ -80,12 +83,12 @@ public class Cuenta {
 		this.numeroCuenta = numeroCuenta;
 	}
 
-	public String getCBU() {
+	public BigInteger getCBU() {
 		return CBU;
 	}
 
-	public void setCBU(String cBU) {
-		CBU = cBU;
+	public void setCBU(BigInteger CBU) {
+		this.CBU = CBU;
 	}
 
 	public double getSaldo() {
@@ -109,5 +112,5 @@ public class Cuenta {
 		return "Numero de Cuenta: " + numeroCuenta + ",\n cliente: " + cliente.toString() + ",\n tipo de Cuenta: " + tipoCuenta.toString()
                 + ",\n fecha_Creacion: " + fechaCreacion + ",\n CBU: " + CBU + ",\n saldo: $" + saldo;  
 		}
-   
+      
 }

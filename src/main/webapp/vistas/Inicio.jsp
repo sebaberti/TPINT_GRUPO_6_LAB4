@@ -24,7 +24,6 @@ class Tarjeta {
 
 List<Tarjeta> tarjetas = new ArrayList<>();
 
-//Rellenamos la lista con esto asi no estamos tocando en el layout si necesitamos hacer cambios.. 
 
 if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Clientes.jsp", "bi-people-fill", "text-primary", "Gestionar Clientes"));
@@ -35,7 +34,7 @@ if (tipoUsuario  == "administrador") {
 } else if (tipoUsuario  == "cliente") {
 	tarjetas.add(new Tarjeta("vistas/Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
 	tarjetas.add(new Tarjeta("vistas/Movimientos.jsp", "bi-journal-text", "text-success", "Movimientos"));
-	tarjetas.add(new Tarjeta("vistas/Transferencias.jsp", "bi-arrow-left-right", "text-info", "Transferencias"));
+	tarjetas.add(new Tarjeta("TransferenciaServlet", "bi-arrow-left-right", "text-info", "Transferencias"));
 	tarjetas.add(new Tarjeta("vistas/SolicitarPrestamos.jsp", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
 	tarjetas.add(new Tarjeta("vistas/PagarCuota.jsp", "bi-credit-card-2-back", "text-danger", "Pagar Cuotas"));
 }
@@ -141,7 +140,7 @@ if (tipoUsuario  == "administrador") {
         </div>
 
         <div class="carousel-item" style="height: 350px; background:url('${pageContext.request.contextPath}/img/slider3.png') center center / cover no-repeat;">
-          <
+          
         </div>
 
         <div class="carousel-item" style="height: 350px; background:url('${pageContext.request.contextPath}/img/slider4.png') center center / cover no-repeat;">

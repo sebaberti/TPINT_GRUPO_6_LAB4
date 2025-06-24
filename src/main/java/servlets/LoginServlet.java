@@ -27,17 +27,23 @@ public class LoginServlet extends HttpServlet {
 
         Usuario usuario = usuarioNeg.validarUsuario(nombreUsuario, clave);
 
-        if (usuario != null && usuario.isEstado()) {
+        if (usuario != null) {
+        	if( usuario.isEstado()) {
             HttpSession session = request.getSession();
             session.setAttribute("usuarioId", usuario.getId());
             session.setAttribute("nombreUsuario", usuario.getNombreUsuario());
             session.setAttribute("rol", usuario.getIdRol() == 1 ? "administrador" : "cliente");
 
             response.sendRedirect(request.getContextPath() + "/vistas/Inicio.jsp");
-
+        	
         } else {
-            request.setAttribute("error", "Usuario o contraseña incorrecta");
+        	request.setAttribute("error", "Usuario inhabilitado. Comuníquese con el administrador.");
             request.getRequestDispatcher("/vistas/Login.jsp").forward(request, response);
+         }
+        }else {
+        	
+        	request.setAttribute("error", "Usuario o contraseña incorrecta");
+        	request.getRequestDispatcher("/vistas/Login.jsp").forward(request, response);
         }
     }
 }

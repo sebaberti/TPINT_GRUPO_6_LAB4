@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daoImplementacion.ClienteDaoImplementacion;
+import daoImplementacion.CuentaDaoImplementacion;
 import entidades.Cliente;
 import negocio.ClienteNegocio;
 
@@ -59,4 +60,10 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 		return clienteNegocio.tienePrestamoActivo(idCliente);
 	}
 	
+	@Override
+	public boolean admiteNuevaCuenta(int idCliente) {
+	    CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
+	    int cuentasActivas = cuentas.cuentasActivas(idCliente);
+	    return cuentasActivas < 3;
+	}
 }

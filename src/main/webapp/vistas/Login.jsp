@@ -2,9 +2,6 @@
 <%@ page session="true"%>
 <!DOCTYPE html>
 <html lang="es">
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<!DOCTYPE html>
-<html lang="es">
 <head>
 <meta charset="UTF-8">
 <title>Login - Banco SIX</title>
@@ -22,6 +19,24 @@
 	<main>
 		<div class="container mt-5">
 			<h2 class="text-center mb-4">Iniciar Sesión</h2>
+			 <%-- Mensaje de éxito si se cambió la contraseña --%>
+            <%
+                HttpSession sesionLogin = request.getSession(false);
+                String mensajeLogin = null;
+                if (sesionLogin != null) {
+                    mensajeLogin = (String) sesionLogin.getAttribute("mensajeLogin");
+                    if (mensajeLogin != null) {
+                        sesionLogin.removeAttribute("mensajeLogin");
+            %>
+                        <div class="alert alert-success text-center mt-3">
+                            <%= mensajeLogin %>
+                        </div>
+            <%
+                    }
+                }
+            %>
+			
+		
 			<% if (request.getAttribute("error") != null) { %>
     <div class="alert alert-danger text-center mt-3">
         <%= request.getAttribute("error") %>

@@ -57,12 +57,17 @@ public class CambiarPasswordServlet extends HttpServlet {
             boolean actualizada = usuarioNeg.actualizarPassword(usuario, nuevaClave);
 
             if (actualizada) {
-                request.setAttribute("mensaje", "Contraseña actualizada correctamente. Ya puede iniciar sesión.");
+           
+                HttpSession nuevaSesion = request.getSession(true); 
+                nuevaSesion.setAttribute("mensajeLogin", "Contraseña actualizada correctamente. Inicie sesión nuevamente.");
+                response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+                return;
             } else {
                 request.setAttribute("mensajeError", "Error al actualizar la contraseña.");
                 request.setAttribute("habilitarCampos", true);
+                request.getRequestDispatcher("/vistas/RecuperarContrasenia.jsp").forward(request, response);
+                return;
             }
-            request.getRequestDispatcher("/vistas/RecuperarContrasenia.jsp").forward(request, response);
         }
         
         
@@ -91,38 +96,41 @@ public class CambiarPasswordServlet extends HttpServlet {
                 datosValidos = false;
             }
 
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("nombreUsuario") == null) {
+            	request.setAttribute("mensajeError", "Debe iniciar sesión para cambiar su contraseña.");
+            	request.getRequestDispatcher("/vistas/Login.jsp").forward(request, response);
+            	return;
+            }
+            
             if (!datosValidos) {
-                request.setAttribute("mensajeError", mensajeError);
-                request.getRequestDispatcher("/vistas/Perfil.jsp").forward(request, response);
+            	session.setAttribute("mensajeError", mensajeError);
+                response.sendRedirect(request.getContextPath() + "/PerfilServlet");
                 return;
             }
 
-            HttpSession session = request.getSession(false);
-            if (session == null || session.getAttribute("nombreUsuario") == null) {
-                request.setAttribute("mensajeError", "Debe iniciar sesión para cambiar su contraseña.");
-                request.getRequestDispatcher("/vistas/Login.jsp").forward(request, response);
-                return;
-            }
 
             String nombreUsuarioSesion = (String) session.getAttribute("nombreUsuario");
 
             boolean passCorrecta = usuarioNeg.validarPassword(nombreUsuarioSesion, actual);
 
             if (!passCorrecta) {
-                request.setAttribute("mensajeError", "La contraseña actual es incorrecta.");
-                request.getRequestDispatcher("/vistas/Perfil.jsp").forward(request, response);
+            	session.setAttribute("mensajeError", "La contraseña actual es incorrecta.");
+                response.sendRedirect(request.getContextPath() + "/PerfilServlet");
                 return;
             }
 
             boolean cambiada = usuarioNeg.actualizarPassword(nombreUsuarioSesion, nueva);
 
             if (cambiada) {
-                session.setAttribute("mensajeInformativo", "Contraseña cambiada correctamente.");
+                session.invalidate(); 
+                HttpSession nuevaSesion = request.getSession(true); 
+                nuevaSesion.setAttribute("mensajeLogin", "Contraseña cambiada correctamente. Inicie sesión nuevamente.");
+                response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
             } else {
-                session.setAttribute("mensajeError", "No se pudo cambiar la contraseña.");
+            	session.setAttribute("mensajeError", "No se pudo cambiar la contraseña.");
+                response.sendRedirect(request.getContextPath() + "/PerfilServlet");
             }
-
-            response.sendRedirect("PerfilServlet");
         }
     }
 }

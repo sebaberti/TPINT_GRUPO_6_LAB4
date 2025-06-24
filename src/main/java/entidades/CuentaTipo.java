@@ -30,6 +30,6 @@ public class CuentaTipo {
 	
 	@Override
 	public String toString() {
-		return descripcion;
+		return "Id tipo Cta: " + id + ", descripcion: " + descripcion;
 	}
 }

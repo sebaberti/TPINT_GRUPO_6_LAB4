@@ -1,6 +1,6 @@
 package daoImplementacion;
 
-import java.sql.CallableStatement;
+import java.sql.CallableStatement;	
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +23,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	private String validarDNIQuery = "SELECT * FROM CLIENTES WHERE DNI = ?";
 	private String validarCUILQuery = "SELECT * FROM Clientes WHERE CUIL = ?";
 	private String tienePrestamoQuery = "SELECT COUNT(id_cliente) FROM Prestamos WHERE id_cliente = ? AND estado = 1;";
+	private String bajaQuery = "UPDATE Clientes SET estado = 0 WHERE id=?";
 
 	public Boolean insertar(Cliente cliente) {
 		int rows = 0;
@@ -326,11 +327,12 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	
 	@Override
 	public Cliente clientePorDNI(int dni) {
+		// Obtengo el cliente solo si está activo (este es apra alta de cuenta)
 		Cliente cliente = null;
 		Connection conexion = null;
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
-			String query = "SELECT c.nombre, c.apellido, c.dni, c.id_usuario, u.nombre_usuario " + "FROM Clientes c "
+			String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.id_usuario, u.nombre_usuario " + "FROM Clientes c "
 					+ "JOIN Usuarios u ON c.id_usuario = u.id " + "WHERE c.dni = ? AND u.estado = 1";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, dni);
@@ -359,7 +361,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	    try {
 	    	conexion = Conexion.getConexion().getSQLConexion();
-	    	String query = "SELECT c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad " +
+	    	String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad " +
 	                   "FROM Clientes c " +
 	                   "JOIN Paises p ON c.id_nacionalidad = p.id " +
 	                   "WHERE c.id_usuario = ?";
@@ -370,6 +372,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	        if (rs.next()) {
 	            cliente = new Cliente();
+	            cliente.setId(rs.getInt("c.id"));
 	            cliente.setNombre(rs.getString("nombre"));
 	            cliente.setApellido(rs.getString("apellido"));
 	            cliente.setDNI(rs.getString("dni"));

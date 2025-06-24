@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="entidades.Cuenta" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,29 +26,42 @@
 			</div>
 			
 			<div class="d-flex justify-content-center">
-				<form method="POST" action="">
+				<form method="POST" action="${pageContext.request.contextPath}/TransferenciaServlet">
+
 					
 					<div class="card w-auto">
 	  					<div class="card-body">
 	  					
 	    					<div class="mb-3">
 	    						<label for="lblCuentaOrig" class="form-label">Seleccionar cuenta de Origen</label>
-	    						<select id="lblCuentaOrig" class="form-select">
+	    						<select id="lblCuentaOrig" name="cuentaOrigen" class="form-select" required>
 	    							<option value="" disabled selected>Seleccionar cuenta</option>
-	    							<!-- cargar todas la cuentas -->
-	    						</select>
+	    							<%
+                                        List<Cuenta> cuentasCliente = (List<Cuenta>) request.getAttribute("cuentasCliente");
+	    							    out.println("DEBUG JSP: cuentasCliente = " + (cuentasCliente != null ? cuentasCliente.size() : "null"));
+
+                                        if (cuentasCliente != null) {
+                                            for (Cuenta cuenta : cuentasCliente) {
+                                    %>
+                                                <option value="<%= cuenta.getId() %>">
+                                                    <%= cuenta.getTipoCuenta().getDescripcion() %> - CBU: <%= cuenta.getCBU() %> - Saldo: $<%= cuenta.getSaldo() %>
+                                                </option>
+                                    <%
+                                            }
+                                        }
+                                    %>
+                                </select>
 	    					</div>
 	    					
 	    					<div class="mb-3">
-	    						<label for="lblCBU" class="form-label">Ingresar CBU de destino</label>
-	    						<input type="text" id="lblCBU" class="form-control">
-	    					</div>
+                                <label for="lblCBU" class="form-label">Ingresar CBU de destino</label>
+                                <input type="text" id="lblCBU" name="cbuDestino" class="form-control" required>
+                            </div>
 	    					
-	    					<div class="mb-3">
-	    						<label for="lblMonto" class="form-label">Ingrese el monto a transferir</label>
-	    						<p class="text-muted">Monto disponible: <%=1000 %></p>
-	    						<input type="number" id="lblMonto" class="form-control">
-	    					</div>
+	    					 <div class="mb-3">
+                                <label for="lblMonto" class="form-label">Ingrese el monto a transferir</label>
+                                <input type="number" id="lblMonto" name="monto" class="form-control" step="0.01" min="0.01" required>
+                            </div>
 	    					
 	    					<div class="mb-3">
 	    						<button type="submit" class="btn btn-success btn-sm w-100">Transferir</button>
@@ -55,6 +70,18 @@
 	    						<!-- descontar saldo del cliente -->
 	    						<!-- aumentar saldo de cuenta destino -->
 	    					</div>
+	    					
+	    					<!-- Mensajes de error o éxito -->
+                            <% if (request.getAttribute("error") != null) { %>
+                                <div class="alert alert-danger text-center">
+                                    <%= request.getAttribute("error") %>
+                                </div>
+                            <% } %>
+                            <% if (request.getAttribute("mensajeExito") != null) { %>
+                                <div class="alert alert-success text-center">
+                                    <%= request.getAttribute("mensajeExito") %>
+                                </div>
+                            <% } %>
 	    					
 	  					</div>
 					</div>
