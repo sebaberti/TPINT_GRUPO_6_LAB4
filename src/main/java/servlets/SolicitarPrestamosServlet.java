@@ -1,8 +1,7 @@
 package servlets;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -11,13 +10,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import entidades.Cliente;
+import entidades.Cuenta;
 import entidades.Plazo;
+import negocioImplementacion.ClienteNegocioImplementacion;
+import negocioImplementacion.CuentaNegocioImplementacion;
 import negocioImplementacion.PlazoNegocioImplementacion;
+import negocioImplementacion.PrestamoNegocioImplementacion;
 
 @WebServlet("/SolicitarPrestamosServlet")
 public class SolicitarPrestamosServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;		
        
     public SolicitarPrestamosServlet() {
         super();
@@ -25,31 +30,95 @@ public class SolicitarPrestamosServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 
+		HttpSession session = request.getSession(false);
 		
+	    if (session == null || session.getAttribute("usuarioId") == null) {
+	        response.sendRedirect("Login.jsp");
+	        return;
+	    }   
+	  
+	    cargarFormulario(request, response);
+	    
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-  	
+		
 		if(request.getParameter("btnSimular")!=null) {
+			cargarFormulario(request, response);
 			simularPrestamo(request, response);
+			request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp").forward(request, response);
+			return;
+		}
+		
+		if(request.getParameter("resetear")!=null) {			
+			request.removeAttribute("monto");
+			request.removeAttribute("idCuentaSeleccionada");
+			request.removeAttribute("idPlazoSeleccionado");
+			request.removeAttribute("mensajeError");
+			request.removeAttribute("detalle");
+			request.removeAttribute("importeMensual");
+			cargarFormulario(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp");
+			dispatcher.forward(request, response);
 			return;
 		}
 		
 		if(request.getParameter("btnConfirmar") != null) {
-			String mensajeInformativo= "Su pedido de préstamo será evaluado.";
-			request.setAttribute("mensajeInformativo", mensajeInformativo);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/MensajesInformativos.jsp");
-			dispatcher.forward(request, response);
-			return;
-		}
+		    try {
+		        Cliente clienteActivo = (Cliente) request.getSession().getAttribute("clienteActivo");
+		        int idCuenta = Integer.parseInt(request.getParameter("cuenta"));
+		        BigDecimal monto = new BigDecimal(request.getParameter("monto").replace(".", "").replace(",", "."));
+		        int idPlazo = Integer.parseInt(request.getParameter("OpcionesPlazo"));
+		        
+		        PrestamoNegocioImplementacion pni = new PrestamoNegocioImplementacion();
+		        boolean exito = pni.solicitarPrestamo(clienteActivo.getId(), idCuenta, monto, idPlazo);
+		      
+		        if (exito) {
+		            request.setAttribute("mensajeInformativo", "Su solicitud de préstamo fue registrada correctamente.");
+		        } else {
+		            request.setAttribute("mensajeInformativo", "Ocurrió un error al procesar su solicitud.");
+		        }
 
+		    } catch (Exception e) {
+		        request.setAttribute("mensajeInformativo", "Datos inválidos o sesión expirada.");
+		        e.printStackTrace();
+		    }
+		    		    
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/MensajesInformativos.jsp");
+			dispatcher.forward(request, response);
+		    return;
+		}
 	}
 
+public void cargarFormulario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	 HttpSession session = request.getSession(false);
+     int idUsuario = (int) session.getAttribute("usuarioId");
+     
+    ClienteNegocioImplementacion clni = new ClienteNegocioImplementacion();
+    Cliente clienteActivo = clni.obtenerClientePorIdUsuario(idUsuario);
+    session.setAttribute("clienteActivo", clienteActivo);
+
+    
+    if (clienteActivo != null) {
+        CuentaNegocioImplementacion cni = new CuentaNegocioImplementacion();
+        ArrayList<Cuenta> listaCuentas = (ArrayList<Cuenta>) cni.listarCuentasPorClienteId(clienteActivo.getId());
+        request.setAttribute("listaCuentasCliente", listaCuentas);
+    }else {
+        System.out.println("⚠️ clienteActivo es null, no se cargan las cuentas.");
+    }
+
+    PlazoNegocioImplementacion pni = new PlazoNegocioImplementacion();
+    ArrayList<Plazo> listaPlazos = pni.listarOpcionesPlazo();
+    request.setAttribute("listaPlazos", listaPlazos);
+}
 		
 public void simularPrestamo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 	boolean datosValidos = true;			
-	double monto = 0.0;			
-	int cantCuotas = 0;
+	BigDecimal monto= BigDecimal.ZERO;			
+	int idPlazo = 0;
 	String cuentaParam;
 	String montoParam;
 	String cuotasParam;
@@ -73,7 +142,11 @@ public void simularPrestamo(HttpServletRequest request, HttpServletResponse resp
 	    	montoParam = request.getParameter("monto");		
 	        montoParam = montoParam.replace(".", "").replace(",", ".");
 			request.setAttribute("monto", montoParam);
-	        monto = Double.parseDouble(montoParam);
+	        monto = new BigDecimal(montoParam);
+	        if (monto.compareTo(new BigDecimal("150000000")) > 0) {
+	            mensajeError += "El monto no puede superar los $150.000.000.<br>";
+	            datosValidos = false;
+	        }	        
 	    	} else {
 	    		mensajeError+= "Debe ingresar un monto. <br>";
 	    		datosValidos=false;
@@ -82,14 +155,12 @@ public void simularPrestamo(HttpServletRequest request, HttpServletResponse resp
 	    	mensajeError += "Debe ingresar un monto válido. <br> ";
 	    	datosValidos=false;
 	    }
-	
-
-	
+		
 	    try {
 	        if (request.getParameter("OpcionesPlazo") != null && !request.getParameter("OpcionesPlazo").isEmpty()) {
-	            cuotasParam = request.getParameter("OpcionesPlazo");
-	            cantCuotas = Integer.parseInt(cuotasParam);
-	            request.setAttribute("idPlazoSeleccionado", cantCuotas);
+	            cuotasParam = request.getParameter("OpcionesPlazo");	  
+	            idPlazo = Integer.parseInt(cuotasParam);
+	            request.setAttribute("idPlazoSeleccionado", idPlazo);
 	            
 	        } else {
 	            mensajeError += "Debe seleccionar una cantidad de cuotas. <br>";
@@ -102,21 +173,16 @@ public void simularPrestamo(HttpServletRequest request, HttpServletResponse resp
 	
 	if (!datosValidos) {
 	    request.setAttribute("mensajeError", mensajeError);
-	    request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp").forward(request, response);
 	    return;
 	}
+	
+PrestamoNegocioImplementacion pni= new PrestamoNegocioImplementacion();
+BigDecimal cuota = pni.calcularCuota(monto, idPlazo);
 
-ArrayList<String> fechas = new ArrayList<>();
-LocalDate hoy = LocalDate.now();
-DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+request.setAttribute("importeMensual", cuota);
 
-for (int i = 1; i <= cantCuotas; i++) {
-    LocalDate fechaCuota = hoy.plusMonths(i);
-    fechas.add("Cuota " + i + ": " + fechaCuota.format(formato));
-}
+request.setAttribute("detalle", true);
 
-request.setAttribute("fechasCuotas", fechas);
-request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp").forward(request, response);
 }
 	
 }

@@ -1,23 +1,14 @@
-<%
-    session = request.getSession(false);
-	int idUsuario=0;
-    if (session == null || session.getAttribute("usuarioId") == null) {
-        response.sendRedirect("Login.jsp");
-        return;
-    } else {
-    	idUsuario= (int)session.getAttribute("usuarioId");   
-
-    }
-%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.time.*, java.time.format.*, java.util.*, java.math.BigDecimal"%>
-<%@ page import="entidades.Cliente"%>
 <%@ page import="entidades.Plazo"%>
 <%@ page import="entidades.Cuenta"%>
-<%@ page import="negocioImplementacion.PlazoNegocioImplementacion"%>
-<%@ page import= "negocioImplementacion.ClienteNegocioImplementacion" %>
-<%@ page import= "negocioImplementacion.CuentaNegocioImplementacion" %>
+<%
+    if (session == null || session.getAttribute("usuarioId") == null) {
+        response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,20 +40,14 @@
 					</div>
 				</div>
 				<div class="row justify-content-center">
-					<div class="col-4 text-center">
-						<%
-						String montomax = "$70.000.000";
-						%>
+					<div class="col-4 text-center">				
 						<p>
-							<strong><%=montomax%></strong>
+							<strong>$150.000.000</strong>
 						</p>
 					</div>
-					<div class="col-4 text-center">
-						<%
-						String plazomax = "72 cuotas";
-						%>
+					<div class="col-4 text-center">						
 						<p>
-							<strong><%=plazomax%></strong>
+							<strong>60 cuotas</strong>
 						</p>
 					</div>
 					<div class="col-4 text-center">
@@ -73,30 +58,16 @@
 				</div>
 			</div>
 		</div>
-		<br>
-
-		<div class="container">
-			<div class="row">
-				<div class="col-6">
-					<div class="bordes">
-						<form method="post"
-							action="${pageContext.request.contextPath}/SolicitarPrestamosServlet">
-<% 
-Cliente clienteActivo=null;
-
-if(idUsuario!=0){
-	ClienteNegocioImplementacion clni= new ClienteNegocioImplementacion();
-	clienteActivo= clni.obtenerClientePorIdUsuario(idUsuario);
-
-}
-	CuentaNegocioImplementacion cni= new CuentaNegocioImplementacion();
-	ArrayList<Cuenta> listaCuentasCliente= (ArrayList<Cuenta>) cni.listarCuentasPorClienteId(clienteActivo.getId());
-
-
-	if (listaCuentasCliente == null || listaCuentasCliente.isEmpty()) {
-	    out.println("<div style='color:red;'>No se encontraron cuentas para el cliente con ID: " + clienteActivo.getId() + "</div>");
-	} else {
-	    out.println("<div style='color:green;'>Cantidad de cuentas encontradas: " + listaCuentasCliente.size() + "</div>");
+		</div>
+	<%
+	ArrayList<Cuenta> listaCuentasCliente = (ArrayList<Cuenta>) request.getAttribute("listaCuentasCliente");
+	if (listaCuentasCliente == null) {
+	    listaCuentasCliente = new ArrayList<>();
+	}
+	
+	ArrayList<Plazo> listaPlazos = (ArrayList<Plazo>) request.getAttribute("listaPlazos");
+	if (listaPlazos == null) {
+	    listaPlazos = new ArrayList<>();
 	}
 	
 	int idCuentaSeleccionada = -1;
@@ -104,24 +75,38 @@ if(idUsuario!=0){
 		idCuentaSeleccionada = Integer.parseInt(String.valueOf(request.getAttribute("idCuentaSeleccionada")));
 	}
 
-%>
+	int idSeleccionado = -1;
+	BigDecimal tna = BigDecimal.ZERO;
+	if (request.getAttribute("idPlazoSeleccionado") != null) {
+		idSeleccionado = Integer.parseInt(String.valueOf(request.getAttribute("idPlazoSeleccionado")));
+	}
+	%>
+	<%= listaCuentasCliente == null ? "Cuentas: null" : "Cuentas: " + listaCuentasCliente.size() %>
+<%= listaPlazos == null ? "Plazos: null" : "Plazos: " + listaPlazos.size() %>
+<%= session.getAttribute("usuarioId") %>
+	<div class="container">
+		<form method="post"	action="${pageContext.request.contextPath}/SolicitarPrestamosServlet">
+			<div class="row">
+				<div class="col-6">
+					<div class="bordes">															
 
 							<div class="mb-3">
-								<label for="" class="form-label">Cuenta a acreditar: </label>
-								<select name="cuenta" class="form-select">
+								<label for="" class="form-label">Cuenta a acreditar: </label> <select
+									name="cuenta" class="form-select">
 									<option value="">-- Seleccione una cuenta --</option>
 									<%
+									if (listaCuentasCliente != null) {
 									for (Cuenta c : listaCuentasCliente) {
-										String selected="";
-										if(c.getId() == idCuentaSeleccionada){
-											selected="selected";											
+										String selected = "";
+										if (c.getId() == idCuentaSeleccionada) {
+											selected = "selected";
 										}
 									%>
-									    <option value="<%=c.getId()%>" <%=selected%>>
-        								<%= c.getNumeroCuenta() %>
-    									</option>				
+									<option value="<%=c.getId()%>" <%=selected%>>
+										<%=c.getNumeroCuenta()%>
+									</option>
 									<%
-									}
+									}}
 									%>
 								</select>
 
@@ -129,7 +114,6 @@ if(idUsuario!=0){
 									acreditará el préstamo.</div>
 
 							</div>
-
 							<div class="mb-3">
 								<label for="Monto" class="form-label">Monto</label>
 								<div class="input-group mb-3">
@@ -140,45 +124,34 @@ if(idUsuario!=0){
 									<span class="input-group-text">.00</span>
 								</div>
 								<div id="avisoMonto" class="form-text">
-									Podés pedir hasta
-									<%=montomax%></div>
+									Valor en pesos</div>
 							</div>
 
 							<div class="mb-3">
 								<label for="" class="form-label">Plazo</label>
-
-								<%
-								PlazoNegocioImplementacion pni = new PlazoNegocioImplementacion();
-								ArrayList<Plazo> listaPlazos = pni.listarOpcionesPlazo();								
-										int idSeleccionado = -1;
-										BigDecimal tna = BigDecimal.ZERO;
-										if (request.getAttribute("idPlazoSeleccionado") != null) {
-										    idSeleccionado = Integer.parseInt(String.valueOf(request.getAttribute("idPlazoSeleccionado")));
-										}
-								%>
+								
 								<select name="OpcionesPlazo" class="form-select">
 									<option value="">-- Seleccionar plazo --</option>
-									<%
-									
+									<%									
 									for (Plazo p : listaPlazos) {
-										String selected="";
-										if(p.getId() == idSeleccionado){
-											selected="selected";
-											tna= p.getTasaAnual();
-										}
+										String selected = "";
+										if (p.getId() == idSeleccionado) {
+											selected = "selected";
+											tna = p.getTasaAnual();										
+										}										
 									%>
-									    <option value="<%=p.getId()%>" <%=selected%>>
-        								<%=p.getCantidadCuotas()%> cuotas
-    									</option>
-									
+									<option value="<%=p.getId()%>" <%=selected%>>
+										<%=p.getCantidadCuotas()%> cuotas
+									</option>
 									<%
 									}
+									request.setAttribute("tna", tna);
 									%>
 								</select>
-								<div id="avisoPlazo" class="form-text">El plazo determina
-									la Tasa Nominal Anual</div>
+								<div 
+								id="avisoPlazo" class="form-text">El plazo determina la Tasa Nominal Anual
+								</div>
 							</div>
-
 							<%
 							if (request.getAttribute("mensajeError") != null) {
 							%>
@@ -190,77 +163,66 @@ if(idUsuario!=0){
 							%>
 							<input type="submit" class="btn btn-primary" name="btnSimular"
 								value="Simular" />
-
-						</form>
+							<input type="submit" class="btn btn-secondary" name="resetear"
+   							 value="Nuevo"/>
 					</div>
 				</div>
-
 				<div class="col-6">
-					<div class="bordes">
-						<form method="post"
-							action="${pageContext.request.contextPath}/SolicitarPrestamosServlet">
-							<h3>Detalle de cuotas</h3>
-							<%
-							ArrayList<String> fechas = (ArrayList<String>) request.getAttribute("fechasCuotas");
-							if (fechas != null) {
-							%>
-							<p>importe mensual:</p>
-							<p>Tasa Anual: <%= tna %>%</p>
-							<p>Fecha de cuotas:</p>
-							<ul>
-								<%
-								for (String f : fechas) {
-								%>
-								<li><%=f%></li>
-								<%
-								}
-								%>
-							</ul>
-							<%
-							} else {
-							%>
-							<p>Simulá tu préstamo para ver el detalle.</p>
-							<%
-							}
-							%>
+				
+	<div class="bordes">
+		<h3>Detalle</h3>
+		<%
+		Boolean detalle = (Boolean) request.getAttribute("detalle");
+		if (Boolean.TRUE.equals(detalle)) {						
+		    BigDecimal importeMensual = (BigDecimal) request.getAttribute("importeMensual");
+		    BigDecimal tasaAnual = (BigDecimal) request.getAttribute("tna");
+		%>
+		    <p>Importe mensual: $<%= importeMensual %></p>
+		    <p>Tasa Anual: <%= tasaAnual %>%</p>
+		    <p>Primera cuota: A partir de 30 días después de la fecha de alta.</p>
 
-							<button type="button" class="btn btn-primary"
-								data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-								Confirmar</button>
-							<div class="modal fade" id="staticBackdrop"
-								data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-								aria-labelledby="staticBackdropLabel" aria-hidden="true">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmar</h1>
-											<button type="button" class="btn-close"
-												data-bs-dismiss="modal" aria-label="Close"></button>
-										</div>
-										<div class="modal-body">¿Está seguro que desea confirmar
-											este préstamos?</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary"
-												data-bs-dismiss="modal">Cancelar</button>
-											<input type="submit" class="btn btn-primary"
-												name="btnConfirmar" value="Confirmar" />
-										</div>
-									</div>
-								</div>
-							</div>
-							<div>
-								<a href="Inicio.jsp" class="btn btn-link">Cancelar</a>
-							</div>
+		    <button type="button" class="btn btn-primary"
+			    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+			    Confirmar</button>
 
-						</form>
-					</div>
-				</div>
-
+		    <div class="modal fade" id="staticBackdrop"
+			    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+				    <div class="modal-content">
+					    <div class="modal-header">
+						    <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmar</h1>
+						    <button type="button" class="btn-close"
+							    data-bs-dismiss="modal" aria-label="Close"></button>
+					    </div>
+					    <div class="modal-body">¿Está seguro que desea confirmar
+						    este préstamo?</div>
+					    <div class="modal-footer">
+						    <button type="button" class="btn btn-secondary"
+							    data-bs-dismiss="modal">Cancelar</button>
+						    <input type="submit" class="btn btn-primary"
+							    name="btnConfirmar" value="Confirmar" />
+					    </div>
+				    </div>
+			    </div>
+		    </div>
+		<%
+		} else {
+		%>
+		    <p>Ingrese los datos para ver los detalles</p>
+		<%
+		}
+		%>
+		<div>
+			<a href="${pageContext.request.contextPath}/vistas/Inicio.jsp"
+				class="btn btn-link">Cancelar</a>
+		</div>
+	</div>
+</div>
 
 			</div>
+			</form>
 		</div>
-
-	</div>
 
 	<jsp:include page="Footer.jsp" />
 

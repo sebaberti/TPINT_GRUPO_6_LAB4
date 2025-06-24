@@ -1,13 +1,9 @@
 package dao;
 
-import java.util.List;
-
-import entidades.Cliente;
-import entidades.Prestamo;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 
 public interface PrestamoDao {
-	public boolean ejecutarSPsolicitarPrestamo(Prestamo prestamo, Cliente cliente);
-	/*public boolean modificar(Prestamo prestamo);
-	public boolean bajaLogica(int id);
-	public List<Prestamo> listarPrestamos();*/
+	public boolean ejecutarSPsolicitarPrestamo(int idCliente, int idCuenta, BigDecimal monto, int idPlazo);
+	public BigDecimal obtenerCuotaDesdeBD(BigDecimal monto, int idPlazo);
 }
