@@ -19,31 +19,18 @@
 <body>
 
 	<%! 
-		public String manejarNull(String valor) {
-			if (valor == null || valor.isEmpty())
-				
-			return "";
-		}
 			public String manejarNull(String valor) {
 				if(valor == null || valor.isEmpty()) 
 					return "";
 				
 				return valor;
 			}
-		
+
 			public Boolean manejarNull(Boolean valor) {
-				if(valor == null) 
+				if (valor == null)
 					return false;
-			
-				return true;
-		}
-		
 
-		public Boolean manejarNull(Boolean valor) {
-			if (valor == null)
-				return false;
-
-		return true;
+			return true;
 		}%>
 
 	<jsp:include page="../../Header.jsp" />
