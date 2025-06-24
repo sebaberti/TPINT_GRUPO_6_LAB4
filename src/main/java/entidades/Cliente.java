@@ -18,6 +18,11 @@ public class Cliente {
 	Usuario usuario;
 	Boolean estado;
 	
+	public Cliente() {
+		nacionalidad = new Pais();
+		domicilio = new Direccion();
+		usuario = new Usuario();
+	}
 	
 	public int getId() {
 		return id;
