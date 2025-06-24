@@ -36,6 +36,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("nombreUsuario", usuario.getNombreUsuario());
             session.setAttribute("rol", usuario.getIdRol() == 1 ? "administrador" : "cliente");
             
+            int idUsuario = (int) session.getAttribute("usuarioId");
             ClienteNegocioImplementacion clni = new ClienteNegocioImplementacion();
             Cliente clienteActivo = clni.obtenerClientePorIdUsuario(idUsuario);
             session.setAttribute("clienteActivo", clienteActivo);
