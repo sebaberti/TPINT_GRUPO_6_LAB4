@@ -5,6 +5,10 @@ public class Provincia {
 	String nombre;
 	Pais pais;
 	
+	public Provincia() {
+
+	}
+	
 	public Provincia(int id, String nombre, Pais pais) {
 		super();
 		this.id = id;
