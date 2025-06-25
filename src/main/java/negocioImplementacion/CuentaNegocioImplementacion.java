@@ -106,5 +106,11 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    return cuentaDao.obtenerCuentaPorId(id);
 	}
 
+	@Override
+	public boolean bajaLogica(int idCuenta) {
+		CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
+	    return cuentaDao.bajaLogica(idCuenta);
+	}
+
 
 }
