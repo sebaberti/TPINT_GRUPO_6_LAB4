@@ -319,7 +319,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 					INNER JOIN provincias p ON p.id = d.id_provincia
 					INNER JOIN paises pa ON pa.id = p.id_pais
 					INNER JOIN paises pais_nac ON pais_nac.id = c.id_nacionalidad
-					WHERE c.dni = '?' AND c.cuil = '?';
+					WHERE c.dni = ? AND c.cuil = ?;
 										""";
 
 			PreparedStatement statement = conexion.prepareStatement(query);
