@@ -155,7 +155,7 @@
 		<%
 		Boolean mostrarModal = (Boolean) request.getAttribute("mostrarModalEliminar");
 		Cuenta cuentaAEliminar = (Cuenta) request.getAttribute("cuentaAElim");
-		if (mostrarModal != null && mostrarModal) {
+		if (mostrarModal != null && mostrarModal && cuentaAEliminar!=null) {
 		%>
 		<script>
 			window.onload = function() {
@@ -168,12 +168,15 @@
 		}
 		%>
 
+<%
+if (mostrarModal != null && mostrarModal && cuentaAEliminar!=null) {
+		%>
 <div class="modal fade" id="modalEliminar" tabindex="-1"
 	aria-labelledby="modalEliminarLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content shadow-lg">
 
-			<div class="modal-header bg-danger text-white">
+			<div class="modal-header bg-primary text-white">
 				<h5 class="modal-title" id="modalEliminarLabel">
 					<i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación
 				</h5>
@@ -204,14 +207,16 @@
 					<button type="submit" name="btnEliminarConfirmado" class="btn btn-danger">
 						<i class="bi bi-trash me-1"></i> Eliminar Cuenta
 					</button>
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
 				</form>
 			</div>
 
 		</div>
 	</div>
 </div>
+<%}	%>
 		<!-- Fin Modal -->
+		
 	</main>
 
 	<jsp:include page="/vistas/Footer.jsp" />
