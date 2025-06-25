@@ -15,4 +15,5 @@ public interface CuentaDao {
 	public int cuentasActivas(int idCliente);
 	public boolean existeCbu(BigInteger cbu);
 	public String obtenerUltimoNumeroCuenta();
+	boolean bajaLogica(int idCuenta);
 }
