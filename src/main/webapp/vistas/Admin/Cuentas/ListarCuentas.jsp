@@ -217,6 +217,49 @@ if (mostrarModal != null && mostrarModal && cuentaAEliminar!=null) {
 <%}	%>
 		<!-- Fin Modal -->
 		
+		
+		<!-- Modal Mensaje-->
+		<%
+		Boolean mostrarModal2 = (Boolean) request.getAttribute("mostrarModalMsj");
+		String mensaje = (String) request.getAttribute("mensaje");
+		if (mostrarModal2 != null && mostrarModal2) {
+		%>
+		<script>
+			window.onload = function() {
+				var modal = new bootstrap.Modal(document
+						.getElementById('modalMensaje'));
+				modal.show();
+			};
+		</script>
+		<%
+		}
+		%>
+		
+		<div class="modal fade" id="modalMensaje" tabindex="-1"
+		aria-labelledby="modalMensajeLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalMensajeLabel">Resultado de operación:</h5>
+					
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Cerrar"></button>
+				</div>
+
+				<div class="modal-body">
+					<h4><%= mensaje %></h4>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cerrar</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+		
 	</main>
 
 	<jsp:include page="/vistas/Footer.jsp" />
