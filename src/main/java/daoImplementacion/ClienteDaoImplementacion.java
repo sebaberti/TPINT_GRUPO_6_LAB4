@@ -102,13 +102,13 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 			int resultado = resultSet.getInt(1);
 			
-			if(!(resultado == 2))
-				return false;
+			if(resultado == 2)
+				return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 
 	public List<Cliente> listar() {
