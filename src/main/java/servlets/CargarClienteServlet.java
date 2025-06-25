@@ -1,5 +1,7 @@
 package servlets;
 
+import daoImplementacion.ProvinciaDaoImplementacion;
+import entidades.Provincia;
 import java.io.IOException;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import javax.servlet.http.*;
 
 import daoImplementacion.ClienteDaoImplementacion;
 import daoImplementacion.LocalidadDaoImplementacion;
+import daoImplementacion.PaisDaoImplementacion;
 import entidades.Cliente;
 import entidades.Localidad;
 
@@ -37,6 +40,8 @@ public class CargarClienteServlet extends HttpServlet {
 
 		if (lista != null && !lista.isEmpty()) {
 			Cliente cliente = lista.get(0);
+			
+			System.out.println(cliente.toString());
 			request.setAttribute("cliente", cliente);
 		} else {
 			request.setAttribute("error", "No se encontró ningún cliente con los datos ingresados.");
@@ -48,13 +53,16 @@ public class CargarClienteServlet extends HttpServlet {
 			request.setAttribute("error", "Debe ingresar al menos un DNI o CUIL para buscar.");
 			List<Localidad> localidadesBsAs = localidadDao.listarLocalidadesBuenosAires();
 			request.setAttribute("localidades", localidadesBsAs);
+			request.setAttribute("nacionalidades", new PaisDaoImplementacion().listar());
 			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
 			return;
 		}
 
-		List<Localidad> localidadesBsAs = localidadDao.listarLocalidadesBuenosAires();
 
+		List<Localidad> localidadesBsAs = localidadDao.listarLocalidadesBuenosAires();
+		request.setAttribute("provincias", new ProvinciaDaoImplementacion().listar());
 		request.setAttribute("localidades", localidadesBsAs);
+		request.setAttribute("nacionalidades", new PaisDaoImplementacion().listar());
 
 		request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
 	}

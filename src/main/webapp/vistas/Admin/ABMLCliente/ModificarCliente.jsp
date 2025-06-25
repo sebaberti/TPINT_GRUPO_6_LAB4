@@ -1,3 +1,5 @@
+<%@page import="entidades.Provincia"%>
+<%@page import="entidades.Pais"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="entidades.Cliente"%>
@@ -168,9 +170,45 @@ if (cliente != null && cliente.getCUIL() != null) {
 				</div>
 
 				<div class="col">
-					<label class="form-label">Provincia</label> <input type="text"
-						class="form-control" value="Buenos Aires" readonly>
+					<label class="form-label">Provincia</label> <select
+						name="provincia" class="form-select" required>
+						<option value="" disabled>Seleccionar provincia</option>
+						<%
+						List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
+						if (provincias != null) {
+							for (Provincia p : provincias) {
+								boolean selected = cliente.getDomicilio() != null && cliente.getDomicilio().getProvincia() != null
+								&& cliente.getDomicilio().getProvincia().getId() == p.getId();
+						%>
+						<option value="<%=p.getId()%>" <%=selected ? "selected" : ""%>>
+							<%=p.getNombre()%>
+						</option>
+						<%
+						}
+						}
+						%>
+					</select>
 				</div>
+
+
+				<div class="col">
+					<label class="form-label">Nacionalidad</label> <select
+						name="nacionalidad" class="form-select" required>
+						<option value="" disabled>Seleccionar nacionalidad</option>
+						<%
+						List<Pais> nacionalidades = (List<Pais>) request.getAttribute("nacionalidades");
+						if (nacionalidades != null) {
+							for (Pais pais : nacionalidades) {
+								boolean selected = cliente.getNacionalidad() != null && cliente.getNacionalidad().getId() == pais.getId();
+						%>
+						<option value="<%=pais.getId()%>" <%=selected ? "selected" : ""%>><%=pais.getNombre()%></option>
+						<%
+						}
+						}
+						%>
+					</select>
+				</div>
+
 
 				<div class="col-12 d-flex justify-content-center mt-4">
 					<button type="submit" class="btn btn-warning px-5">

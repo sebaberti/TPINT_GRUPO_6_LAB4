@@ -19,6 +19,7 @@ import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
 import negocioImplementacion.PlazoNegocioImplementacion;
 import negocioImplementacion.PrestamoNegocioImplementacion;
+import negocioImplementacion.Seguridad;
 
 @WebServlet("/SolicitarPrestamosServlet")
 public class SolicitarPrestamosServlet extends HttpServlet {
@@ -30,14 +31,15 @@ public class SolicitarPrestamosServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 
+		 		
 		HttpSession session = request.getSession(false);
-		
-	    if (session == null || session.getAttribute("usuarioId") == null) {
-	        response.sendRedirect("Login.jsp");
-	        return;
-	    }   
-	  
+        Object user = (session != null) ? session.getAttribute("usuario") : null;
+        
+        if (!Seguridad.sesionActiva(user)) {
+            response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+            return;
+        }
+        
 	    cargarFormulario(request, response);
 	    
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp");
