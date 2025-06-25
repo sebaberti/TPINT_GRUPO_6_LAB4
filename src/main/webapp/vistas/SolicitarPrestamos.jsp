@@ -4,15 +4,21 @@
 <%@ page import="entidades.Plazo"%>
 <%@ page import="entidades.Cuenta"%>
 <%@ page import="entidades.Cliente"%>
+<%@ page import="negocioImplementacion.Seguridad"%>
 <%
-    if (session == null || session.getAttribute("usuarioId") == null) {
-        response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-        return;
-    }
+
+Object user = session.getAttribute("usuario");
+
+if (!Seguridad.sesionActiva(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+} 
+
 Cliente clienteActivo = null;
 if (session != null && session.getAttribute("clienteActivo") != null) {
     clienteActivo = (Cliente) session.getAttribute("clienteActivo");
 }
+
 %>
 <!DOCTYPE html>
 <html>
@@ -86,9 +92,7 @@ if (session != null && session.getAttribute("clienteActivo") != null) {
 		idSeleccionado = Integer.parseInt(String.valueOf(request.getAttribute("idPlazoSeleccionado")));
 	}
 	%>
-	<%= listaCuentasCliente == null ? "Cuentas: null" : "Cuentas: " + listaCuentasCliente.size() %>
-<%= listaPlazos == null ? "Plazos: null" : "Plazos: " + listaPlazos.size() %>
-<%= session.getAttribute("usuarioId") %>
+
 	<div class="container">
 		<form method="post"	action="${pageContext.request.contextPath}/SolicitarPrestamosServlet">
 			<div class="row">
