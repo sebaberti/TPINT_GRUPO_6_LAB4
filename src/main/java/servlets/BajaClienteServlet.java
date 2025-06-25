@@ -77,28 +77,39 @@ public class BajaClienteServlet extends HttpServlet {
 		}
 
 		if (request.getParameter("btnEliminar") != null) {
-
-			if (session.getAttribute("objCliente") != null)
+			
+			if (session.getAttribute("objCliente") != null) {
 				cliente = (Cliente) session.getAttribute("objCliente");
-			else
+			}
+			else {
 				redirigir(request, response, "error", "Complete los campos DNI y CUIL", rutaEliminarJSP);
-
+				return;
+			}
+			
 			if (!cliente.getEstado()) {
 				session.removeAttribute("objCliente");
 				redirigir(request, response, "error", "El cliente ya se encuentra inactivo", rutaEliminarJSP);
+				return;
 			}
+			
 
-			if (clienteNegocio.tienePrestamoActivo(cliente.getId()))
+			if (clienteNegocio.tienePrestamoActivo(cliente.getId())) {
 				redirigir(request, response, "error", "No es posible eliminar el cliente. Posee prestamos activos",
 						rutaEliminarJSP);
+				return;
+			}
+			
 
-			if (!clienteNegocio.bajaLogica(cliente.getDNI(), cliente.getCUIL()))
+			if (!clienteNegocio.bajaLogica(cliente.getDNI(), cliente.getCUIL())) {
 				redirigir(request, response, "error",
 						"No fue posible eliminar el Cliente " + cliente.getNombre() + ", " + cliente.getApellido(),
 						rutaEliminarJSP);
+				return;
+			}
 
 			session.removeAttribute("objCliente");
 			redirigir(request, response, "procesoExitoso", "El cliente se elimino correctamente", rutaEliminarJSP);
+			return;
 		}
 	}
 
