@@ -20,7 +20,10 @@ public class Direccion {
 		this.direccion = direccion;
 	}
 	
-	public Direccion() {}
+	public Direccion() {
+		localidad = new Localidad();
+		provincia = new Provincia();
+	}
 	
 	public int getId() {
 		return id;
