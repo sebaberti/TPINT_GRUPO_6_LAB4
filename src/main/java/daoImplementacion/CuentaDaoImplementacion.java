@@ -238,7 +238,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 
 	        if (rs.next()) {
 	            cuenta = new Cuenta();
-	            cuenta.setId(rs.getInt("id"));
+	            cuenta.setId(rs.getInt("id"));	            
 	            cuenta.setCBU(new BigInteger(rs.getString("cbu")));
 	            cuenta.setSaldo(rs.getDouble("saldo"));
 	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));

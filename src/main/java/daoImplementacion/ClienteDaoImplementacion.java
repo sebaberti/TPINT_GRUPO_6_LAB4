@@ -465,4 +465,46 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		}
 		return false;
 	}
+
+	@Override
+	public Cliente obtenerClientePorId(int id) {
+		Cliente cliente = null;
+		Connection conexion = null;
+
+		try {
+			conexion = Conexion.getConexion().getSQLConexion();
+			String query = "SELECT c.id, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, c.id_nacionalidad, p.nombre AS nacionalidad, c.fecha_nacimiento, c.correo_electronico, c.telefono, c.estado"
+					+ " FROM clientes c"
+					+ " JOIN paises p ON p.id=c.id_nacionalidad"
+					+ " WHERE c.id=?";
+			PreparedStatement statement = conexion.prepareStatement(query);
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				cliente = new Cliente();
+				cliente.setId(rs.getInt("id"));
+				cliente.setDNI(rs.getString("dni"));
+				cliente.setCUIL(rs.getString("cuil"));
+				cliente.setNombre(rs.getString("nombre"));
+				cliente.setApellido(rs.getString("apellido"));
+				cliente.setSexo(rs.getString("sexo"));
+				
+				Pais nacionalidad = new Pais();
+				nacionalidad.setId(rs.getInt("id_nacionalidad"));
+				nacionalidad.setNombre(rs.getString("nacionalidad"));
+				cliente.setNacionalidad(nacionalidad);
+					
+				cliente.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
+				cliente.setTelefono(rs.getString("telefono"));
+				cliente.setEmail(rs.getString("correo_electronico"));
+				cliente.setEstado(rs.getBoolean("estado"));				
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return cliente;
+	}
 }

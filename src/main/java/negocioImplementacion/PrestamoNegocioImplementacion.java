@@ -2,6 +2,7 @@ package negocioImplementacion;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 
 import daoImplementacion.PrestamoDaoImplementacion;
 import entidades.Cliente;
@@ -23,6 +24,12 @@ public class PrestamoNegocioImplementacion implements PrestamoNegocio{
 		    }
 		PrestamoDaoImplementacion pdi= new PrestamoDaoImplementacion();
 		return pdi.obtenerCuotaDesdeBD(monto, idPlazo);
+	}
+
+	@Override
+	public List<Prestamo> listarPrestamos() {
+		PrestamoDaoImplementacion pdi= new PrestamoDaoImplementacion();
+		return pdi.listar();
 	}
 	
 

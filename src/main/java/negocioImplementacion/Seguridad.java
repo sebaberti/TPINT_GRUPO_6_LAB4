@@ -1,7 +1,4 @@
 package negocioImplementacion;
-
-import javax.servlet.http.HttpSession;
-
 import entidades.Usuario;
 
 public class Seguridad {
