@@ -53,7 +53,7 @@
 							<h6 class="card-title mb-2">Listar y editar Clientes</h6>
 						</div>
 						<button href=""
-							class="btn btn-primary btn-sm w-100 btn-abml" onclick="location.href='ListarCliente.jsp'">Seleccionar</button>
+							class="btn btn-primary btn-sm w-100 btn-abml" onclick="location.href='${pageContext.request.contextPath}/ListarClientesServlet'">Seleccionar</button>
 					</div>
 				</div>
 			</div>
