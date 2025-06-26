@@ -94,9 +94,15 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 						if(listaPrestamos!=null)
 						for(Prestamo p : listaPrestamos) 
 						{
+<<<<<<< HEAD
+					%>
+					<tr>
+						<form name="tablaPrestamo" method="get"	action="AutorizarPrestamosServlet">
+=======
 					%>					
 					<tr>
 						<form name="tablaPrestamo" method="post"	action="AutorizarPrestamosServlet">
+>>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932
 						<td><%=p.getId() %> <input type="hidden" name="idPrestamo" value="<%=p.getId()%>"></td>						
 						<td><%=p.getCliente().getApellido() + ", " + p.getCliente().getNombre()  %></td>
 						<td><%=p.getCuenta().getNumeroCuenta() %></td>
@@ -106,6 +112,10 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 						<td>$<%=formato.format(importeMensual)%></td>
 						<td><%=p.getEstadoTexto() %></td>
 						<td><input type="submit" name="btnReportes" value="Ver Reporte"></td>
+<<<<<<< HEAD
+						<td><input type="submit" name="btnAprobar" value="Aprobar"></td>
+						<td><input type="submit" name="btnRechazar" value="Rechazar"></td>
+=======
 						<%if(p.getEstado()==0) {%>
 						<td><input type="submit" name="btnAprobar" value="Aprobar"></td>
 						<td><input type="submit" name="btnRechazar" value="Rechazar"></td>
@@ -114,6 +124,7 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 							<td></td>
 							<td></td>
 						<%} %>
+>>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932
 						</form>
 					</tr>
 					<%  } %>

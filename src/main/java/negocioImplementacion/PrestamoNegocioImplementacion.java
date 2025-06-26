@@ -35,6 +35,16 @@ public class PrestamoNegocioImplementacion implements PrestamoNegocio{
 		PrestamoDaoImplementacion pdi= new PrestamoDaoImplementacion();
 		return pdi.obtenerCuotaDesdeBD(monto, idPlazo);
 	}
+<<<<<<< HEAD
+
+	@Override
+	public List<Prestamo> listarPrestamos() {
+		PrestamoDaoImplementacion pdi= new PrestamoDaoImplementacion();
+		return pdi.listar();
+	}
+	
+=======
+>>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932
 
 	@Override
 	public List<Prestamo> listarPrestamos() {

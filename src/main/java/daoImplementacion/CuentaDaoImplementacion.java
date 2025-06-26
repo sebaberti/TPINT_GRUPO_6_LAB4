@@ -246,6 +246,10 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	    	rs = statement.executeQuery();
 
 	        if (rs.next()) {
+<<<<<<< HEAD
+	            cuenta = new Cuenta();
+	            cuenta.setId(rs.getInt("id"));	            
+=======
 	        	cuenta = new Cuenta();
 	            Cliente cliente = new Cliente();
 	            CuentaTipo tipoCuenta = new CuentaTipo();
@@ -258,6 +262,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	            tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
 	            cuenta.setTipoCuenta(tipoCuenta);
 	            
+>>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932
 	            cuenta.setCBU(new BigInteger(rs.getString("cbu")));
 	            cuenta.setSaldo(rs.getDouble("saldo"));
 	            cuenta.setEstado(rs.getBoolean("estado"));

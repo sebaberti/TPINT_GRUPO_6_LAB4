@@ -157,6 +157,9 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 		return lista;
 	
 	}
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932
 }
