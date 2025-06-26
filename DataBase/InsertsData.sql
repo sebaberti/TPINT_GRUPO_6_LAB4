@@ -62,19 +62,29 @@ INSERT INTO `Provincias` (`nombre`, `id_pais`) VALUES
 
 -- Uso Buenos Aires Id 1 y Santa Fe Id 20
 INSERT INTO `Localidades` (`nombre`, `id_provincia`) VALUES
-('Tres de Febrero', 1),
-('Pacheco', 1),
-('La Plata', 1),
-('Lomas de Zamora', 1),
-('Mar del Plata', 1),
-('Bahía Blanca', 1),
-('Tandil', 1),
-('San Nicolás', 1),
-('Santa Fe', 20),
-('Rosario', 20),
-('Rafaela', 20),
-('Venado Tuerto', 20),
-('Reconquista', 20);
+('La Plata', 1), ('Mar del Plata', 1),
+('San Fernando del Valle de Catamarca', 2), ('Andalgalá', 2),
+('Resistencia', 3), ('Presidencia Roque Sáenz Peña', 3),
+('Rawson', 4), ('Comodoro Rivadavia', 4),
+('Córdoba', 5), ('Villa Carlos Paz', 5),
+('Corrientes', 6), ('Goya', 6),
+('Paraná', 7), ('Concordia', 7),
+('Formosa', 8), ('Clorinda', 8),
+('San Salvador de Jujuy', 9), ('Palpalá', 9),
+('Santa Rosa', 10), ('General Pico', 10),
+('La Rioja', 11), ('Chilecito', 11),
+('Mendoza', 12), ('San Rafael', 12),
+('Posadas', 13), ('Oberá', 13),
+('Neuquén', 14), ('San Martín de los Andes', 14),
+('Viedma', 15), ('Bariloche', 15),
+('Salta', 16), ('San Ramón de la Nueva Orán', 16),
+('San Juan', 17), ('Rawson (SJ)', 17),
+('San Luis', 18), ('Villa Mercedes', 18),
+('Río Gallegos', 19), ('Caleta Olivia', 19),
+('Santa Fe', 20), ('Rosario', 20),
+('Santiago del Estero', 21), ('La Banda', 21),
+('Ushuaia', 22), ('Río Grande', 22),
+('San Miguel de Tucumán', 23), ('Yerba Buena', 23);
 
 INSERT INTO `Usuarios` (`nombre_usuario`, `contrasenia`, `id_rol`, `estado`) 
 VALUES
