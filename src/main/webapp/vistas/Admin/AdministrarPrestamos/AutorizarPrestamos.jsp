@@ -63,7 +63,16 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 	<main class="container mt-5 mb-5">
 		<h1 class="text-center mb-4">Listado de Préstamos Solicitados</h1>
 			<div class="table-responsive mt-5">
-				<table id="table_id" class="display">
+			<%
+			if (request.getAttribute("mensaje") != null) {
+			%>
+			<div class="alert alert-success" role="alert">
+				<%=request.getAttribute("mensaje")%>
+			</div>
+			<%
+			}
+			%>
+			<table id="table_id" class="display">
 					<thead class="table-light">
 						<tr>
 							<th>IDPrestamo</th>
@@ -85,9 +94,9 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 						if(listaPrestamos!=null)
 						for(Prestamo p : listaPrestamos) 
 						{
-					%>
+					%>					
 					<tr>
-						<form name="tablaPrestamo" method="get"	action="AutorizarPrestamosServlet">
+						<form name="tablaPrestamo" method="post"	action="AutorizarPrestamosServlet">
 						<td><%=p.getId() %> <input type="hidden" name="idPrestamo" value="<%=p.getId()%>"></td>						
 						<td><%=p.getCliente().getApellido() + ", " + p.getCliente().getNombre()  %></td>
 						<td><%=p.getCuenta().getNumeroCuenta() %></td>
@@ -97,8 +106,14 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 						<td>$<%=formato.format(importeMensual)%></td>
 						<td><%=p.getEstadoTexto() %></td>
 						<td><input type="submit" name="btnReportes" value="Ver Reporte"></td>
+						<%if(p.getEstado()==0) {%>
 						<td><input type="submit" name="btnAprobar" value="Aprobar"></td>
 						<td><input type="submit" name="btnRechazar" value="Rechazar"></td>
+						<%} else {
+							%>
+							<td></td>
+							<td></td>
+						<%} %>
 						</form>
 					</tr>
 					<%  } %>

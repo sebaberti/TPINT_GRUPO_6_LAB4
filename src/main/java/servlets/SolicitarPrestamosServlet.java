@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import entidades.Cliente;
 import entidades.Cuenta;
 import entidades.Plazo;
+import excepciones.MontoInvalidoException;
 import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
 import negocioImplementacion.PlazoNegocioImplementacion;
@@ -118,7 +119,8 @@ public void cargarFormulario(HttpServletRequest request, HttpServletResponse res
 }
 		
 public void simularPrestamo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-	boolean datosValidos = true;			
+	boolean datosValidos = true;	
+	PrestamoNegocioImplementacion pni= new PrestamoNegocioImplementacion();
 	BigDecimal monto= BigDecimal.ZERO;			
 	int idPlazo = 0;
 	String cuentaParam;
@@ -142,18 +144,20 @@ public void simularPrestamo(HttpServletRequest request, HttpServletResponse resp
 	    try {
 	    	if (request.getParameter("monto") != null && !request.getParameter("monto").isEmpty()) {
 	    	montoParam = request.getParameter("monto");		
-	        montoParam = montoParam.replace(".", "").replace(",", ".");
+	        montoParam = montoParam.replace(".", "").replace(",", ".");	    	
 			request.setAttribute("monto", montoParam);
-	        monto = new BigDecimal(montoParam);
-	        if (monto.compareTo(new BigDecimal("150000000")) > 0) {
-	            mensajeError += "El monto no puede superar los $150.000.000.<br>";
+	        monto = new BigDecimal(montoParam);	    	
+	        pni.validarMonto(monto);
+	    	}else {
+	            mensajeError += "Debe ingresar un monto. <br>";
 	            datosValidos = false;
-	        }	        
-	    	} else {
-	    		mensajeError+= "Debe ingresar un monto. <br>";
-	    		datosValidos=false;
-	    	}
-	    } catch (NumberFormatException e) {
+	        }
+	     	    	
+	    }catch (MontoInvalidoException e) {
+	        mensajeError += e.getMessage() + "<br>";
+	        datosValidos = false; 
+	        
+	    }catch (NumberFormatException e) {
 	    	mensajeError += "Debe ingresar un monto válido. <br> ";
 	    	datosValidos=false;
 	    }
@@ -178,7 +182,6 @@ public void simularPrestamo(HttpServletRequest request, HttpServletResponse resp
 	    return;
 	}
 	
-PrestamoNegocioImplementacion pni= new PrestamoNegocioImplementacion();
 BigDecimal cuota = pni.calcularCuota(monto, idPlazo);
 
 request.setAttribute("importeMensual", cuota);

@@ -41,7 +41,42 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 			return false;
 		  }
 	}
+	@Override
+	public boolean autorizarPrestamo(int idPrestamo) {
+		 try
+		  {
+			 Connection conexion = Conexion.getConexion().getSQLConexion();
+			 CallableStatement cst = conexion.prepareCall("CALL banco.AutorizarPrestamo(?)");
+			 cst.setInt(1, idPrestamo);  		
+			 cst.execute();		
+			 conexion.commit();
+		    return true;
+		  }
+		  catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		  }		
+	}
+	
+	@Override
+	public boolean rechazarPrestamo(int idPrestamo) {
+		String query = "UPDATE prestamos SET estado=2 WHERE id=?";
 
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement stmt = conexion.prepareStatement(query);
+			stmt.setInt(1, idPrestamo);
+
+			if (stmt.executeUpdate() > 0) {
+				conexion.commit();
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	@Override
 	public BigDecimal obtenerCuotaDesdeBD(BigDecimal monto, int idPlazo) {
 	    BigDecimal cuota = BigDecimal.ZERO;
@@ -122,4 +157,6 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 		return lista;
 	
 	}
+
+
 }
