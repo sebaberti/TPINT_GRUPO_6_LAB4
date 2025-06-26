@@ -376,6 +376,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 
 	    try {
 	        conexion = Conexion.getConexion().getSQLConexion();
+	        conexion.setAutoCommit(false);
 	        statement = conexion.prepareStatement(query);
 
 	        statement.setInt(1, cuenta.getTipoCuenta().getId());
