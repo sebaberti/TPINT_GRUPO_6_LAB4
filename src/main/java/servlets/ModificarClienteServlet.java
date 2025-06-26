@@ -27,26 +27,39 @@ import negocioImplementacion.ProvinciaNegocioImplementacion;
 @WebServlet("/ModificarClienteServlet")
 public class ModificarClienteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	LocalidadNegocioImplementacion localidadNegocio;
+	ProvinciaNegocioImplementacion provinciaNegocio;
+	ArrayList<Localidad> localidades;
 
 	public ModificarClienteServlet() {
 		super();
+		localidadNegocio = new LocalidadNegocioImplementacion();
+		provinciaNegocio = new ProvinciaNegocioImplementacion();
+		List<Localidad> localidades = new ArrayList<Localidad>();
+	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		if(request.getAttribute("listaLocalidadVacia") == null) {
+			localidades = (ArrayList<Localidad>) localidadNegocio.listarLocalidades();
+			request.setAttribute("localidades", localidades);
+			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
+			return;
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 		// Filtro localidades según provincia elegida
 		if (request.getParameter("btnCargarLocalidadesFiltradas") != null) {
 			int provinciaID = 0;
 			List<Localidad> localidades = new ArrayList<Localidad>();
 			List<Localidad> localidadesAux = new ArrayList<Localidad>();
 			
-			if (request.getParameter("provincia") == null) {
-				request.setAttribute("error", "Eliga una provincia");
-				request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request,
-						response);
-				return;
-			} else {
+			if (request.getParameter("provincia") != null) {
 				provinciaID = Integer.parseInt(request.getParameter("provincia"));
 				request.setAttribute("provinciaElegida", provinciaID);
 			}
@@ -112,9 +125,10 @@ public class ModificarClienteServlet extends HttpServlet {
 
 				if (exito) {
 					List<Pais> listaPaises = new PaisDaoImplementacion().listar();
-					request.setAttribute("nacionalidades", listaPaises);
-					request.setCharacterEncoding("UTF-8");
-					response.sendRedirect("ListarClientesServlet");
+					request.setAttribute("nacionalidades", listaPaises); // ? No se porque esta
+					request.setAttribute("modifico", "El cliente se modifico con exito");
+					request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request,
+							response);
 				} else {
 					request.setAttribute("nacionalidades", new PaisDaoImplementacion().listar());
 					request.setAttribute("error", "No se pudo modificar el cliente.");
