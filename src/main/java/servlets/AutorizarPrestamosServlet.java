@@ -47,8 +47,45 @@ public class AutorizarPrestamosServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<<<<<<< HEAD
 	
 		doGet(request, response);
 	}
 
 }
+=======
+	PrestamoNegocioImplementacion pni= new PrestamoNegocioImplementacion();
+	
+	String idPrestamoParam = request.getParameter("idPrestamo");
+    String mensaje="";
+    
+    if (idPrestamoParam != null) {
+        int idPrestamo = Integer.parseInt(idPrestamoParam);
+
+        if (request.getParameter("btnReportes") != null) {
+       
+        }
+
+        if (request.getParameter("btnAprobar") != null) {
+            boolean exito= pni.autorizarPrestamo(idPrestamo);
+            mensaje = exito ? "Préstamo ID " + idPrestamo + " aprobado con éxito"
+                    : "No se pudo aprobar el préstamo ID " + idPrestamo;
+        }
+
+        if (request.getParameter("btnRechazar") != null) {
+            boolean exito= pni.rechazarPrestamo(idPrestamo);
+            mensaje = exito ? "Préstamo ID " + idPrestamo + " rechazado con éxito"
+                    : "No se pudo rechazar el préstamo ID " + idPrestamo;            
+        }
+        
+        List<Prestamo> listaPrestamos= pni.listarPrestamos();		
+		request.setAttribute("listaPrestamos", listaPrestamos);
+		
+		request.setAttribute("mensaje", mensaje);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/AdministrarPrestamos/AutorizarPrestamos.jsp");
+		dispatcher.forward(request, response);
+	}
+	}
+}
+
+>>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932

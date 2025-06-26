@@ -310,28 +310,29 @@ BEGIN
     DECLARE resultado INT DEFAULT 0;
 
 	START TRANSACTION;
-    
-    SELECT C.id, C.id_usuario INTO id_cliente, id_usuario 
-    FROM  Clientes AS C 
-    WHERE C.dni = C.dni_cliente AND cuil = cuil_cliente;
-    
-    IF id_cliente IS NOT NULL THEN 
+
+    IF EXISTS (SELECT 1 FROM Clientes WHERE dni = dni_cliente AND cuil = cuil_cliente) THEN 
 		
-		UPDATE Clientes AS C SET estado = false WHERE C.id = id_cliente;
-		SET fila_cliente = ROW_COUNT();
-	
-        UPDATE Usuarios AS U SET estado = false WHERE U.id = id_usuario;
-		SET fila_usuario = ROW_COUNT();
-        
-        UPDATE Cuentas AS C SET C.estado = false WHERE C.id_cliente = id_cliente;
-            
+        SELECT C.id INTO id_cliente FROM Clientes AS C WHERE C.dni = dni_cliente AND C.cuil = cuil_cliente;
+		SELECT C.id_usuario INTO id_usuario FROM  Clientes AS C WHERE dni = dni_cliente AND cuil = cuil_cliente;
+
+        IF EXISTS(SELECT 1 FROM Usuarios WHERE id = id_usuario) THEN
+
+			UPDATE Clientes SET estado = false WHERE dni = dni_cliente AND cuil = cuil_cliente;
+            SET fila_cliente = ROW_COUNT();
+			UPDATE Usuarios SET estado = false WHERE id = id_usuario;
+            SET fila_usuario = ROW_COUNT();
+            UPDATE Cuentas AS Cuenta SET estado = false WHERE Cuenta.id_cliente = id_cliente;
 		ELSE
 			ROLLBACK;
 		END IF;
-			
+
 	COMMIT;
-    
+
     SET resultado = fila_cliente + fila_usuario;
     SELECT resultado;
+
+    ELSE
+		ROLLBACK;
+	END IF;
 END$$
-DELIMITER ;

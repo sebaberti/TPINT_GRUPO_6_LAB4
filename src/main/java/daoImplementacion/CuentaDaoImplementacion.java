@@ -144,18 +144,22 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	}	
 
  	
-	public List<Cuenta> listarCuentasPorClienteId(int clienteId) {
+	public List<Cuenta> listarCuentasPorClienteId(int clienteId,boolean soloActivas) {
 	    List<Cuenta> lista = new ArrayList<>();
 	    
 	    Connection conexion = null;
         PreparedStatement statement= null;
    	 	ResultSet rs= null;
 	   
-	    String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, " +
-                "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " +
-                "FROM cuentas c " +
-                "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id " +
-                "WHERE c.id_cliente = ? AND c.estado = 1 AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
+   	 String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, " +
+             "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " +
+             "FROM cuentas c " +
+             "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id " +
+             "WHERE c.id_cliente = ? AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
+
+   	 			if (soloActivas) {
+   	 			query += " AND c.estado = 1";
+   	 			}
 
 	    try {
 	    	conexion = Conexion.getConexion().getSQLConexion();
@@ -227,7 +231,12 @@ public class CuentaDaoImplementacion implements CuentaDao {
         PreparedStatement statement= null;
    	 	ResultSet rs= null;
    	 	
-	    String query = "SELECT * FROM cuentas WHERE id = ?";
+	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
+	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
+	       		"cl.nombre, cl.apellido, cl.dni, "+
+	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
+	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
+	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.id = ?";
 
 	    try{ 
 	    	conexion = Conexion.getConexion().getSQLConexion();
@@ -237,12 +246,31 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	    	rs = statement.executeQuery();
 
 	        if (rs.next()) {
+<<<<<<< HEAD
 	            cuenta = new Cuenta();
 	            cuenta.setId(rs.getInt("id"));	            
+=======
+	        	cuenta = new Cuenta();
+	            Cliente cliente = new Cliente();
+	            CuentaTipo tipoCuenta = new CuentaTipo();
+
+	            cuenta.setId(rs.getInt("cuenta_id"));
+	            cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
+	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+	            
+	            tipoCuenta.setId(rs.getInt("tipo_cuenta_id"));
+	            tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
+	            cuenta.setTipoCuenta(tipoCuenta);
+	            
+>>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932
 	            cuenta.setCBU(new BigInteger(rs.getString("cbu")));
 	            cuenta.setSaldo(rs.getDouble("saldo"));
-	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
 	            cuenta.setEstado(rs.getBoolean("estado"));
+
+	            cliente.setNombre(rs.getString("nombre"));
+	            cliente.setApellido(rs.getString("apellido"));
+	            cliente.setDNI(rs.getString("dni"));
+	            cuenta.setCliente(cliente);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -321,4 +349,58 @@ public class CuentaDaoImplementacion implements CuentaDao {
         }
 		return nroCta;
 	}	
+	
+	@Override
+	public boolean bajaLogica(int idCuenta) {		
+	    Connection conexion = null;
+	    PreparedStatement statement= null;
+
+	    String query ="UPDATE cuentas SET estado = 0 WHERE id = ? AND estado = 1";
+	    
+	    try {
+	        conexion = Conexion.getConexion().getSQLConexion();
+	            conexion.setAutoCommit(true); // para hacer commit
+	        
+	        statement = conexion.prepareStatement(query);
+	        statement.setInt(1, idCuenta);
+	        
+	        int filasAfectadas = statement.executeUpdate();
+
+	        return filasAfectadas > 0;	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } 
+	    return false;
+	}
+	
+	
+	@Override
+	public boolean modificarCuenta(Cuenta cuenta) {
+		Connection conexion = null;
+		PreparedStatement statement = null;
+		
+	    String query = "UPDATE cuentas SET id_tipo_cuenta = ?, saldo = ?, estado = ? WHERE id = ?";
+
+
+	    try {
+	        conexion = Conexion.getConexion().getSQLConexion();
+	        conexion.setAutoCommit(false);
+	        statement = conexion.prepareStatement(query);
+
+	        statement.setInt(1, cuenta.getTipoCuenta().getId());
+	        statement.setDouble(2, cuenta.getSaldo());
+	        statement.setBoolean(3, cuenta.isEstado());
+	        statement.setInt(4, cuenta.getId());
+
+	        if (statement.executeUpdate() > 0) {
+	            conexion.commit();
+	            return true;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return false;
+	}
+
 }

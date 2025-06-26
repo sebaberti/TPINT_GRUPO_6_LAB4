@@ -6,6 +6,7 @@ public class Localidad {
 	Provincia provincia;
 
 	public Localidad() {
+		provincia = new Provincia();
 	}
 
 	public Localidad(int id, String nombre) {
