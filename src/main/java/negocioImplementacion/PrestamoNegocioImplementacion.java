@@ -32,9 +32,6 @@ public class PrestamoNegocioImplementacion implements PrestamoNegocio{
 
 	@Override
 	public BigDecimal calcularCuota(BigDecimal monto, int idPlazo) {
-		 if (monto == null || monto.compareTo(BigDecimal.ZERO) <= 0 || idPlazo <= 0) {
-		        return BigDecimal.ZERO;
-		    }
 		PrestamoDaoImplementacion pdi= new PrestamoDaoImplementacion();
 		return pdi.obtenerCuotaDesdeBD(monto, idPlazo);
 	}

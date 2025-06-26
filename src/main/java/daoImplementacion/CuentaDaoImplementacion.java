@@ -144,7 +144,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	}	
 
  	
-	public List<Cuenta> listarCuentasPorClienteId(int clienteId,boolean soloActivas) {
+	public List<Cuenta> listarCuentasPorClienteId(int clienteId, boolean soloActivas) {
 	    List<Cuenta> lista = new ArrayList<>();
 	    
 	    Connection conexion = null;
