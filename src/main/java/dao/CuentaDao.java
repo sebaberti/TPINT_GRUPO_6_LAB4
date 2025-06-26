@@ -16,4 +16,5 @@ public interface CuentaDao {
 	public boolean existeCbu(BigInteger cbu);
 	public String obtenerUltimoNumeroCuenta();
 	boolean bajaLogica(int idCuenta);
+	public boolean modificarCuenta(Cuenta cuenta);
 }

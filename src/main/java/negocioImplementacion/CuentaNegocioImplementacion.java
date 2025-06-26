@@ -111,6 +111,12 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.bajaLogica(idCuenta);
 	}
+	
+	@Override
+	public boolean modificarCuenta(Cuenta cuenta) {
+	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
+	    return cuentaDao.modificarCuenta(cuenta);
+	}
 
 
 }
