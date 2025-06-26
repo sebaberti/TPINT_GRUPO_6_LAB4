@@ -59,8 +59,11 @@ public class TransferenciaServlet extends HttpServlet {
                     request.setAttribute("error", "La cuenta de destino está inactiva.");
                 } else {
                     Cuenta cuentaOrigen = cuentaNegocio.obtenerCuentaPorId(cuentaOrigenId);
-                	
-                    if (cuentaOrigen.getEstado() != true) {
+                    
+                    
+                    if (cuentaOrigen.getId() == cuentaDestino.getId()) {
+                        request.setAttribute("error", "No puedes transferir a la misma cuenta.");
+                    } else if (cuentaOrigen.getEstado() != true) {
                         request.setAttribute("error", "La cuenta de origen está inactiva.");
                     } else if (cuentaOrigen.getSaldo() < monto) {
                         request.setAttribute("error", "Saldo insuficiente.");

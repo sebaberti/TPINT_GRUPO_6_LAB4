@@ -118,12 +118,11 @@
 						}
 						%>
 						<td>
-							<form method="post" action="ManejarCuentaServlet">
-								<input type="hidden" name="idCuenta" value="<%=c.getId()%>">
-								<button type="submit" name="btnModificar" value="modificar"
-									class="btn btn-warning btn-sm">
-									<i class="bi bi-pencil-square"></i>
-								</button>
+							<form method="get" action="ModificarCuentaServlet">
+    						<input type="hidden" name="idCuenta" value="<%= c.getId() %>">
+   							<button type="submit" class="btn btn-warning btn-sm">
+       						<i class="bi bi-pencil-square"></i>
+    						</button>
 							</form>
 						</td>
 						<td>
@@ -224,6 +223,7 @@ if (mostrarModal != null && mostrarModal && cuentaAEliminar!=null) {
 		String mensaje = (String) request.getAttribute("mensaje");
 		if (mostrarModal2 != null && mostrarModal2) {
 		%>
+		
 		<script>
 			window.onload = function() {
 				var modal = new bootstrap.Modal(document

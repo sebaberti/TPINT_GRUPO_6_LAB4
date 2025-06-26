@@ -5,8 +5,10 @@
 <%@ page import="entidades.Cliente"%>
 <%@ page import="entidades.Localidad"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
 
 <%
+request.getSession().setAttribute("cliente", request.getAttribute("cliente"));
 Cliente cliente = (Cliente) request.getAttribute("cliente");
 List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
 
@@ -25,7 +27,6 @@ if (cliente != null && cliente.getCUIL() != null) {
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Modificar Cliente</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -94,13 +95,13 @@ if (cliente != null && cliente.getCUIL() != null) {
 
 				<div class="col">
 					<label class="form-label">DNI</label> <input type="text" name="dni"
-						class="form-control" required value="<%=cliente.getDNI()%>">
+						class="form-control" required value="<%=cliente.getDNI()%>" disabled>
 				</div>
 
 				<div class="col">
 					<label class="form-label">CUIL</label> <input type="text"
 						name="cuil" class="form-control" required
-						value="<%=cuilFormateado%>">
+						value="<%=cuilFormateado%>" disabled>
 				</div>
 
 				<div class="col">
@@ -130,7 +131,7 @@ if (cliente != null && cliente.getCUIL() != null) {
 				<div class="col">
 					<label class="form-label">Fecha de Nacimiento</label> <input
 						type="date" name="fechaNacimiento" class="form-control"
-						value="<%=cliente.getFecha_nacimiento() != null ? cliente.getFecha_nacimiento().toString() : ""%>">
+						value="<%=cliente.getFecha_nacimiento() != null ? cliente.getFecha_nacimiento().toString() : ""%>" disabled>
 				</div>
 
 				<div class="col">
@@ -138,11 +139,42 @@ if (cliente != null && cliente.getCUIL() != null) {
 						name="direccion" class="form-control" required
 						value="<%=cliente.getDomicilio() != null ? cliente.getDomicilio().getDireccion() : ""%>">
 				</div>
+				
+				<div class="col">
+					<label class="form-label">Provincia</label> <select
+						name="provincia" class="form-select" required>
+						<option value="" disabled>Seleccionar provincia</option>
+						<%
+						List<Provincia> provincias = (ArrayList<Provincia>) request.getAttribute("provincias");
+						if (provincias != null) {
+							int idProvincia = cliente.getDomicilio().getProvincia().getId();
+							String nombreProvincia = cliente.getDomicilio().getProvincia().getNombre();
+							for (Provincia p : provincias) {
+								boolean selected;
+								if(request.getAttribute("provinciaElegida") != null)
+									selected = p.getId() == (Integer)request.getAttribute("provinciaElegida");
+								else
+									selected = p.getId() == idProvincia;
+						%>
+						<option value="<%=p.getId()%>" <%=selected ? "selected" : ""%>>
+							<%=p.getNombre()%>
+						</option>
+						<%
+						}
+						}
+						%>
+					</select>
+				</div>
+				
+				<div class="col d-flex flex-column justify-content-end">
+						<button type="submit" name="btnCargarLocalidadesFiltradas"
+							class="btn btn-secondary btn-md w-50 .btn-abml">Cargar Localidades</button>
+					</div>
 
 				<div class="col">
 					<label class="form-label">Localidad</label> <select
 						name="localidad" class="form-select" required>
-						<option value="" disabled>Seleccionar localidad</option>
+						<option value="">Seleccionar localidad</option>
 						<%
 						if (localidades != null) {
 							for (Localidad loc : localidades) {
@@ -170,48 +202,18 @@ if (cliente != null && cliente.getCUIL() != null) {
 				</div>
 
 				<div class="col">
-					<label class="form-label">Provincia</label> <select
-						name="provincia" class="form-select" required>
-						<option value="" disabled>Seleccionar provincia</option>
-						<%
-						List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
-						if (provincias != null) {
-							for (Provincia p : provincias) {
-								boolean selected = cliente.getDomicilio() != null && cliente.getDomicilio().getProvincia() != null
-								&& cliente.getDomicilio().getProvincia().getId() == p.getId();
+					<label class="form-label">Nacionalidad</label> 
+					<%
+						String nombrePais = cliente.getNacionalidad().getNombre();
 						%>
-						<option value="<%=p.getId()%>" <%=selected ? "selected" : ""%>>
-							<%=p.getNombre()%>
-						</option>
-						<%
-						}
-						}
-						%>
-					</select>
-				</div>
-
-
-				<div class="col">
-					<label class="form-label">Nacionalidad</label> <select
-						name="nacionalidad" class="form-select" required>
-						<option value="" disabled>Seleccionar nacionalidad</option>
-						<%
-						List<Pais> nacionalidades = (List<Pais>) request.getAttribute("nacionalidades");
-						if (nacionalidades != null) {
-							for (Pais pais : nacionalidades) {
-								boolean selected = cliente.getNacionalidad() != null && cliente.getNacionalidad().getId() == pais.getId();
-						%>
-						<option value="<%=pais.getId()%>" <%=selected ? "selected" : ""%>><%=pais.getNombre()%></option>
-						<%
-						}
-						}
-						%>
-					</select>
+					<input type="text"
+						name="nacionalidad" class="form-control" disabled
+						value="<%= nombrePais != null && !nombrePais.isEmpty() ? nombrePais : "Error"%>">
 				</div>
 
 
 				<div class="col-12 d-flex justify-content-center mt-4">
-					<button type="submit" class="btn btn-warning px-5">
+					<button type="submit" name="btnModificar" class="btn btn-warning px-5">
 						<i class="bi bi-pencil-square me-2"></i>Modificar
 					</button>
 				</div>

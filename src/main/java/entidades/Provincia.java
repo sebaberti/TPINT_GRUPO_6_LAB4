@@ -6,7 +6,13 @@ public class Provincia {
 	Pais pais;
 	
 	public Provincia() {
-
+		pais = new Pais();
+	}
+	
+	public Provincia(int id, String nombre) {
+		this.id = id;
+		this.nombre = nombre;
+		pais = new Pais();
 	}
 	
 	public Provincia(int id, String nombre, Pais pais) {

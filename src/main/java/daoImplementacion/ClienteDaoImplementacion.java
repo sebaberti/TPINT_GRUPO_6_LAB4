@@ -59,22 +59,33 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	public Boolean modificar(Cliente cliente) {
 		String query = """
-				UPDATE Clientes
-				SET cuil = ?, nombre = ?, apellido = ?, correo_electronico = ?, telefono = ?, id_nacionalidad = ?
-				WHERE id = ?
+				UPDATE Clientes 
+				INNER JOIN Domicilios ON Clientes.id_domicilio = Domicilios.id
+				SET 
+				  Clientes.nombre = ?,
+				  Clientes.apellido = ?,
+				  Clientes.sexo = ?,
+				  Clientes.correo_electronico = ?,
+				  Clientes.telefono = ?,
+				  Domicilios.direccion = ?,
+				  Domicilios.id_provincia = ?,
+				  Domicilios.id_localidad = ?
+				WHERE Clientes.id = ?
 				""";
 
 		try {
 			Connection conexion = Conexion.getConexion().getSQLConexion();
 			PreparedStatement stmt = conexion.prepareStatement(query);
 
-			stmt.setString(1, cliente.getCUIL());
-			stmt.setString(2, cliente.getNombre());
-			stmt.setString(3, cliente.getApellido());
+			stmt.setString(1, cliente.getNombre());
+			stmt.setString(2, cliente.getApellido());
+			stmt.setString(3, cliente.getSexo());
 			stmt.setString(4, cliente.getEmail());
 			stmt.setString(5, cliente.getTelefono());
-			stmt.setInt(6, cliente.getNacionalidad() != null ? cliente.getNacionalidad().getId() : 1);
-			stmt.setInt(7, cliente.getId());
+			stmt.setString(6, cliente.getDomicilio().getDireccion());
+			stmt.setInt(7, cliente.getDomicilio().getProvincia().getId());
+			stmt.setInt(8, cliente.getDomicilio().getLocalidad().getId());
+			stmt.setInt(9, cliente.getId());
 
 			if (stmt.executeUpdate() > 0) {
 				conexion.commit();
@@ -102,14 +113,14 @@ public class ClienteDaoImplementacion implements ClienteDao {
 				return false;
 
 			int resultado = resultSet.getInt(1);
-
-			if (!(resultado == 2))
-				return false;
+			
+			if(resultado == 2)
+				return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 
 	public List<Cliente> listar() {
@@ -319,7 +330,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 					INNER JOIN provincias p ON p.id = d.id_provincia
 					INNER JOIN paises pa ON pa.id = p.id_pais
 					INNER JOIN paises pais_nac ON pais_nac.id = c.id_nacionalidad
-					WHERE c.dni = '?' AND c.cuil = '?';
+					WHERE c.dni = ? AND c.cuil = ?;
 										""";
 
 			PreparedStatement statement = conexion.prepareStatement(query);

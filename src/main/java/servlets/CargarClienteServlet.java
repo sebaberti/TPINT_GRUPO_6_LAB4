@@ -2,6 +2,8 @@ package servlets;
 
 import daoImplementacion.ProvinciaDaoImplementacion;
 import entidades.Provincia;
+import negocioImplementacion.ClienteNegocioImplementacion;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -34,18 +36,14 @@ public class CargarClienteServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		String dni = request.getParameter("dni");
 		String cuil = request.getParameter("cuil");
-
-		ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
-		List<Cliente> lista = clienteDao.buscar(dni, cuil);
-
-		if (lista != null && !lista.isEmpty()) {
-			Cliente cliente = lista.get(0);
-			
-			System.out.println(cliente.toString());
+		
+		ClienteNegocioImplementacion clienteNegocio = new ClienteNegocioImplementacion();
+		Cliente cliente = clienteNegocio.getCliente(dni, cuil);
+		if (cliente != null) 
 			request.setAttribute("cliente", cliente);
-		} else {
+		else
 			request.setAttribute("error", "No se encontró ningún cliente con los datos ingresados.");
-		}
+			
 
 		LocalidadDaoImplementacion localidadDao = new LocalidadDaoImplementacion();
 

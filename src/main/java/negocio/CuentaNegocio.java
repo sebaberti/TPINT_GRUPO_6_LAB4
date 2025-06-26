@@ -12,6 +12,8 @@ public interface CuentaNegocio {
 	public Cuenta obtenerCuentaPorCBU(String cbu);
 	public Cuenta obtenerCuentaPorId(int id);
 	List<Cuenta> listarCuentasPorClienteId(int clienteId);
+	public boolean bajaLogica(int idCuenta);
+	public boolean modificarCuenta(Cuenta cuenta);
 }
 
 
