@@ -47,13 +47,7 @@ public class AutorizarPrestamosServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-<<<<<<< HEAD
-	
-		doGet(request, response);
-	}
 
-}
-=======
 	PrestamoNegocioImplementacion pni= new PrestamoNegocioImplementacion();
 	
 	String idPrestamoParam = request.getParameter("idPrestamo");
@@ -87,5 +81,3 @@ public class AutorizarPrestamosServlet extends HttpServlet {
 	}
 	}
 }
-
->>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932

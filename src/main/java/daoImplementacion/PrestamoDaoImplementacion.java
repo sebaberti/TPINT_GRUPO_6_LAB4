@@ -8,16 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import dao.PrestamoDao;
 import entidades.Cliente;
 import entidades.Cuenta;
 import entidades.Plazo;
 import entidades.Prestamo;
-import entidades.Usuario;
+
 
 public class PrestamoDaoImplementacion implements PrestamoDao{
 
@@ -41,7 +39,7 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 			return false;
 		  }
 	}
-	@Override
+	
 	public boolean autorizarPrestamo(int idPrestamo) {
 		 try
 		  {
@@ -157,9 +155,5 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 		return lista;
 	
 	}
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 8d5c7fe4bd88c5cd41b02e9e0f93b194c3155932
 }
