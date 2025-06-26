@@ -63,7 +63,7 @@ if (cliente != null && cliente.getCUIL() != null) {
 		<%
 		if (modifico != null) {
 		%>
-		<div class="alert alert-succes alert-dismissible fade show"
+		<div class="alert alert-success alert-dismissible fade show"
 			role="alert">
 			<%=modifico%>
 			<button type="button" class="btn-close" data-bs-dismiss="alert"
