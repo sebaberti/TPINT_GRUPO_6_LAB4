@@ -144,18 +144,22 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	}	
 
  	
-	public List<Cuenta> listarCuentasPorClienteId(int clienteId) {
+	public List<Cuenta> listarCuentasPorClienteId(int clienteId,boolean soloActivas) {
 	    List<Cuenta> lista = new ArrayList<>();
 	    
 	    Connection conexion = null;
         PreparedStatement statement= null;
    	 	ResultSet rs= null;
 	   
-	    String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, " +
-                "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " +
-                "FROM cuentas c " +
-                "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id " +
-                "WHERE c.id_cliente = ? AND c.estado = 1 AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
+   	 String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, " +
+             "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " +
+             "FROM cuentas c " +
+             "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id " +
+             "WHERE c.id_cliente = ? AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
+
+   	 			if (soloActivas) {
+   	 			query += " AND c.estado = 1";
+   	 			}
 
 	    try {
 	    	conexion = Conexion.getConexion().getSQLConexion();

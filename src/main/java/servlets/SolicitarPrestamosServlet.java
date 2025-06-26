@@ -107,7 +107,7 @@ public void cargarFormulario(HttpServletRequest request, HttpServletResponse res
 
     if (clienteActivo != null) {
         CuentaNegocioImplementacion cni = new CuentaNegocioImplementacion();
-        ArrayList<Cuenta> listaCuentas = (ArrayList<Cuenta>) cni.listarCuentasPorClienteId(clienteActivo.getId());
+        ArrayList<Cuenta> listaCuentas = (ArrayList<Cuenta>) cni.listarCuentasPorClienteId(clienteActivo.getId(),true);
         request.setAttribute("listaCuentasCliente", listaCuentas);
     }else {
         System.out.println("⚠️ clienteActivo es null, no se cargan las cuentas.");
