@@ -249,7 +249,8 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	            cuenta.setId(rs.getInt("cuenta_id"));
 	            cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
 	            cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
-
+	            
+	            tipoCuenta.setId(rs.getInt("tipo_cuenta_id"));
 	            tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
 	            cuenta.setTipoCuenta(tipoCuenta);
 	            
@@ -361,6 +362,36 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } 
+	    return false;
+	}
+	
+	
+	@Override
+	public boolean modificarCuenta(Cuenta cuenta) {
+		Connection conexion = null;
+		PreparedStatement statement = null;
+		
+	    String query = "UPDATE cuentas SET id_tipo_cuenta = ?, saldo = ?, estado = ? WHERE id = ?";
+
+
+	    try {
+	        conexion = Conexion.getConexion().getSQLConexion();
+	        conexion.setAutoCommit(false);
+	        statement = conexion.prepareStatement(query);
+
+	        statement.setInt(1, cuenta.getTipoCuenta().getId());
+	        statement.setDouble(2, cuenta.getSaldo());
+	        statement.setBoolean(3, cuenta.isEstado());
+	        statement.setInt(4, cuenta.getId());
+
+	        if (statement.executeUpdate() > 0) {
+	            conexion.commit();
+	            return true;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
 	    return false;
 	}
 
