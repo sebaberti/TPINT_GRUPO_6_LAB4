@@ -157,7 +157,7 @@ public class ModificarClienteServlet extends HttpServlet {
 		cliente.setFecha_nacimiento(clienteAux.getFecha_nacimiento());
 		cliente.setEmail(email);
 		cliente.setTelefono(telefono);
-		cliente.getNacionalidad().setNombre(nacionalidad);
+		cliente.getNacionalidad().setNombre(clienteAux.getNacionalidad().getNombre());
 		cliente.getDomicilio().setDireccion(direccion);
 		cliente.getDomicilio().getProvincia().setId(idProvincia);
 		cliente.getDomicilio().getLocalidad().setId(idLocalidad);
