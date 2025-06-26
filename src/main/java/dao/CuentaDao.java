@@ -11,7 +11,7 @@ public interface CuentaDao {
 	public List<Cuenta> listarPorDNI(int dni);
 	public Cuenta obtenerCuentaPorCBU(String cbu);
 	public Cuenta obtenerCuentaPorId(int id);
-	public List<Cuenta> listarCuentasPorClienteId(int clienteId);
+	public List<Cuenta> listarCuentasPorClienteId(int clienteId,boolean soloActivas);
 	public int cuentasActivas(int idCliente);
 	public boolean existeCbu(BigInteger cbu);
 	public String obtenerUltimoNumeroCuenta();

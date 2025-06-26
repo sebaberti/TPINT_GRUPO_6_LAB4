@@ -79,9 +79,9 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	}
 	
 	@Override
-	public List<Cuenta> listarCuentasPorClienteId(int clienteId) {
+	public List<Cuenta> listarCuentasPorClienteId(int clienteId,boolean soloActivas) {
 	    CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
-	    return cuentas.listarCuentasPorClienteId(clienteId); 
+	    return cuentas.listarCuentasPorClienteId(clienteId,soloActivas); 
 	}
 
 	public boolean existeCuenta(Cuenta cuenta) {

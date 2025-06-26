@@ -1,7 +1,9 @@
 package daoImplementacion;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,29 @@ public class PlazoDaoImplementacion implements PlazoDao {
 		}
 
 		return listaPlazos;
+	}
+
+	@Override
+	public Plazo obtenerPlazoPorId(int id) {
+		Plazo plazo= null;
+		try {
+			   Connection conexion = Conexion.getConexion().getSQLConexion();
+		        String query = "SELECT id, cantidad_cuotas, tasaAnual FROM opciones_plazo WHERE id =" + id;
+		        Statement statement = conexion.createStatement();		        	
+		        ResultSet rs = statement.executeQuery(query);
+		        if (rs.next()) {
+		            plazo = new Plazo();
+		            plazo.setId(rs.getInt("id"));
+		            plazo.setCantidadCuotas(rs.getInt("cantidad_cuotas"));
+		            plazo.setTasaAnual(rs.getBigDecimal("tasaAnual"));
+		        }		        
+		        rs.close();
+		        statement.close();
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    return plazo;
 	}
 
 }

@@ -31,7 +31,7 @@ public class TransferenciaServlet extends HttpServlet {
             return;
         }
 
-        List<Cuenta> cuentasCliente = cuentaNegocio.listarCuentasPorClienteId(idCliente);
+        List<Cuenta> cuentasCliente = cuentaNegocio.listarCuentasPorClienteId(idCliente,true);
 
         request.setAttribute("cuentasCliente", cuentasCliente);
         request.getRequestDispatcher("/vistas/Transferencia.jsp").forward(request, response);
@@ -89,7 +89,7 @@ public class TransferenciaServlet extends HttpServlet {
         }
 
     
-        List<Cuenta> cuentasCliente = cuentaNegocio.listarCuentasPorClienteId(idCliente);
+        List<Cuenta> cuentasCliente = cuentaNegocio.listarCuentasPorClienteId(idCliente,true);
 
 
         request.setAttribute("cuentasCliente", cuentasCliente);
