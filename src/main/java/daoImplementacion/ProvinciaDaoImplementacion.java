@@ -35,4 +35,26 @@ public class ProvinciaDaoImplementacion implements ProvinciaDao {
 
 		return lista;
 	}
+	
+	public Provincia obtenerProvinciaPorID(int id) {
+		
+		String query = "SELECT * FROM Provincias WHERE id = ?";
+		
+
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement statement = conexion.prepareStatement(query);
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				return new Provincia(rs.getInt(1), rs.getString(2));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new Provincia(-1, "vacio");
+	}
 }
