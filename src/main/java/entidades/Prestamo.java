@@ -5,17 +5,18 @@ import java.time.LocalDate;
 
 public class Prestamo {
 	private int id;
+	private Cliente cliente;
 	private Cuenta cuenta;
 	private LocalDate fechaAlta;
 	private BigDecimal importePedido;
 	private Plazo plazo;
-	boolean estado;
+	private int estado;
 	
 	public Prestamo() {
 	}
 	
-	public Prestamo(int id, Cuenta cuenta, LocalDate fechaAlta, BigDecimal importePedido, Plazo plazo,
-			boolean estado) {	
+	public Prestamo(int id, Cliente cliente, Cuenta cuenta, LocalDate fechaAlta, BigDecimal importePedido, Plazo plazo,
+			int estado) {	
 		this.id = id;
 		this.cuenta= cuenta;
 		this.fechaAlta = fechaAlta;
@@ -30,6 +31,14 @@ public class Prestamo {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public Cuenta getCuenta() {
@@ -64,13 +73,20 @@ public class Prestamo {
 		this.plazo = plazo;
 	}
 
-	public boolean isEstado() {
+	public int getEstado() {
 		return estado;
 	}
 
-	public void setEstado(boolean estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
-
 	
+	public String getEstadoTexto() {
+		switch (estado) {
+			case 0: return "Pendiente";
+			case 1: return "Aprobado";
+			case 2: return "Rechazado";
+			default: return "Desconocido";
+		}
+	}
 }

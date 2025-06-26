@@ -29,7 +29,7 @@ if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("Clientes.jsp", "bi-people-fill", "text-primary", "Gestionar Clientes"));
 	tarjetas.add(new Tarjeta("Cuentas.jsp", "bi-bank2", "text-success", "Gestionar Cuentas"));
 	tarjetas.add(new Tarjeta("Usuarios.jsp", "bi-person-lock", "text-info", "Usuarios"));
-	tarjetas.add(new Tarjeta("vistas/Admin/AdministrarPrestamos/AutorizarPrestamos.jsp", "bi-check2-circle", "text-warning", "Autorizar Préstamos"));
+	tarjetas.add(new Tarjeta("AutorizarPrestamosServlet", "bi-check2-circle", "text-warning", "Autorizar Préstamos"));
 	tarjetas.add(new Tarjeta("vistas/Admin/Reportes/reportes.jsp", "bi-bar-chart-line", "text-danger", "Reportes"));
 } else if (tipoUsuario  == "cliente") {
 	tarjetas.add(new Tarjeta("vistas/Cuentas.jsp", "bi-wallet2", "text-primary", "Mis Cuentas"));
