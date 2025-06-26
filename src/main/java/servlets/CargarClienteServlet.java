@@ -3,8 +3,10 @@ package servlets;
 import daoImplementacion.ProvinciaDaoImplementacion;
 import entidades.Provincia;
 import negocioImplementacion.ClienteNegocioImplementacion;
+import negocioImplementacion.LocalidadNegocioImplementacion;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -45,21 +47,27 @@ public class CargarClienteServlet extends HttpServlet {
 			request.setAttribute("error", "No se encontró ningún cliente con los datos ingresados.");
 			
 
-		LocalidadDaoImplementacion localidadDao = new LocalidadDaoImplementacion();
+		LocalidadNegocioImplementacion localidadDao = new LocalidadNegocioImplementacion();
 
 		if ((dni == null || dni.trim().isEmpty()) && (cuil == null || cuil.trim().isEmpty())) {
 			request.setAttribute("error", "Debe ingresar al menos un DNI o CUIL para buscar.");
-			List<Localidad> localidadesBsAs = localidadDao.listarLocalidadesBuenosAires();
-			request.setAttribute("localidades", localidadesBsAs);
+			List<Localidad> localidades = localidadDao.listarLocalidades();
+			request.setAttribute("localidades", localidades);
 			request.setAttribute("nacionalidades", new PaisDaoImplementacion().listar());
 			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
 			return;
 		}
 
 
-		List<Localidad> localidadesBsAs = localidadDao.listarLocalidadesBuenosAires();
+		List<Localidad> localidades = localidadDao.listarLocalidades();
+		List<Localidad> localidadesFiltradas = new ArrayList<Localidad>();
+		// Filtro por las localidades correspondientes a la provincia del Cliente
+		for (Localidad localidad : localidades) {
+			if(localidad.getProvincia().getId() == cliente.getDomicilio().getProvincia().getId())
+				localidadesFiltradas.add(localidad);
+		}
 		request.setAttribute("provincias", new ProvinciaDaoImplementacion().listar());
-		request.setAttribute("localidades", localidadesBsAs);
+		request.setAttribute("localidades", localidadesFiltradas);
 		request.setAttribute("nacionalidades", new PaisDaoImplementacion().listar());
 
 		request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
