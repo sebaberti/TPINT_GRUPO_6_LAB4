@@ -10,7 +10,7 @@
 <%
 request.getSession().setAttribute("cliente", request.getAttribute("cliente"));
 Cliente cliente = (Cliente) request.getAttribute("cliente");
-List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
+List<Localidad> localidades = (ArrayList<Localidad>) request.getAttribute("localidades");
 
 String cuilFormateado = "";
 if (cliente != null && cliente.getCUIL() != null) {
@@ -47,6 +47,7 @@ if (cliente != null && cliente.getCUIL() != null) {
 
 		<%
 		String mensajeError = (String) request.getAttribute("error");
+		String modifico = (String) request.getAttribute("modifico");
 		if (mensajeError != null) {
 		%>
 		<div class="alert alert-warning alert-dismissible fade show"
@@ -56,6 +57,20 @@ if (cliente != null && cliente.getCUIL() != null) {
 				aria-label="Close"></button>
 		</div>
 		<%
+		}
+		%>
+		
+		<%
+		if (modifico != null) {
+		%>
+		<div class="alert alert-succes alert-dismissible fade show"
+			role="alert">
+			<%=modifico%>
+			<button type="button" class="btn-close" data-bs-dismiss="alert"
+				aria-label="Close"></button>
+		</div>
+		<%
+		request.removeAttribute("modifico");
 		}
 		%>
 
