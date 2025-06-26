@@ -139,37 +139,7 @@ if (cliente != null && cliente.getCUIL() != null) {
 						name="direccion" class="form-control" required
 						value="<%=cliente.getDomicilio() != null ? cliente.getDomicilio().getDireccion() : ""%>">
 				</div>
-
-				<div class="col">
-					<label class="form-label">Localidad</label> <select
-						name="localidad" class="form-select" required>
-						<option value="" disabled>Seleccionar localidad</option>
-						<%
-						if (localidades != null) {
-							for (Localidad loc : localidades) {
-								boolean selected = cliente.getDomicilio() != null && cliente.getDomicilio().getLocalidad() != null
-								&& loc.getId() == cliente.getDomicilio().getLocalidad().getId();
-						%>
-						<option value="<%=loc.getId()%>" <%=selected ? "selected" : ""%>><%=loc.getNombre()%></option>
-						<%
-						}
-						}
-						%>
-					</select>
-				</div>
-
-				<div class="col">
-					<label class="form-label">Teléfono</label> <input type="text"
-						name="telefono" class="form-control" required
-						value="<%=cliente.getTelefono()%>">
-				</div>
-
-				<div class="col">
-					<label class="form-label">Correo electrónico</label> <input
-						type="email" name="email" class="form-control" required
-						value="<%=cliente.getEmail()%>">
-				</div>
-
+				
 				<div class="col">
 					<label class="form-label">Provincia</label> <select
 						name="provincia" class="form-select" required>
@@ -201,11 +171,40 @@ if (cliente != null && cliente.getCUIL() != null) {
 							class="btn btn-secondary btn-md w-50 .btn-abml">Cargar Localidades</button>
 					</div>
 
+				<div class="col">
+					<label class="form-label">Localidad</label> <select
+						name="localidad" class="form-select" required>
+						<option value="">Seleccionar localidad</option>
+						<%
+						if (localidades != null) {
+							for (Localidad loc : localidades) {
+								boolean selected = cliente.getDomicilio() != null && cliente.getDomicilio().getLocalidad() != null
+								&& loc.getId() == cliente.getDomicilio().getLocalidad().getId();
+						%>
+						<option value="<%=loc.getId()%>" <%=selected ? "selected" : ""%>><%=loc.getNombre()%></option>
+						<%
+						}
+						}
+						%>
+					</select>
+				</div>
+
+				<div class="col">
+					<label class="form-label">Teléfono</label> <input type="text"
+						name="telefono" class="form-control" required
+						value="<%=cliente.getTelefono()%>">
+				</div>
+
+				<div class="col">
+					<label class="form-label">Correo electrónico</label> <input
+						type="email" name="email" class="form-control" required
+						value="<%=cliente.getEmail()%>">
+				</div>
 
 				<div class="col">
 					<label class="form-label">Nacionalidad</label> 
 					<%
-						String nombrePais = cliente.getDomicilio().getProvincia().getPais().getNombre();
+						String nombrePais = cliente.getNacionalidad().getNombre();
 						%>
 					<input type="text"
 						name="nacionalidad" class="form-control" disabled
