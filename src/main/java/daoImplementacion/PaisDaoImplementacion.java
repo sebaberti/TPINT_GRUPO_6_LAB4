@@ -34,4 +34,26 @@ public class PaisDaoImplementacion implements PaisDao {
 
 		return lista;
 	}
+	
+	public Pais obtenerPaisPorID(int id) {
+		String query = "SELECT * FROM paises WHERE id = ?";
+		
+
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement statement = conexion.prepareStatement(query);
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				return new Pais(rs.getInt(1), rs.getString(2));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new Pais(-1, "vacio");
+	}
 }
+
