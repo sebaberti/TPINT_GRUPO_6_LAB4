@@ -16,14 +16,7 @@
 <title>Alta Cliente</title>
 </head>
 <body>
-<%
-    List<Pais> testPaises = (List<Pais>) request.getAttribute("listaPaises");
-    if (testPaises == null) {
-        out.println("<p style='color:red;'>listaPaises está llegando como null 😢</p>");
-    } else {
-        out.println("<p style='color:green;'>listaPaises contiene: " + testPaises.size() + " países ✅</p>");
-    }
-%>
+
 
 <jsp:include page="../../Header.jsp" />
 	
