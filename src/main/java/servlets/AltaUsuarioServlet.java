@@ -31,12 +31,15 @@ public class AltaUsuarioServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	        throws ServletException, IOException {
-
+		
+	}
+}
+/*
 	    
 	    if (request.getParameter("btnBuscarCliente") != null) {
 	        String dni = request.getParameter("dniClienteBuscar");
 	        ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
-	        Cliente cliente = clienteDao.buscarPorDNI(dni);
+	       Cliente cliente = clienteDao.buscarPorDNI(dni);
 
 	        if (cliente != null && cliente.getUsuario() == null) {
 	            request.setAttribute("clienteEncontrado", cliente);
@@ -83,6 +86,6 @@ public class AltaUsuarioServlet extends HttpServlet {
 	        request.getRequestDispatcher("/altaUsuario.jsp").forward(request, response);
 	    }
 	}
+*/
 
-}
 

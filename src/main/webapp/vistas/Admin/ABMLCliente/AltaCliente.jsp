@@ -1,6 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="entidades.Cliente" %>
+<%@ page import="java.util.List" %>
+<%@ page import="entidades.Pais" %>
+<%@ page import="entidades.Provincia" %>
+<%@ page import="entidades.Localidad" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +16,14 @@
 <title>Alta Cliente</title>
 </head>
 <body>
-
+<%
+    List<Pais> testPaises = (List<Pais>) request.getAttribute("listaPaises");
+    if (testPaises == null) {
+        out.println("<p style='color:red;'>listaPaises está llegando como null 😢</p>");
+    } else {
+        out.println("<p style='color:green;'>listaPaises contiene: " + testPaises.size() + " países ✅</p>");
+    }
+%>
 
 <jsp:include page="../../Header.jsp" />
 	
@@ -66,41 +77,57 @@
       					<label for="selectSexo" class="form-label">Sexo</label>
       					<select id="selectSexo" name="selectSexo" class="form-select" required>
         					<option value="" disabled selected>Seleccione un sexo</option>
-        					<option>Femenino</option>
-        					<option>Masculino</option>
+        					<option value="Femenino">Femenino</option>
+        					<option value="Masculino">Masculino</option>
       					</select>
       				</div>
-    				<div class="col mb-3">
-						<label for="selectNacionalidad" class="form-label" >Nacionalidad</label>
-						<select id="selectNacionalidad" name="selectNacionalidad" class="form-select" required>
-        					<option value="" disabled selected>Seleccionar país</option>
-        					<option>Argentina</option>
-      					</select>
-					</div>
 					<div class="col mb-3">
+						<select name="selectNacionalidad" class="form-select" required>
+						    <option value="" disabled selected>Seleccionar país</option>
+						    <%
+						        List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
+						        for (Pais p : listaPaises) {
+						    %>
+						        <option value="<%= p.getId() %>"><%= p.getNombre() %></option>
+						    <%
+						        }
+						    %>
+						</select>
+						</div>
+						<div class="col mb-3">
 						<label for="fechaNacimientoCliente" class="form-label" >Fecha Nacimiento</label>
 						<input type="date" class="form-control" id="fechaNacimientoCliente" name="fechaNacimientoCliente" required>
 					</div>
-			
 					<div class="col mb-3">
 						<label for="direccionCliente" class="form-label" >Dirección</label>
 						<input type="text" class="form-control" id="direccionCliente" name="direccionCliente"  placeholder="Ej: Calle 123" required>
 					</div>
 					<div class="col mb-3">
-						<label for="selectProvincia" class="form-label" >Provincia</label>
-						<select id="selectProvincia" name="selectProvincia" class="form-select" required>
-        					<option value="" disabled selected>Seleccionar provincia</option>
-        					<option>Buenos Aires</option>
-      					</select>
+					   <select name="selectProvincia" class="form-select" required>
+					    <option value="" disabled selected>Seleccionar provincia</option>
+					    <%
+					        List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
+					        for (Provincia prov : listaProvincias) {
+					    %>
+					        <option value="<%= prov.getId() %>"><%= prov.getNombre() %></option>
+					    <%
+					        }
+					    %>
+					</select>
 					</div>
 					<div class="col mb-3">
-						<label for="selectLocalidad" class="form-label" >Localidad</label>
-						<select id="selectLocalidad" name="selectLocalidad" class="form-select" required>
-        					<option value="" disabled selected>Seleccionar localidad</option>
-        					<option>CABA</option>
-      					</select>
+						<select name="selectLocalidad" class="form-select" required>
+					    <option value="" disabled selected>Seleccionar localidad</option>
+					    <%
+					        List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
+					        for (Localidad loc : listaLocalidades) {
+					    %>
+					        <option value="<%= loc.getId() %>"><%= loc.getNombre() %></option>
+					    <%
+					        }
+					    %>
+						</select>
 					</div>
-			
 					<div class="col mb-3">
 						<label for="emailCliente" class="form-label" >Correo electronico</label>
 						<input type="email" class="form-control" id="emailCliente" name="emailCliente" placeholder="Ej: ejemplo@proveedor.com" required>
