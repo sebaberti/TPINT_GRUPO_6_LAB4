@@ -1,113 +1,121 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page session="true" %>
-<%@ page import="java.util.List" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.*, entidades.Movimiento, entidades.Cuenta" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-	<title>Movimientos - Banco SIX</title>
- 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <meta charset="UTF-8">
+    <title>Movimientos - Banco SIX</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+    <!-- Estilos propios -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloABML.css">
 </head>
 <body>
-	<jsp:include page="Header.jsp" />
-	<main>
-	<form class="container my-4">
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label for="fechaInicio" class="form-label">Fecha desde:</label>
-      <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" required>
-    </div>
-    <div class="col-md-6">
-      <label for="fechaFin" class="form-label">Fecha hasta:</label>
-      <input type="date" id="fechaFin" name="fechaFin" class="form-control">
-    </div>
-  </div>
+<jsp:include page="/vistas/Header.jsp" />
 
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <label for="tipoMovimiento" class="form-label">Tipo de movimiento:</label>
-      <select class="form-select" id="tipoMovimiento" name="tipoMovimiento">
-        <option value="">Seleccione...</option>
-        <option value="credito">Crédito</option>
-        <option value="debito">Débito</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label for="estado" class="form-label">Estado:</label>
-      <select class="form-select" id="estado" name="estado">
-        <option value="">Seleccione...</option>
-        <option value="realizado">Realizado</option>
-        <option value="en_proceso">En proceso</option>
-        <option value="rechazada">Rechazada</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label for="cuenta" class="form-label">Cuenta:</label>
-      <select class="form-select" id="cuenta" name="cuenta">
-        <option value="">Seleccione una cuenta...</option>
-        <option value="101">Caja de Ahorro - $25.000</option>
-        <option value="102">Cuenta Corriente - $8.000</option>
-      </select>
-    </div>
-  </div>
-  <div class="text-end mb-4">
-    <button type="submit" class="btn btn-primary">
-      <i class="bi bi-search"></i> Ver movimientos
-    </button>
-  </div>
-</form>
-<div class="row mb-3">
-  <div class="col-md-3 ms-1" style="margin-left: 60px;">
-    <label for="cantidad" class="form-label">Mostrar:</label>
-    <select class="form-select" id="cantidad" name="cantidad" onchange="this.form.submit()">
-      <option value="10">10 movimientos</option>
-      <option value="50">50 movimientos</option>
-      <option value="100">100 movimientos</option>
-    </select>
-  </div>
-</div>
+<main class="container my-5">
+    <h1 class="text-center mb-4">Historial de Movimientos</h1>
 
-<div class="table-responsive">
-  <table class="table table-bordered text-center align-middle">
-    <thead class="table-dark">
-      <tr>
-        <th>Fecha</th>
-        <th>Tipo</th>
-        <th>Estado</th>
-        <th>Monto</th>
-        <th>Cuenta</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>12/06/2025</td>
-        <td>Crédito</td>
-        <td><span class="badge bg-success">Realizado</span></td>
-        <td>$1.000</td>
-        <td>Caja de Ahorro</td>
-      </tr>
-      <tr>
-        <td>13/06/2025</td>
-        <td>Débito</td>
-        <td><span class="badge bg-danger">Rechazada</span></td>
-        <td>$500</td>
-        <td>Cuenta Corriente</td>
-      </tr>
-      <tr>
-        <td>14/06/2025</td>
-        <td>Débito</td>
-        <td><span class="badge bg-warning text-dark">En proceso</span></td>
-        <td>$750</td>
-        <td>Caja de Ahorro</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <!-- Formulario de filtros -->
+    <form method="get" action="MovimientosServlet">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="cuentaId" class="form-label">Cuenta:</label>
+                <select name="cuentaId" id="cuentaId" class="form-select" required>
+                    <option value="">Seleccione una cuenta...</option>
+                    <%
+                        List<Cuenta> cuentasCliente = (List<Cuenta>) request.getAttribute("cuentasCliente");
+                        int cuentaSeleccionada = request.getParameter("cuentaId") != null ? Integer.parseInt(request.getParameter("cuentaId")) : -1;
+                        for (Cuenta c : cuentasCliente) {
+                            boolean seleccionada = (c.getId() == cuentaSeleccionada);
+                    %>
+                    <option value="<%= c.getId() %>" <%= seleccionada ? "selected" : "" %>>
+                        <%= c.getTipoCuenta().getDescripcion() %> - CBU: <%= c.getCBU() %> - Saldo: $<%= c.getSaldo() %>
+                    </option>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="fechaInicio" class="form-label">Desde:</label>
+                <input type="date" class="form-control" name="fechaInicio"
+                       value="<%= request.getParameter("fechaInicio") != null ? request.getParameter("fechaInicio") : "" %>">
+            </div>
+
+            <div class="col-md-3">
+                <label for="fechaFin" class="form-label">Hasta:</label>
+                <input type="date" class="form-control" name="fechaFin"
+                       value="<%= request.getParameter("fechaFin") != null ? request.getParameter("fechaFin") : "" %>">
+            </div>
+        </div>
+
+        <div class="mb-4 text-end">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Ver movimientos
+            </button>
+        </div>
+    </form>
+
+    <!-- Tabla de resultados -->
+    <div class="table-responsive">
+        <table id="tabla_movimientos" class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Detalle</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+    <%
+        List<Movimiento> movimientos = (List<Movimiento>) request.getAttribute("movimientos");
+        if (movimientos != null && !movimientos.isEmpty()) {
+            for (Movimiento m : movimientos) {
+    %>
+    <tr>
+        <td><%= m.getFecha().toLocalDate() %></td>
+        <td><%= m.getTipoMovimiento().getDescripcion() %></td>
+        <td><%= m.getDetalle() %></td>
+        <td class="<%= m.getImporte() >= 0 ? "text-success" : "text-danger" %>">$<%= m.getImporte() %></td>
+    </tr>
+    <%  }
+        }
+    %>
+</tbody>
+</table>
+<%
+    if (movimientos == null || movimientos.isEmpty()) {
+%>
+    <div class="alert alert-info text-center mt-3">No hay movimientos para mostrar.</div>
+<%
+    }
+%>
+            </tbody>
+        </table>
+    </div>
 </main>
-<jsp:include page="Footer.jsp" />
+
+<jsp:include page="/vistas/Footer.jsp" />
+
+<!-- Scripts Bootstrap y DataTables -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+
+<script>
+	$(document).ready(function() {$('#tabla_movimientos').DataTable({
+	searching : false,
+	language : { url : "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"}
+		});
+	});
+</script>
 </body>
 </html>

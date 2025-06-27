@@ -22,24 +22,40 @@ public class TransferenciaDaoImplementacion implements TransferenciaDao {
     	Connection conexion = null;
         PreparedStatement statement= null;
      	ResultSet rs= null;
+     	ResultSet generatedKeys = null;
      	
         String query = "INSERT INTO transferencias (cuenta_origen, cuenta_destino, monto, fecha) VALUES (?, ?, ?, ?)";
 
         try {
             conexion = Conexion.getConexion().getSQLConexion();
-            statement = conexion.prepareStatement(query);
+            statement = conexion.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+           
 
             statement.setInt(1, transferencia.getCuentaOrigen().getId());
             statement.setInt(2, transferencia.getCuentaDestino().getId());
             statement.setDouble(3, transferencia.getMonto());
             statement.setTimestamp(4, java.sql.Timestamp.valueOf(transferencia.getFecha()));
 
-            if (statement.executeUpdate() > 0) {
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                generatedKeys = statement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    transferencia.setId(generatedKeys.getInt(1)); // ✅ se guarda el ID en el objeto
+                }
                 conexion.commit();
                 return true;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (generatedKeys != null) generatedKeys.close();
+                if (statement != null) statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return false;
