@@ -4,6 +4,7 @@
 <%@ page import="entidades.Cliente"%>
 <%@ page import="entidades.Cuenta"%>
 <%@ page import="entidades.CuentaTipo"%>
+<%@ page import="negocioImplementacion.Seguridad"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,6 +26,17 @@
 	<jsp:include page="/vistas/Header.jsp" />
 
 	<%
+	Object user = session.getAttribute("usuario");
+
+/* 	if (!Seguridad.sesionActiva(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} 
+	if (!Seguridad.esAdministrador(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} */
+	
 	Cliente cliente = (Cliente) request.getAttribute("cliente");
 	%>
 
