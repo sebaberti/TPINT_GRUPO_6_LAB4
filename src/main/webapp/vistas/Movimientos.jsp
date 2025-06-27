@@ -8,11 +8,8 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- DataTables CSS -->
+  
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-
-    <!-- Estilos propios -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
 <body>
@@ -26,31 +23,34 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="cuentaId" class="form-label">Cuenta:</label>
-                <select name="cuentaId" id="cuentaId" class="form-select" required>
-                    <option value="">Seleccione una cuenta...</option>
-                    <%
-                        List<Cuenta> cuentasCliente = (List<Cuenta>) request.getAttribute("cuentasCliente");
-                        int cuentaSeleccionada = request.getParameter("cuentaId") != null ? Integer.parseInt(request.getParameter("cuentaId")) : -1;
-                        for (Cuenta c : cuentasCliente) {
-                            boolean seleccionada = (c.getId() == cuentaSeleccionada);
-                    %>
-                    <option value="<%= c.getId() %>" <%= seleccionada ? "selected" : "" %>>
-                        <%= c.getTipoCuenta().getDescripcion() %> - CBU: <%= c.getCBU() %> - Saldo: $<%= c.getSaldo() %>
-                    </option>
-                    <% } %>
-                </select>
+                <%
+    List<Cuenta> cuentasCliente = (List<Cuenta>) request.getAttribute("cuentasCliente");
+    Integer cuentaSeleccionada = (Integer) request.getAttribute("cuentaSeleccionada");
+    if (cuentaSeleccionada == null) {
+        cuentaSeleccionada = -1; // o null si querés manejar diferente
+    }
+	%>
+	<select name="cuentaId" id="cuentaId" class="form-select" required>
+    <option value="">Seleccione una cuenta...</option>
+    <% for (Cuenta c : cuentasCliente) {
+        boolean seleccionada = c.getId() == cuentaSeleccionada;
+    %>
+        <option value="<%= c.getId() %>" <%= seleccionada ? "selected" : "" %>>
+            <%= c.getTipoCuenta().getDescripcion() %> - CBU: <%= c.getCBU() %> - Saldo: $<%= c.getSaldo() %>
+        </option>
+    <% } %>
+	</select>
             </div>
 
             <div class="col-md-3">
                 <label for="fechaInicio" class="form-label">Desde:</label>
-                <input type="date" class="form-control" name="fechaInicio"
-                       value="<%= request.getParameter("fechaInicio") != null ? request.getParameter("fechaInicio") : "" %>">
+                <input type="date" class="form-control" name="fechaInicio" value="">
+                
             </div>
 
             <div class="col-md-3">
                 <label for="fechaFin" class="form-label">Hasta:</label>
-                <input type="date" class="form-control" name="fechaFin"
-                       value="<%= request.getParameter("fechaFin") != null ? request.getParameter("fechaFin") : "" %>">
+               <input type="date" class="form-control" name="fechaFin" value="">
             </div>
         </div>
 
@@ -87,8 +87,8 @@
     <%  }
         }
     %>
-</tbody>
-</table>
+		</tbody>
+	</table>
 <%
     if (movimientos == null || movimientos.isEmpty()) {
 %>
@@ -117,5 +117,6 @@
 		});
 	});
 </script>
+
 </body>
 </html>
