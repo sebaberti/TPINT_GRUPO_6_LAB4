@@ -1,6 +1,8 @@
 package servlets;
 
-import java.io.IOException;		
+import java.io.IOException;
+import java.sql.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import entidades.Cliente;
+import entidades.Direccion;
+import entidades.Localidad;
+import entidades.Pais;
+import entidades.Provincia;
 import negocioImplementacion.ClienteNegocioImplementacion;
 
 @WebServlet("/AltaClienteServlet")
@@ -56,20 +62,32 @@ public class AltaClienteServlet extends HttpServlet {
 		if (request.getParameter("btnAltaCliente") != null) {
 
 			try {
-				cliente.setId(1);
-				cliente.setDNI(request.getParameter("DNICliente"));
-				cliente.setCUIL(request.getParameter("CUILCliente"));
-				cliente.setNombre(request.getParameter("nombreCliente"));
-				cliente.setApellido(request.getParameter("apellidoCliente"));
-				cliente.setSexo("M");
-				// cliente.getNacionalidad.setPais("Argentino");
-				// cliente.setFecha_nacimiento();
-				// cliente.getDireccion.setDireccion(request.getParameter("lblDireccion"));
-				// cliente.getDireccion.setLocalidad(request.getParameter("lblLocalidad"));
-				// cliente.getDireccion.setProvincia(request.getParameter("lblProvincia"));
-				cliente.setEmail(request.getParameter("emailCliente"));
-				cliente.setTelefono(request.getParameter("telefonoCliente"));
-				cliente.setEstado(true);
+				 	cliente.setDNI(request.getParameter("DNICliente"));
+		            cliente.setCUIL(request.getParameter("CUILCliente"));
+		            cliente.setNombre(request.getParameter("nombreCliente"));
+		            cliente.setApellido(request.getParameter("apellidoCliente"));
+		            cliente.setSexo(request.getParameter("selectSexo"));		           
+		            Pais pais = new Pais();
+		            pais.setId(Integer.parseInt(request.getParameter("selectNacionalidad")));
+		            cliente.setNacionalidad(pais);		           
+		            String fechaNac = request.getParameter("fechaNacimientoCliente");
+		            if (fechaNac != null && !fechaNac.isEmpty()) {
+		                Date fecha = Date.valueOf(fechaNac); 
+		                cliente.setFecha_nacimiento(fecha);
+		            }		          
+		            Direccion direccion = new Direccion();
+		            direccion.setDireccion(request.getParameter("direccionCliente"));
+		            Provincia provincia = new Provincia();
+		            provincia.setId(Integer.parseInt(request.getParameter("selectProvincia")));
+		            direccion.setProvincia(provincia);
+		            Localidad localidad = new Localidad();
+		            localidad.setId(Integer.parseInt(request.getParameter("selectLocalidad")));
+		            direccion.setLocalidad(localidad);
+		            cliente.setDomicilio(direccion);		     
+		            cliente.setEmail(request.getParameter("emailCliente"));
+		            cliente.setTelefono(request.getParameter("telefonoCliente"));
+		            cliente.setEstado(true);
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
