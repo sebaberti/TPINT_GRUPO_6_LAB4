@@ -20,6 +20,17 @@
 	<jsp:include page="/vistas/Header.jsp" />
 
 	<main class="container py-4">
+	<%
+	/* 	if (!Seguridad.sesionActiva(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} 
+	if (!Seguridad.esAdministrador(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} */
+	%>
+	
 		<div class="text-center mb-3">
 			<h4 class="fw-semibold">Gestión de Cuentas</h4>
 			<p class="text-muted small">Seleccione una opción para administrar las cuentas.</p>

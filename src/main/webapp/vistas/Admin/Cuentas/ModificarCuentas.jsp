@@ -25,6 +25,16 @@
 	<jsp:include page="/vistas/Header.jsp" />
 
 	<main class="container">
+	<%
+	/* 	if (!Seguridad.sesionActiva(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} 
+	if (!Seguridad.esAdministrador(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} */
+	%>
 		<div class="form-card">
 			<h2 class="form-title">Modificar Cuenta</h2>
 

@@ -35,6 +35,15 @@
 
 	<main class="container mt-5 mb-5">
 		<%
+	/* 	if (!Seguridad.sesionActiva(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} 
+	if (!Seguridad.esAdministrador(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	} */
+
 		List<Cuenta> listaCuentas = (List<Cuenta>) request.getAttribute("listaCuentas");
 		%>
 

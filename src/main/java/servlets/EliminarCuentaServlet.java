@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import entidades.Cliente;
 import entidades.Cuenta;
+import utilidades.ruta;
+import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
 
 
@@ -18,15 +21,17 @@ import negocioImplementacion.CuentaNegocioImplementacion;
 * Servlet implementation class ManejarCuentaServlet
 */
 @WebServlet("/ManejarCuentaServlet")
-public class ManejarCuentaServlet extends HttpServlet {
+public class EliminarCuentaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
       
-   /**
-    * @see HttpServlet#HttpServlet()
-    */
-   public ManejarCuentaServlet() {
+	private ClienteNegocioImplementacion clienteNegocio;
+	private Cliente cliente;
+	private String rutaEliminarJSP = "/vistas/Admin/ABMLCliente/EliminarCliente.jsp";
+
+   public EliminarCuentaServlet() {
        super();
-       // TODO Auto-generated constructor stub
+       clienteNegocio = new ClienteNegocioImplementacion();
+       cliente = null;
    }
 
 	/**
@@ -36,7 +41,6 @@ public class ManejarCuentaServlet extends HttpServlet {
    	try {
       		CuentaNegocioImplementacion cuentaNeg = new CuentaNegocioImplementacion();
       		Cuenta cuenta = null;
-      		String btnModificar = request.getParameter("btnModificar");
       		String btnEliminar = request.getParameter("btnEliminar");
       		String idCuentaStr = request.getParameter("idCuenta");
       		int idCuenta;
@@ -67,6 +71,12 @@ public class ManejarCuentaServlet extends HttpServlet {
    	            //
    	            //*******previo a avanzar se debe validar que sea posible eliminar!!//**********
    	            //
+   	        	
+   	        	if (clienteNegocio.tienePrestamoActivo(cliente.getId())) {
+   					ruta.redirigir(request, response, "error", "No es posible eliminar la cuenta. Posee prestamos activos",
+   							rutaEliminarJSP);
+   					return;
+   				}
    	        	
    	            boolean eliminada = cuentaNeg.bajaLogica(idCuenta);
    	            request.setAttribute("mostrarModalMsj", true);
