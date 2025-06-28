@@ -99,6 +99,9 @@ public class MovimientosServlet extends HttpServlet {
                         e.printStackTrace(); 
                     }
                 }
+            if (movimientos != null) {
+            	movimientos.sort((m1, m2) -> m2.getFecha().compareTo(m1.getFecha()));
+            	}
             }
         
         
