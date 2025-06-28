@@ -15,6 +15,7 @@ public interface CuentaNegocio {
 	public boolean bajaLogica(int idCuenta);
 	public boolean modificarCuenta(Cuenta cuenta);
 	public Boolean tienePrestamoActivo(int idCuenta);
+	public int cuentasActivas(int idCliente);
 }
 
 

@@ -149,6 +149,12 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.tienePrestamoActivo(idCuenta);
 	}
+	
+	
+	public int cuentasActivas(int idCliente) {
+		CuentaDaoImplementacion dao = new CuentaDaoImplementacion();
+	    return dao.cuentasActivas(idCliente);
+	}
 
 
 }
