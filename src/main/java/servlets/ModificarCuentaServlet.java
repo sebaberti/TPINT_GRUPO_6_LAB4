@@ -63,7 +63,7 @@ public class ModificarCuentaServlet extends HttpServlet {
             CuentaTipo tipoCuenta = tipoDao.buscarPorId(idTipoCuenta);
 
             if (cuenta != null && tipoCuenta != null) {
-                // Verificamos si se quiere reactivar una cuenta inactiva
+                
                 boolean seQuiereReactivar = !cuenta.isEstado() && estado;
 
                 if (seQuiereReactivar) {
@@ -72,8 +72,7 @@ public class ModificarCuentaServlet extends HttpServlet {
                     if (cuentasActivas >= 3) {
                         request.setAttribute("mostrarModalMsj", true);
                         request.setAttribute("mensaje", "No se puede reactivar la cuenta. El cliente ya tiene 3 cuentas activas.");
-
-                        // Mostrar nuevamente la lista de cuentas
+                        
                         List<Cuenta> listaCuentas = cuentaNegocio.listarCuentas();
                         request.setAttribute("listaCuentas", listaCuentas);
 
@@ -101,7 +100,7 @@ public class ModificarCuentaServlet extends HttpServlet {
                 request.setAttribute("mensaje", "No se encontró la cuenta o el tipo de cuenta.");
             }
 
-            // Refrescar lista de cuentas
+            
             List<Cuenta> listaCuentas = cuentaNegocio.listarCuentas();
             request.setAttribute("listaCuentas", listaCuentas);
 

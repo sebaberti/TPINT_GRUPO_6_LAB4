@@ -19,64 +19,51 @@ import entidades.Usuario;
 
 public class ClienteDaoImplementacion implements ClienteDao {
 
+	private String insertQuery = "INSERT INTO Clientes(dni, cuil ,nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	private String validarDNIQuery = "SELECT * FROM CLIENTES WHERE DNI = ?";
 	private String validarCUILQuery = "SELECT * FROM Clientes WHERE CUIL = ?";
 	private String tienePrestamoQuery = "SELECT COUNT(id_cliente) FROM Prestamos WHERE id_cliente = ? AND estado = 1;";
 	private String bajaQuery = "UPDATE Clientes SET estado = 0 WHERE id=?";
 
 	public Boolean insertar(Cliente cliente) {
-		Connection conexion = null;
-	    CallableStatement statement = null;
+		int rows = 0;
 
 		try {
-			conexion = Conexion.getConexion().getSQLConexion();
-			conexion.setAutoCommit(false);
-			statement = conexion.prepareCall("CALL sp_AgregarClienteConUsuario(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");		
-		
-		        statement.setString(1, cliente.getUsuario().getNombreUsuario());
-		        statement.setString(2, cliente.getUsuario().getContrasenia());
-				statement.setString(3, cliente.getDNI());
-			    statement.setString(4, cliente.getCUIL());
-				statement.setString(5, cliente.getNombre());
-				statement.setString(6, cliente.getApellido());		
-		        statement.setString(7, cliente.getSexo());
-		        statement.setInt(8, cliente.getNacionalidad().getId());
-		        statement.setDate(9, cliente.getFecha_nacimiento());
-		        statement.setString(10, cliente.getEmail());
-		        statement.setString(11, cliente.getTelefono());
-		        statement.setString(12, cliente.getDomicilio().getDireccion());
-		        statement.setInt(13, cliente.getDomicilio().getLocalidad().getId());
-		        statement.setInt(14, cliente.getDomicilio().getProvincia().getId());
-		        statement.registerOutParameter(15, java.sql.Types.INTEGER);
-		        statement.execute();
-		        
-		        int idCliente = statement.getInt(15);
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement statement = conexion.prepareStatement(insertQuery);
+			System.out.println(cliente.getDNI());
+		        statement.setString(1, cliente.getDNI());
+		        statement.setString(2, cliente.getCUIL());
+		        statement.setString(3, cliente.getNombre());
+		        statement.setString(4, cliente.getApellido());
+		        statement.setString(5, cliente.getSexo());
 
-		        if (idCliente != -1) {
+		        statement.setInt(6, cliente.getNacionalidad().getId());
+		        statement.setDate(7, cliente.getFecha_nacimiento());
+
+		        statement.setInt(8, cliente.getDomicilio().getProvincia().getId());
+		        statement.setInt(9, cliente.getDomicilio().getLocalidad().getId());
+		        statement.setString(10, cliente.getDomicilio().getDireccion());
+
+		        statement.setString(11, cliente.getEmail());
+		        statement.setString(12, cliente.getTelefono());
+
+		        if (cliente.getUsuario() != null) {
+		            statement.setInt(13, cliente.getUsuario().getId());
+		        } else {
+		            statement.setNull(13, java.sql.Types.INTEGER);
+		        }
+
+		        statement.setBoolean(14, cliente.getEstado());
+
+		        if (statement.executeUpdate() > 0) {
 		            conexion.commit();
 		            return true;
-		        } else {
-		            conexion.rollback();
-		        }	
+		        }			
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			 try {
-		            if (conexion != null) {
-		                conexion.rollback();
-		            }
-		        } catch (Exception ex) {
-		            ex.printStackTrace();
-		        }
-		} finally {
-	        try {
-	            if (statement != null) statement.close();
-	            if (conexion != null) conexion.setAutoCommit(true);
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
-
+		}
 		return false;
 	}
 
@@ -441,8 +428,18 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
-			String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad "
-					+ "FROM Clientes c " + "JOIN Paises p ON c.id_nacionalidad = p.id " + "WHERE c.id_usuario = ?";
+			String query = "SELECT c.id, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, " +
+		               "c.id_nacionalidad, p.nombre AS nacionalidad, c.fecha_nacimiento, " +
+		               "c.correo_electronico, c.telefono, c.estado, " +
+		               "d.direccion AS direccion, " +
+		               "l.nombre AS localidad, " +
+		               "pr.nombre AS provincia " +
+		               "FROM clientes c " +
+		               "JOIN paises p ON p.id = c.id_nacionalidad " +
+		               "JOIN domicilios d ON d.id = c.id_domicilio " +
+		               "JOIN localidades l ON l.id = d.id_localidad " +
+		               "JOIN provincias pr ON pr.id = d.id_provincia " +
+		               "WHERE c.id = ?";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, idUsuario);
 			ResultSet rs = statement.executeQuery();
@@ -458,10 +455,26 @@ public class ClienteDaoImplementacion implements ClienteDao {
 				cliente.setEmail(rs.getString("correo_electronico"));
 				cliente.setSexo(rs.getString("sexo"));
 				cliente.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
+				
 				Pais nacionalidad = new Pais();
 				nacionalidad.setId(rs.getInt("id_nacionalidad"));
 				nacionalidad.setNombre(rs.getString("nacionalidad"));
 				cliente.setNacionalidad(nacionalidad);
+				
+				Direccion direccion = new Direccion();
+				direccion.setDireccion(rs.getString("direccion"));
+
+				Provincia provincia = new Provincia();
+				provincia.setNombre(rs.getString("provincia"));
+
+				Localidad localidad = new Localidad();
+				localidad.setNombre(rs.getString("localidad"));
+				localidad.setProvincia(provincia);
+
+				direccion.setProvincia(provincia);
+				direccion.setLocalidad(localidad);
+
+				cliente.setDomicilio(direccion);
 
 			}
 
