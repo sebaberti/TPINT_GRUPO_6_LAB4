@@ -55,10 +55,14 @@ public class AltaCuentaServlet extends HttpServlet {
     			try {
     				int dni = Integer.parseInt(dniFiltro); // valido que hayan completado con un int
     				cliente = clienteDao.clientePorDNI(dni);
-    				request.setAttribute("cliente", cliente);
-    				request.getSession().setAttribute("idCliente", cliente.getId()); //lo guardo en session para no perderlo
+    				if(cliente!=null) {
+        				request.setAttribute("cliente", cliente);
+        				request.getSession().setAttribute("idCliente", cliente.getId()); //lo guardo en session para no perderlo
+    				}else {
+    					request.setAttribute("error", "El DNI ingresado no es válido.");
+    				}
     			} catch (NumberFormatException e) {
-    				request.setAttribute("errorDni", "El DNI ingresado no es válido.");
+    				request.setAttribute("error", "El DNI ingresado no es válido.");
     			}
     		}
 
