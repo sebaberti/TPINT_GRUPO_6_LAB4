@@ -31,18 +31,6 @@
 		<div class="row text-center">
 			<h2 class="fw-semibold">Alta nuevo Cliente</h2>
 		</div>
-
-		<% if (request.getAttribute("error") != null) { %>
-		<div class="alert alert-danger text-center mt-3">
-			<%= request.getAttribute("error") %>
-		</div>
-		<% }  %>
-
-		<% if (request.getAttribute("clienteInsertado") != null) { %>
-		<div class="alert alert-success text-center mt-3">
-			<%= request.getAttribute("clienteInsertado") %>
-		</div>
-		<% }  %>
 <%
     Cliente cliente = null;
     Object objCliente = request.getAttribute("cliente");
@@ -158,8 +146,6 @@
 							provinciaElegida = Integer.parseInt(String.valueOf(request.getAttribute("provinciaElegida")));
 						}						
 						if (provincias != null) {
-							//int idProvincia = cliente.getDomicilio().getProvincia().getId();
-							//String nombreProvincia = cliente.getDomicilio().getProvincia().getNombre();
             				for (Provincia p : provincias) {
                 			boolean esSeleccionada = (p.getId() == provinciaElegida);
     						%>

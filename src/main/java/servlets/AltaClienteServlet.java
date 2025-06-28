@@ -16,7 +16,6 @@ import entidades.Direccion;
 import entidades.Localidad;
 import entidades.Pais;
 import entidades.Provincia;
-import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.LocalidadNegocioImplementacion;
 import negocioImplementacion.PaisNegocioImplementacion;
 import negocioImplementacion.ProvinciaNegocioImplementacion;
@@ -24,21 +23,18 @@ import negocioImplementacion.ProvinciaNegocioImplementacion;
 @WebServlet("/AltaClienteServlet")
 public class AltaClienteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	ClienteNegocioImplementacion clienteNegocio;
-	HttpSession session;
+	private HttpSession session;
 
-	private String rutaAltaClienteJSP = "/vistas/Admin/ABMLCliente/AltaCliente.jsp";
 
 	public AltaClienteServlet() {
 		super();
-		clienteNegocio = new ClienteNegocioImplementacion();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
 			cargarDesplegables(request, response);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/ABMLCliente/AltaCliente.jsp");
-			dispatcher.forward(request, response);
 			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/ABMLCliente/AltaCliente.jsp");
+			dispatcher.forward(request, response);			
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
@@ -50,12 +46,11 @@ public class AltaClienteServlet extends HttpServlet {
 		cliente = capturarCampos(request);
 				
 		if(cliente != null) {
-			request.setAttribute("cliente", cliente);
-			existeCliente(request, response, cliente);
+			request.setAttribute("cliente", cliente);			
 			
 			if (request.getParameter("btnAltaCliente")!=null) {
 				session.setAttribute("cliente", cliente);
-				response.sendRedirect(request.getContextPath() + "/vistas/Admin/ABMLUsuario/AltaUsuario.jsp");
+				response.sendRedirect(request.getContextPath() + "/AltaUsuarioServlet");
 				return;
 			}
 			
@@ -74,7 +69,9 @@ public class AltaClienteServlet extends HttpServlet {
 				    cliente.setDNI(request.getParameter("DNICliente"));
 				}
 				if (request.getParameter("CUILCliente") != null && !request.getParameter("CUILCliente").isEmpty()) {
-				    cliente.setCUIL(request.getParameter("CUILCliente"));
+					String cuilOriginal = request.getParameter("CUILCliente");
+				    String cuilSoloNumeros = cuilOriginal.replaceAll("\\D", "");
+					cliente.setCUIL(cuilSoloNumeros);
 				}
 				if (request.getParameter("nombreCliente") != null && !request.getParameter("nombreCliente").isEmpty()) {
 				    cliente.setNombre(request.getParameter("nombreCliente"));
@@ -106,9 +103,9 @@ public class AltaClienteServlet extends HttpServlet {
 		            	direccion.setDireccion(request.getParameter("direccionCliente"));
 		            }
 		            
-		            Provincia provincia = null;
+		            Provincia p = null;
 		            if (request.getParameter("selectProvincia") != null && !request.getParameter("selectProvincia").isEmpty()) {
-		            Provincia p= new Provincia();		  
+		            p= new Provincia();		  
 		            p.setId(Integer.parseInt(request.getParameter("selectProvincia")));	
 		            direccion.setProvincia(p);
 		            }		            
@@ -138,30 +135,6 @@ public class AltaClienteServlet extends HttpServlet {
 
 		return cliente;
 	}
-
-	private void redirigir(HttpServletRequest request, HttpServletResponse response, String nombreAtributo,
-		String msjError, String ruta) throws ServletException, IOException {
-		request.setAttribute(nombreAtributo, msjError);
-		request.getRequestDispatcher(ruta).forward(request, response);
-	}
-	
-	private void existeCliente(HttpServletRequest request, HttpServletResponse response, Cliente cliente) throws ServletException, IOException {
-		
-		Boolean dni = clienteNegocio.existeDNI(cliente.getDNI());
-		Boolean cuil = clienteNegocio.existeCUIL(cliente.getCUIL());
-		
-		if (dni && cuil) {
-			redirigir(request, response, "error", "El DNI " + cliente.getDNI() + " y el CUIL " + cliente.getCUIL() + " ya existen", rutaAltaClienteJSP);
-		}
-
-		if (dni) {
-			redirigir(request, response, "error", "El DNI " + cliente.getDNI() + " ya existe", rutaAltaClienteJSP);
-		}
-		
-		if (cuil) {
-			redirigir(request, response, "error", "El CUIL " + cliente.getCUIL() + " ya existe", rutaAltaClienteJSP);
-		}
-	}
 	
 	public void cargarDesplegables(HttpServletRequest request, HttpServletResponse response){
 		ProvinciaNegocioImplementacion pni= new ProvinciaNegocioImplementacion();
@@ -179,7 +152,6 @@ public class AltaClienteServlet extends HttpServlet {
 	    		nacionalidadParam = request.getParameter("selectNacionalidad");		
 			request.setAttribute("nacionalidadElegida", nacionalidadParam);			
 	    	}
-	    	//Se puede agregar un else con un mensajito q este campo debe ser seleccionado
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
@@ -192,7 +164,6 @@ public class AltaClienteServlet extends HttpServlet {
 	    	provinciaParam = request.getParameter("selectProvincia");		
 			request.setAttribute("provinciaElegida", provinciaParam);			
 	    	}
-	    	//Se puede agregar un else con un mensajito q este campo debe ser seleccionado
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }		
@@ -208,7 +179,7 @@ public class AltaClienteServlet extends HttpServlet {
 		   	localidadParam = request.getParameter("selectLocalidad");		
 			request.setAttribute("localidadElegida", localidadParam);		
 		    }
-		    	//Se puede agregar un else con un mensajito q este campo debe ser seleccionado
+		   	
 		    } catch (Exception e) {
 		    	e.printStackTrace();
 		    }
