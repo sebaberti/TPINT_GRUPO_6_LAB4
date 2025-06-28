@@ -16,6 +16,7 @@ import entidades.Direccion;
 import entidades.Localidad;
 import entidades.Pais;
 import entidades.Provincia;
+import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.LocalidadNegocioImplementacion;
 import negocioImplementacion.PaisNegocioImplementacion;
 import negocioImplementacion.ProvinciaNegocioImplementacion;
@@ -48,17 +49,22 @@ public class AltaClienteServlet extends HttpServlet {
 		if(cliente != null) {
 			request.setAttribute("cliente", cliente);			
 			
-			if (request.getParameter("btnAltaCliente")!=null) {
-				session.setAttribute("cliente", cliente);
-				response.sendRedirect(request.getContextPath() + "/AltaUsuarioServlet");
+		if (request.getParameter("btnAltaCliente")!=null) {
+			if(existeCliente(request, response, cliente)){					
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/MensajesInformativos.jsp");				
+				dispatcher.forward(request, response);
 				return;
 			}
 			
-			}
+			session.setAttribute("cliente", cliente);				
+			response.sendRedirect(request.getContextPath() + "/AltaUsuarioServlet");
+			return;
+		}
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/ABMLCliente/AltaCliente.jsp");
 		dispatcher.forward(request, response);
-	};
+		}
+		};
 
 	private Cliente capturarCampos(HttpServletRequest request) {
 
@@ -85,9 +91,9 @@ public class AltaClienteServlet extends HttpServlet {
 		            
 		        Pais pais = null;
 		    	if (request.getParameter("selectNacionalidad") != null && !request.getParameter("selectNacionalidad").isEmpty()) {
-		    		int idPais= Integer.parseInt(request.getParameter("selectNacionalidad"));
-		    		PaisNegocioImplementacion pni= new PaisNegocioImplementacion();
-		    		pais= pni.obtenerPaisPorID(idPais);
+		    		int idPais= Integer.parseInt(request.getParameter("selectNacionalidad"));	
+		    		pais= new Pais();		   
+		    		pais.setId(idPais);		    		
 		    		cliente.setNacionalidad(pais);
 		    	}
 		        		      		            
@@ -183,5 +189,31 @@ public class AltaClienteServlet extends HttpServlet {
 		    } catch (Exception e) {
 		    	e.printStackTrace();
 		    }
+	}
+	
+	private boolean existeCliente(HttpServletRequest request, HttpServletResponse response, Cliente cliente) throws ServletException, IOException {
+		ClienteNegocioImplementacion cni= new ClienteNegocioImplementacion();
+		Boolean dni = cni.existeDNI(cliente.getDNI());
+		Boolean cuil = cni.existeCUIL(cliente.getCUIL());
+		String msj="";
+		Boolean datosValidos=true;
+		
+		if (dni) {
+			msj+="Ya se encuentra un cliente registrado con este DNI <br>";
+			datosValidos=false;
+		}
+		
+		if (cuil) {
+			msj+="Ya se encuentra un cliente registrado con este CUIL <br>";
+			datosValidos=false;
+		}
+		
+		if (!datosValidos) {
+			msj+= "Por favor, intente nuevamente.<br>";
+		    request.setAttribute("mensajeError", msj);
+		}
+		
+		return dni && cuil;
+		
 	}
 }

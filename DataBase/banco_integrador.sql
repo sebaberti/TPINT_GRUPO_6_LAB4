@@ -336,3 +336,53 @@ BEGIN
 		ROLLBACK;
 	END IF;
 END$$
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_AgregarClienteConUsuario(
+	IN p_nombre_usuario varchar(50),
+    IN p_contrasenia varchar(50),
+    IN p_dni varchar(20),
+    IN p_cuil varchar(20),
+    IN p_nombre_cliente varchar(50),
+    IN p_apellido_cliente varchar(50),
+    IN p_sexo char,
+    IN p_id_nacionalidad int,
+    IN p_fecha_nacimiento date,
+    IN p_correo_electronico varchar(50),
+    IN p_telefono varchar(50),
+    IN p_direccion varchar(150),
+    IN p_id_localidad int,
+    IN p_id_provincia int,
+    OUT p_id_cliente INT
+    ) 
+BEGIN
+	DECLARE v_id_usuario INT;
+    DECLARE v_id_domicilio INT;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+        ROLLBACK;
+        SET p_id_cliente = -1;
+    END; 
+    
+    INSERT INTO usuarios(nombre_usuario, contrasenia, id_rol, estado)
+    VALUES (p_nombre_usuario, p_contrasenia, 2, 1);
+    
+    SET v_id_usuario  = LAST_INSERT_ID();
+    
+    INSERT INTO domicilios(direccion, id_localidad, id_provincia)
+    VALUES (p_direccion, p_id_localidad, p_id_provincia);
+    
+    SET v_id_domicilio= LAST_INSERT_ID();
+    
+    INSERT INTO clientes(dni, cuil, nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado)
+    VALUES (p_dni, p_cuil, p_nombre_cliente, p_apellido_cliente, p_sexo, p_id_nacionalidad, p_fecha_nacimiento,v_id_domicilio, p_correo_electronico, p_telefono, v_id_usuario, 1);
+    
+    SET p_id_cliente = LAST_INSERT_ID();
+    
+    COMMIT;
+    
+END$$
+
+DELIMITER ;
