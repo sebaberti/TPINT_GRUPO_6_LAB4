@@ -35,6 +35,7 @@ public class PaisDaoImplementacion implements PaisDao {
 		return lista;
 	}
 	
+	@Override
 	public Pais obtenerPaisPorID(int id) {
 		String query = "SELECT * FROM paises WHERE id = ?";
 		

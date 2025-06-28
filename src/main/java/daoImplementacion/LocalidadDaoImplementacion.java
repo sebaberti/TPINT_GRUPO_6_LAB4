@@ -14,6 +14,7 @@ public class LocalidadDaoImplementacion implements LocalidadDao {
 
 	private String listarQuery = "SELECT id, nombre FROM Localidades WHERE id_provincia = 1";
 	private String listar = "SELECT id, nombre, id_provincia FROM Localidades";
+	private String listaPorProvincia = "SELECT id, nombre FROM Localidades WHERE id_provincia = ?";
 
 	@Override
 	public List<Localidad> listarLocalidadesBuenosAires() {
@@ -79,5 +80,29 @@ public class LocalidadDaoImplementacion implements LocalidadDao {
 		}
 
 		return new Localidad(-1, "vacio");
+	}
+
+	@Override
+	public List<Localidad> listarLocalidadesPorProvincia(int idProvincia) {
+		List<Localidad> localidades = new ArrayList<>();
+
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement stmt = conexion.prepareStatement(listaPorProvincia);
+			stmt.setInt(1, idProvincia);
+			ResultSet rs = stmt.executeQuery();
+			
+
+			while (rs.next()) {
+				Localidad l = new Localidad();
+				l.setId(rs.getInt("id"));
+				l.setNombre(rs.getString("nombre"));
+				localidades.add(l);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return localidades;
 	}
 }
