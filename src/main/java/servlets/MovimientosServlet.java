@@ -96,7 +96,7 @@ public class MovimientosServlet extends HttpServlet {
                         }).collect(Collectors.toList());
 
                     } catch (Exception e) {
-                        e.printStackTrace(); // Podés loguear el error si querés
+                        e.printStackTrace(); 
                     }
                 }
             }

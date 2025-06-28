@@ -29,12 +29,6 @@ public class MovimientoDaoImplementacion implements MovimientoDao {
             stmt.setDouble(5, movimiento.getImporte());
             stmt.setString(6, movimiento.getDetalle());
             
-            System.out.println("Insertando movimiento con id_cliente = " + movimiento.getCliente());
-            if (movimiento.getCliente() != null) {
-                System.out.println("Cliente ID = " + movimiento.getCliente().getId());
-            } else {
-                System.out.println("El cliente del movimiento es NULL");
-            }
 
             if (movimiento.getIdTransferencia() != null) {
                 stmt.setInt(7, movimiento.getIdTransferencia());

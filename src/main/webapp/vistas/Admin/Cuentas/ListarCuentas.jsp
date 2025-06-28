@@ -2,6 +2,7 @@
 <%@ page import="java.util.List"%>
 <%@ page import="entidades.Cuenta"%>
 <%@ page import="entidades.CuentaTipo"%>
+<%@ page import="utilidades.FormatterUtil" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -114,7 +115,7 @@
 						<td><%=c.getCliente().getDNI()%></td>
 						<td><%=c.getTipoCuenta().getDescripcion()%></td>
 						<td><%=c.getCBU()%></td>
-						<td><%=c.getSaldo()%></td>
+						<td>$ <%= FormatterUtil.formatearMiles(c.getSaldo()) %></td>
 						<%
 						if (c.isEstado()) {
 						%>

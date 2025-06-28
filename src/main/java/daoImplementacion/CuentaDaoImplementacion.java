@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mysql.jdbc.Statement;
+
 import dao.CuentaDao;
 import entidades.Cliente;
 import entidades.Cuenta;
@@ -24,7 +27,8 @@ public class CuentaDaoImplementacion implements CuentaDao {
         
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
-			statement = conexion.prepareStatement(query);
+			statement = conexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			
 			statement.setInt(1, cuenta.getCliente().getId());
 			statement.setDate(2, new java.sql.Date(cuenta.getFechaCreacion().getTime()));
 			statement.setString(3, cuenta.getNumeroCuenta());
@@ -34,9 +38,13 @@ public class CuentaDaoImplementacion implements CuentaDao {
 			statement.setBoolean(7, cuenta.isEstado());
 			
 			if (statement.executeUpdate() > 0) {
-				conexion.commit();
-				return true;
-			}			
+	            ResultSet generatedKeys = statement.getGeneratedKeys();
+	            if (generatedKeys.next()) {
+	                cuenta.setId(generatedKeys.getInt(1)); // Obtener ID generado
+	            }
+	            conexion.commit();
+	            return true;
+	        }		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -3,6 +3,8 @@
 <%@ page import="entidades.Cuenta"%>
 <%@ page import="entidades.CuentaTipo"%>
 <%@ page import="java.math.BigInteger"%>
+<%@ page import="utilidades.FormatterUtil" %>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -42,7 +44,7 @@
                         <td><%= c.getNumeroCuenta() %></td>
                         <td><%= c.getCBU() %></td>
                         <td><%= c.getTipoCuenta().getDescripcion() %></td>
-                        <td>$ <%= String.format("%.2f", c.getSaldo()) %></td>
+                        <td>$ <%= FormatterUtil.formatearMiles(c.getSaldo()) %></td>
                         <td><%= new java.text.SimpleDateFormat("dd/MM/yyyy").format(c.getFechaCreacion()) %></td>
                         <td>
                             <span class="badge bg-<%= c.isEstado() ? "success" : "danger" %>">

@@ -1,24 +1,50 @@
 package negocioImplementacion;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
 import daoImplementacion.CuentaDaoImplementacion;
+import daoImplementacion.MovimientoDaoImplementacion;
 import entidades.Cuenta;
+import entidades.Movimiento;
+import entidades.MovimientoTipo;
 import negocio.CuentaNegocio;
 
 public class CuentaNegocioImplementacion implements CuentaNegocio {
 
 	public boolean insertarCuenta(Cuenta cuenta) {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
+		
 		cuenta.setCBU(generarCBU()); // Generar el CBU único
 		java.util.Date fechaActual = new java.util.Date();
 		cuenta.setFechaCreacion(new java.sql.Date(fechaActual.getTime())); // seteo fecha actual
 		cuenta.setNumeroCuenta(generarNroCta());
 		cuenta.setEstado(true);
-		return cuentas.insertarCuenta(cuenta);
+		
+		boolean insertada = cuentas.insertarCuenta(cuenta);
+
+	    if (insertada) {
+	        // Crear movimiento por apertura
+	        Movimiento movimiento = new Movimiento();
+	        movimiento.setCuenta(cuenta);
+	        movimiento.setCliente(cuenta.getCliente());
+	        movimiento.setFecha(LocalDateTime.now());
+	        movimiento.setImporte(cuenta.getSaldo());
+	        movimiento.setDetalle("Alta de cuenta");
+
+	        MovimientoTipo tipoMovimiento = new MovimientoTipo();
+	        tipoMovimiento.setId(1); // Asumimos que ID 1 es "Alta de cuenta"
+	        movimiento.setTipoMovimiento(tipoMovimiento);
+
+	        MovimientoDaoImplementacion movDao = new MovimientoDaoImplementacion();
+	        return movDao.insertarMovimiento(movimiento);
+	    }
+
+	    return false;
 	}
+	
 	
 	private BigInteger generarCBU() {
 		

@@ -39,6 +39,7 @@ public class AutorizarPrestamosServlet extends HttpServlet {
 		
 		PrestamoNegocioImplementacion pni= new PrestamoNegocioImplementacion();
 		List<Prestamo> listaPrestamos= pni.listarPrestamos();
+		listaPrestamos.sort((p1, p2) -> Integer.compare(p1.getEstado(), p2.getEstado()));
 		
 		request.setAttribute("listaPrestamos", listaPrestamos);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/AdministrarPrestamos/AutorizarPrestamos.jsp");
@@ -73,6 +74,7 @@ public class AutorizarPrestamosServlet extends HttpServlet {
         }
         
         List<Prestamo> listaPrestamos= pni.listarPrestamos();		
+        listaPrestamos.sort((p1, p2) -> Integer.compare(p1.getEstado(), p2.getEstado()));
 		request.setAttribute("listaPrestamos", listaPrestamos);
 		
 		request.setAttribute("mensaje", mensaje);
