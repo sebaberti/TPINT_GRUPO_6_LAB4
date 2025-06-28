@@ -10,7 +10,9 @@ public class ProvinciaNegocioImplementacion implements ProvinciaNegocio {
 	
 	private ProvinciaDaoImplementacion provinciaNegocio;
 	
-	public ProvinciaNegocioImplementacion() { provinciaNegocio = new ProvinciaDaoImplementacion();}
+	public ProvinciaNegocioImplementacion() {
+		provinciaNegocio = new ProvinciaDaoImplementacion();
+	}
 	
 	public List<Provincia> listar() {
 		return provinciaNegocio.listar();

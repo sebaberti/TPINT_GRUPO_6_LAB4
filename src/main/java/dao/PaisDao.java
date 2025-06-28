@@ -4,5 +4,6 @@ import java.util.List;
 import entidades.Pais;
 
 public interface PaisDao {
-	List<Pais> listar();
+	public List<Pais> listar();
+	public Pais obtenerPaisPorID(int id);
 }

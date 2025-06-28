@@ -32,24 +32,34 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			Connection conexion = Conexion.getConexion().getSQLConexion();
 			PreparedStatement statement = conexion.prepareStatement(insertQuery);
 			System.out.println(cliente.getDNI());
-			statement.setString(1, cliente.getDNI());
-			statement.setString(2, cliente.getCUIL());
-			statement.setString(3, cliente.getNombre());
-			statement.setString(4, cliente.getApellido());
-			statement.setString(5, "M"); // Sexo - Modificar por el valor del objeto.
-			statement.setInt(6, 1); // ID Nacionalidad - Modificar por el valor del objeto.
-			statement.setDate(7, java.sql.Date.valueOf(LocalDate.of(1999, 10, 10))); // Capturar el valor del objeto
-			statement.setInt(8, 1); // ID Domiclio Capturar el valor del objeto
-			statement.setString(9, cliente.getEmail());
-			statement.setString(10, cliente.getTelefono());
-			// El usuario deberia poder omitirse al crear el cliente?
-			statement.setInt(11, 3); // ID Usuario - Deberia ser nulo si se esta creando.
-			statement.setBoolean(12, true);
+		        statement.setString(1, cliente.getDNI());
+		        statement.setString(2, cliente.getCUIL());
+		        statement.setString(3, cliente.getNombre());
+		        statement.setString(4, cliente.getApellido());
+		        statement.setString(5, cliente.getSexo());
 
-			if (statement.executeUpdate() > 0) {
-				conexion.commit();
-				return true;
-			}
+		        statement.setInt(6, cliente.getNacionalidad().getId());
+		        statement.setDate(7, cliente.getFecha_nacimiento());
+
+		        statement.setInt(8, cliente.getDomicilio().getProvincia().getId());
+		        statement.setInt(9, cliente.getDomicilio().getLocalidad().getId());
+		        statement.setString(10, cliente.getDomicilio().getDireccion());
+
+		        statement.setString(11, cliente.getEmail());
+		        statement.setString(12, cliente.getTelefono());
+
+		        if (cliente.getUsuario() != null) {
+		            statement.setInt(13, cliente.getUsuario().getId());
+		        } else {
+		            statement.setNull(13, java.sql.Types.INTEGER);
+		        }
+
+		        statement.setBoolean(14, cliente.getEstado());
+
+		        if (statement.executeUpdate() > 0) {
+		            conexion.commit();
+		            return true;
+		        }			
 
 		} catch (Exception e) {
 			e.printStackTrace();

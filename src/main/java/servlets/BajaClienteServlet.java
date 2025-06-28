@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import entidades.Cliente;
+import utilidades.ruta;
 import negocioImplementacion.ClienteNegocioImplementacion;
 
 /**
@@ -35,7 +36,7 @@ public class BajaClienteServlet extends HttpServlet {
 
 		if (request.getParameter("vieneDeListar") == null || request.getParameter("dni") == null
 				|| request.getParameter("cuil") == null)
-			redirigir(request, response, "error", "Hubo un error al buscar el cliente. Intentelo manualmente",
+			ruta.redirigir(request, response, "error", "Hubo un error al buscar el cliente. Intentelo manualmente",
 					rutaEliminarJSP);
 
 		String dni = (String) request.getParameter("dni");
@@ -43,7 +44,7 @@ public class BajaClienteServlet extends HttpServlet {
 		cliente = clienteNegocio.getCliente(dni, cuil);
 
 		if (cliente == null)
-			redirigir(request, response, "error", "Hubo un error al buscar el cliente. Intentelo manualmente",
+			ruta.redirigir(request, response, "error", "Hubo un error al buscar el cliente. Intentelo manualmente",
 					rutaEliminarJSP);
 
 		session.setAttribute("objCliente", cliente);
@@ -61,7 +62,7 @@ public class BajaClienteServlet extends HttpServlet {
 		if (request.getParameter("btnBuscar") != null) {
 
 			if (request.getParameter("DNICliente") == null || request.getParameter("DNICliente") == null)
-				redirigir(request, response, "error", "Ingrese un número de DNI y CUIL valido", rutaEliminarJSP);
+				ruta.redirigir(request, response, "error", "Ingrese un número de DNI y CUIL valido", rutaEliminarJSP);
 
 			dni = request.getParameter("DNICliente");
 			cuil = request.getParameter("CUILCliente");
@@ -69,7 +70,7 @@ public class BajaClienteServlet extends HttpServlet {
 			cliente = clienteNegocio.getCliente(dni, cuil);
 
 			if (cliente == null)
-				redirigir(request, response, "error", "No se encontro un registro asociado", rutaEliminarJSP);
+				ruta.redirigir(request, response, "error", "No se encontro un registro asociado", rutaEliminarJSP);
 
 			session.setAttribute("objCliente", cliente);
 			response.sendRedirect(request.getContextPath() + rutaEliminarJSP);
@@ -82,48 +83,34 @@ public class BajaClienteServlet extends HttpServlet {
 				cliente = (Cliente) session.getAttribute("objCliente");
 			}
 			else {
-				redirigir(request, response, "error", "Complete los campos DNI y CUIL", rutaEliminarJSP);
+				ruta.redirigir(request, response, "error", "Complete los campos DNI y CUIL", rutaEliminarJSP);
 				return;
 			}
 			
 			if (!cliente.getEstado()) {
 				session.removeAttribute("objCliente");
-				redirigir(request, response, "error", "El cliente ya se encuentra inactivo", rutaEliminarJSP);
+				ruta.redirigir(request, response, "error", "El cliente ya se encuentra inactivo", rutaEliminarJSP);
 				return;
 			}
 			
 
 			if (clienteNegocio.tienePrestamoActivo(cliente.getId())) {
-				redirigir(request, response, "error", "No es posible eliminar el cliente. Posee prestamos activos",
+				ruta.redirigir(request, response, "error", "No es posible eliminar el cliente. Posee prestamos activos",
 						rutaEliminarJSP);
 				return;
 			}
 			
 
 			if (!clienteNegocio.bajaLogica(cliente.getDNI(), cliente.getCUIL())) {
-				redirigir(request, response, "error",
+				ruta.redirigir(request, response, "error",
 						"No fue posible eliminar el Cliente " + cliente.getNombre() + ", " + cliente.getApellido(),
 						rutaEliminarJSP);
 				return;
 			}
 
 			session.removeAttribute("objCliente");
-			redirigir(request, response, "procesoExitoso", "El cliente se elimino correctamente", rutaEliminarJSP);
+			ruta.redirigir(request, response, "procesoExitoso", "El cliente se elimino correctamente", rutaEliminarJSP);
 			return;
 		}
 	}
-
-
-	private void redirigir(HttpServletRequest request, HttpServletResponse response, String nombreAtributo,
-			String msjError, String ruta) throws ServletException, IOException {
-		request.setAttribute(nombreAtributo, msjError);
-		request.getRequestDispatcher(ruta).forward(request, response);
-	}
-
-	private void redirigir(HttpServletRequest request, HttpServletResponse response, String nombreAtributo,
-			Cliente cliente, String ruta) throws ServletException, IOException {
-		request.setAttribute(nombreAtributo, cliente);
-		request.getRequestDispatcher(ruta).forward(request, response);
-	}
-
 }

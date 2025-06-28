@@ -9,4 +9,5 @@ public interface LocalidadDao {
 	 public List<Localidad> listarLocalidadesBuenosAires();
 	 public List<Localidad> listarLocalidades();
 	 public Localidad obtenerLocalidadPorID(int id);
+	 public List<Localidad> listarLocalidadesPorProvincia(int idProvincia);
 }
