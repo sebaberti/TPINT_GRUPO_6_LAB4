@@ -21,6 +21,11 @@ public class LocalidadNegocioImplementacion implements LocalidadNegocio{
 	public List<Localidad> listarLocalidadesBuenosAires() {
 		return localidadNegocio.listarLocalidadesBuenosAires();
 	}
+	
+	public List<Localidad> listarLocalidadesPorProvincia(int idProvincia){
+		return localidadNegocio.listarLocalidadesPorProvincia(idProvincia);
+	}
+	
 	 public Localidad obtenerLocalidadPorID(int id) {
 		 return localidadNegocio.obtenerLocalidadPorID(id);
 	 }

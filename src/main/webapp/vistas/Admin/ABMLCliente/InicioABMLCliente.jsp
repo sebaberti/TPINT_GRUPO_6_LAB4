@@ -38,7 +38,7 @@
 							<h6 class="card-title mb-2">Alta de Cliente</h6>
 						</div>
 						<button class="btn btn-success btn-sm w-100 btn-abml"
-							onclick="location.href='AltaCliente.jsp'">Seleccionar</button>
+							onclick="location.href='${pageContext.request.contextPath}/AltaClienteServlet'">Seleccionar</button>
 					</div>
 				</div>
 			</div>
