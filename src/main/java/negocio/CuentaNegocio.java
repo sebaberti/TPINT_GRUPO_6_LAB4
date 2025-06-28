@@ -14,6 +14,7 @@ public interface CuentaNegocio {
 	List<Cuenta> listarCuentasPorClienteId(int clienteId, boolean soloActivas);
 	public boolean bajaLogica(int idCuenta);
 	public boolean modificarCuenta(Cuenta cuenta);
+	public Boolean tienePrestamoActivo(int idCuenta);
 }
 
 

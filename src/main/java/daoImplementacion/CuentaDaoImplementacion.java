@@ -410,5 +410,31 @@ public class CuentaDaoImplementacion implements CuentaDao {
 
 	    return false;
 	}
+	
+	@Override
+	public Boolean tienePrestamoActivo(int idCuenta) {
+		Connection conexion = null;
+		PreparedStatement statement = null;
+		ResultSet rs= null;
+		String query = "SELECT COUNT(id_cuenta) FROM Prestamos WHERE id_cuenta = ? AND estado = 1";
+		
+		int count = 0;
+		try {
+			conexion = Conexion.getConexion().getSQLConexion();
+	        statement = conexion.prepareStatement(query);
+			statement.setInt(1, idCuenta);
+			rs = statement.executeQuery();
+
+			if (!rs.next())
+				return false;
+
+			count = rs.getInt(1);
+			return count > 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 }

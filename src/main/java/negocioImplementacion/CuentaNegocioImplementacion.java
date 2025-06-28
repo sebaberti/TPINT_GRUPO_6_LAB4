@@ -118,5 +118,11 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    return cuentaDao.modificarCuenta(cuenta);
 	}
 
+	@Override
+	public Boolean tienePrestamoActivo(int idCuenta) {
+		CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
+	    return cuentaDao.tienePrestamoActivo(idCuenta);
+	}
+
 
 }
