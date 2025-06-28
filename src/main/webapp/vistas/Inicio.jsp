@@ -36,7 +36,7 @@ if (tipoUsuario  == "administrador") {
 	tarjetas.add(new Tarjeta("MovimientosServlet", "bi-journal-text", "text-success", "Movimientos"));
 	tarjetas.add(new Tarjeta("TransferenciaServlet", "bi-arrow-left-right", "text-info", "Transferencias"));
 	tarjetas.add(new Tarjeta("SolicitarPrestamosServlet", "bi-cash-stack", "text-warning", "Solicitar Préstamo"));
-	tarjetas.add(new Tarjeta("vistas/PagarCuota.jsp", "bi-credit-card-2-back", "text-danger", "Pagar Cuotas"));
+	tarjetas.add(new Tarjeta("PagoCuotasServlet", "bi-credit-card-2-back", "text-danger", "Pagar Cuotas"));
 }
 %>
 <!DOCTYPE html>
