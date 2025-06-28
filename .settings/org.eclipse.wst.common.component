@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                                        
+                                            
+    
     
     
     
@@ -9,7 +10,8 @@
     
     
     <wb-module deploy-name="TPINT_GRUPO_6_LAB4">
-                                                                                
+                                                                                        
+        
         
         
         
@@ -19,10 +21,14 @@
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                
+                        
+        
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+                
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-                                                                                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/"/>
+                                                                                        
+        
         
         
         
@@ -32,7 +38,8 @@
         
         
         <property name="context-root" value="TPINT_GRUPO_6_LAB4"/>
-                                                                                
+                                                                                        
+        
         
         
         
@@ -42,7 +49,8 @@
         
         
         <property name="java-output-path" value="/TPINT_GRUPO_6_LAB4/build/classes"/>
-                                                                            
+                                                                                    
+    
     
     
     
@@ -52,7 +60,8 @@
     
     
     </wb-module>
-                                    
+                                        
+
 
 
 
