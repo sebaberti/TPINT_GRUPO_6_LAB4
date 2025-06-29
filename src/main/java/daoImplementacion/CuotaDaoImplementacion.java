@@ -92,6 +92,35 @@ public class CuotaDaoImplementacion implements CuotaDao {
 
 	    return lista;
 	}
+	
+	@Override
+	public Cuota obtenerCuotaPorId(int idCuota) {
+	    Cuota cuota = null;
+	    String query = "SELECT * FROM Cuotas WHERE id = ?";
+
+	    try (Connection conexion = Conexion.getConexion().getSQLConexion();
+	         PreparedStatement stmt = conexion.prepareStatement(query)) {
+
+	        stmt.setInt(1, idCuota);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            cuota = new Cuota();
+	            cuota.setId(rs.getInt("id"));
+	            cuota.setNumeroCuota(rs.getInt("nro_cuota"));
+	            cuota.setImporte(rs.getDouble("importe"));
+	            cuota.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
+	            cuota.setFechaPago(rs.getDate("fecha_pago"));
+	            cuota.setEstado(rs.getBoolean("estado"));
+	            cuota.setPrestamoId(rs.getInt("id_prestamo"));
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return cuota;
+	}
 
 	private Cuota mapearCuota(ResultSet rs) throws SQLException {
 	    Cuota cuota = new Cuota();

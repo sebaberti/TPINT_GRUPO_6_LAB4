@@ -30,4 +30,9 @@ public class CuotaNegocioImplementacion implements CuotaNegocio{
 		return tsi.pagarCuota(idCuota, idCuenta);
 	}
 
+	@Override
+	public Cuota obtenerCuotaPorId(int idCuota) {
+		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
+		return tsi.obtenerCuotaPorId(idCuota);
+	}
 }

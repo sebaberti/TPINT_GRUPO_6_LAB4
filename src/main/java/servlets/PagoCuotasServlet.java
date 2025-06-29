@@ -112,11 +112,15 @@ public class PagoCuotasServlet extends HttpServlet {
 					int idCuota = Integer.parseInt(request.getParameter("cuotaId"));
 					int idCuenta = Integer.parseInt(request.getParameter("cuentaId"));
 
+					//Recupero nro de cuota antes del pago
+			        Cuota cuotaSeleccionada = cuotaNeg.obtenerCuotaPorId(idCuota);
+			        int nroCuota = cuotaSeleccionada.getNumeroCuota();
+			        
 					boolean pagado = cuotaNeg.pagarCuota(idCuota, idCuenta);
 
 					if (pagado) {
 						request.setAttribute("titulo", "Operación realizada");
-						request.setAttribute("mensaje", "La cuota fue pagada correctamente.");
+						request.setAttribute("mensaje",  "La cuota N° " + nroCuota + " fue abonada correctamente.");
 					} else {
 						request.setAttribute("titulo", "Operación no permitida");
 						request.setAttribute("mensaje", "La cuenta no tiene saldo suficiente para abonar la cuota.");
