@@ -32,14 +32,7 @@ public class CuotaDaoImplementacion implements CuotaDao {
 		        rs = statement.executeQuery();
 
 		        while (rs.next()) {
-		        	cuota = new Cuota();
-		            cuota.setId(rs.getInt("id"));
-		            cuota.setPrestamoId(rs.getInt("id_prestamo"));
-		            cuota.setNumeroCuota(rs.getInt("nro_cuota"));
-		            cuota.setImporte(rs.getDouble("importe"));
-		            cuota.setFechaPago(rs.getDate("fecha_pago"));
-		            cuota.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
-		            cuota.setEstado(rs.getBoolean("estado"));
+		        	mapearCuota(rs);
 		        }
 		    } catch (Exception e) {
 		        e.printStackTrace();
