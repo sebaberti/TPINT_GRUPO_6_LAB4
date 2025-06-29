@@ -132,6 +132,15 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	}
 
 	@Override
+	public List<Cuenta> listarPorNro(String nro) {
+		return cuentaDao.listarPorNro(nro);
+	}
+
+	@Override
+	public List<Cuenta> listarPorCBU(BigInteger cbu) {
+		return cuentaDao.listarPorCBU(cbu);
+	}
+	@Override
 	public boolean bajaLogica(int idCuenta) {
 	    return cuentaDao.bajaLogica(idCuenta);
 	}

@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -36,18 +37,51 @@ public class ListarCuentasServlet extends HttpServlet {
 			List<Cuenta> listaCuentas = cuentaDao.listar();
 
 			String btnBuscar = request.getParameter("btnBuscar");
-			String dniFiltro = request.getParameter("txtDniClientes");
-			//buscar
-			if (btnBuscar != null && dniFiltro != null && !dniFiltro.trim().isEmpty()) {
 
-				    try {
-				        int dni = Integer.parseInt(dniFiltro); //valido que sea un int
+			// Filtrar
+			String valorBusqueda = request.getParameter("valorBusqueda");
+			if (btnBuscar != null && !valorBusqueda.trim().isEmpty()) {
+				String criterio = request.getParameter("criterioBusqueda");
+				String valor = request.getParameter("valorBusqueda");
 
-				        listaCuentas = cuentaDao.listarPorDNI(dni);
-
-				    } catch (NumberFormatException e) {
-				        request.setAttribute("errorDni", "El DNI ingresado no es válido.");
-				    }
+				switch (criterio) {
+				case "dni":
+					try {
+						int dni = Integer.parseInt(valor); // valido que sea un int
+						
+						listaCuentas= cuentaDao.listarPorDNI(dni);
+						if (listaCuentas==null || listaCuentas.isEmpty()) {
+							request.setAttribute("errorBusqueda", "No se encontraron cuentas con el DNI ingresado.");
+						}
+						
+					} catch (NumberFormatException e) {
+						request.setAttribute("errorBusqueda", "El DNI ingresado no es válido.");
+					}
+					break;
+				case "nroCuenta":
+					try {
+						listaCuentas = cuentaDao.listarPorNro(valor);
+						if (listaCuentas==null || listaCuentas.isEmpty()) {
+							request.setAttribute("errorBusqueda", "No se encontraron cuentas con el Número de cuenta ingresado.");
+						}
+					} catch (Exception e) {
+						request.setAttribute("errorBusqueda", "Error al buscar el Nro de cuenta ingresado");
+					}
+					break;
+				case "cbu":
+					try {
+						BigInteger cbu = new BigInteger(valor); //Valido que sean nros
+						
+						listaCuentas= cuentaDao.listarPorCBU(cbu);
+						if (listaCuentas==null || listaCuentas.isEmpty()) {
+							request.setAttribute("errorBusqueda", "No se encontraron cuentas con el CBU ingresado.");
+						}
+						
+					} catch (NumberFormatException e) {
+						request.setAttribute("errorBusqueda", "El CBU ingresado no es válido.");
+					}
+					break;
+				}
 
 			}
 

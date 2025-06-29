@@ -1,5 +1,6 @@
 package negocio;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import entidades.Cuenta;
@@ -17,6 +18,8 @@ public interface CuentaNegocio {
 	public Boolean tienePrestamoActivo(int idCuenta);
 	public int cuentasActivas(int idCliente);
 	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado);
+	public List<Cuenta> listarPorNro(String nro);
+	public List<Cuenta> listarPorCBU(BigInteger cbu);	
 }
 
 

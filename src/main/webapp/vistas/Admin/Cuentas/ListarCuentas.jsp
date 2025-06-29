@@ -24,6 +24,7 @@
 	href="${pageContext.request.contextPath}/css/Cuentas/estiloListarCuentas.css">
 
 <script>
+$.fn.dataTable.ext.errMode = 'none';
 	$(document)
 			.ready(
 					function() {
@@ -65,35 +66,50 @@
 		</div>
 
 		<!-- Formulario de búsqueda -->
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<form
-					action="${pageContext.request.contextPath}/ListarCuentasServlet"
-					method="post">
+<%
+    String criterioSeleccionado = request.getParameter("criterioBusqueda") != null ? request.getParameter("criterioBusqueda") : "dni";
+    String valorBusqueda = request.getParameter("valorBusqueda") != null ? request.getParameter("valorBusqueda") : "";
+%>
 
-					<div class="mb-3">
-						<label for="dniCliente" class="form-label">DNI del Cliente</label>
-						<input type="text" class="form-control shadow-sm" id="dniCliente"
-							name="txtDniClientes" placeholder="Ingrese DNI...">
-						<%
-						if (request.getAttribute("errorDni") != null) {
-						%>
-						<div class="alert alert-danger"><%=request.getAttribute("errorDni")%></div>
-						<%
-						}
-						%>
-					</div>
-					<div class="d-grid gap-2 d-md-flex justify-content-md-between">
-						<button type="submit" name="btnBuscar" class="btn btn-success">
-							<i class="bi bi-search me-1"></i> Buscar
-						</button>
-						<button type="submit" name="btnVerTodo" class="btn btn-secondary">
-							<i class="bi bi-eye me-1"></i> Ver Todo
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form action="${pageContext.request.contextPath}/ListarCuentasServlet" method="post">
+
+            <!-- Criterio de búsqueda -->
+            <div class="mb-3">
+                <label for="criterioBusqueda" class="form-label">Filtrar por</label>
+                <select class="form-select" name="criterioBusqueda" id="criterioBusqueda">
+                    <option value="dni" <%= "dni".equals(criterioSeleccionado) ? "selected" : "" %>>DNI del Cliente</option>
+                    <option value="nroCuenta" <%= "nroCuenta".equals(criterioSeleccionado) ? "selected" : "" %>>Nro de Cuenta</option>
+                    <option value="cbu" <%= "cbu".equals(criterioSeleccionado) ? "selected" : "" %>>CBU</option>
+                </select>
+            </div>
+
+            <!-- Valor a buscar -->
+            <div class="mb-3">
+                <label for="valorBusqueda" class="form-label">Valor</label>
+                <input type="text" class="form-control shadow-sm" id="valorBusqueda"
+                    name="valorBusqueda" placeholder="Ingrese el valor..."
+                    value="<%=valorBusqueda%>">
+
+                <% if (request.getAttribute("errorBusqueda") != null) { %>
+                    <div class="alert alert-danger mt-2"><%=request.getAttribute("errorBusqueda")%></div>
+                <% } %>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                <button type="submit" name="btnBuscar" class="btn btn-success">
+                    <i class="bi bi-search me-1"></i> Buscar
+                </button>
+                <button type="submit" name="btnVerTodo" class="btn btn-secondary">
+                    <i class="bi bi-eye me-1"></i> Ver Todo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 
 		<!-- Tabla de cuentas -->
 		<div class="table-responsive mt-5">
