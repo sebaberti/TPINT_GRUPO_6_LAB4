@@ -47,18 +47,61 @@ public class PagoCuotasServlet extends HttpServlet {
 			CuotaNegocioImplementacion cuotaNeg = new CuotaNegocioImplementacion();
 			CuentaNegocioImplementacion cuentaNeg = new CuentaNegocioImplementacion();
 
+			// cargar informacion
 			if (cliente != null) {
 				idCliente = cliente.getId();
-
-				// Cuotas pendientes
-				List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente, false);
 
 				// Cuentas activas
 				List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
 
 				// Enviar datos al JSP
-				request.setAttribute("cuotasPendientes", cuotasPendientes);
 				request.setAttribute("cuentasCliente", cuentasActivas);
+
+				// filtrar
+				String btnFiltrar = request.getParameter("btnFiltrar");
+				String estadoFiltro = request.getParameter("estadoCuota");
+				request.getSession().setAttribute("estadoCuota", estadoFiltro); //lo guardo en session
+				
+				if (estadoFiltro == null)
+					estadoFiltro = "impagas"; // default
+
+				List<Cuota> cuotasFiltradas;
+
+				if (btnFiltrar != null) {
+					switch (estadoFiltro) {
+					case "pagas":
+						cuotasFiltradas = cuotaNeg.cuotasPorClienteYEstado(idCliente, true);
+						break;
+					case "impagas":
+						cuotasFiltradas = cuotaNeg.cuotasPorClienteYEstado(idCliente, false);
+						break;
+					default:
+						cuotasFiltradas = cuotaNeg.cuotasPorCliente(idCliente);
+						break;
+					}
+				}
+
+				String tituloCuotas;
+
+				switch (estadoFiltro) {
+				case "pagas":
+					cuotasFiltradas = cuotaNeg.cuotasPorClienteYEstado(idCliente, true);
+					tituloCuotas = "Cuotas pagadas";
+					break;
+				case "impagas":
+					cuotasFiltradas = cuotaNeg.cuotasPorClienteYEstado(idCliente, false);
+					tituloCuotas = "Cuotas pendientes";
+					break;
+				default:
+					cuotasFiltradas = cuotaNeg.cuotasPorCliente(idCliente);
+					tituloCuotas = "Todas las cuotas";
+					break;
+				}
+
+				request.setAttribute("estadoFiltro", estadoFiltro);
+				request.setAttribute("cuotasFiltradas", cuotasFiltradas);
+				request.setAttribute("tituloCuotas", tituloCuotas);
+
 			}
 
 			// si presionan "pagar"
@@ -85,12 +128,30 @@ public class PagoCuotasServlet extends HttpServlet {
 					request.setAttribute("mostrarModalMsj", true);
 				}
 				// Refrescar vista
-				List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente, false);
 				List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
 
-				request.setAttribute("mostrarModalMsj", true);
-				request.setAttribute("cuotasPendientes", cuotasPendientes);
 				request.setAttribute("cuentasCliente", cuentasActivas);
+				request.setAttribute("mostrarModalMsj", true);
+				String estadoFiltro = (session.getAttribute("estadoCuota") != null)  //recupero de memoria si se filtró antes, o mantengo valor por defecto
+					    ? session.getAttribute("estadoCuota").toString()
+					    : "impagas";
+				
+
+				List<Cuota> cuotasActualizadas;
+				switch (estadoFiltro) {
+					case "pagas":
+						cuotasActualizadas = cuotaNeg.cuotasPorClienteYEstado(idCliente, true);
+						break;
+					case "impagas":
+						cuotasActualizadas = cuotaNeg.cuotasPorClienteYEstado(idCliente, false);
+						break;
+					default:
+						cuotasActualizadas = cuotaNeg.cuotasPorCliente(idCliente);
+						break;
+				}
+
+				request.setAttribute("cuotasFiltradas", cuotasActualizadas);
+				request.setAttribute("estadoFiltro", estadoFiltro);
 			}
 			request.getRequestDispatcher("/vistas/PagoCuotas.jsp").forward(request, response);
 		} catch (Exception e) {

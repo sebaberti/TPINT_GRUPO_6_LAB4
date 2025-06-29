@@ -30,10 +30,33 @@
 				desde la cual se desea pagar.</p>
 		</div>
 
+		<!-- Formulario del filtro -->
+		<form method="get" action="PagoCuotasServlet" class="row mb-3">
+			<div class="col-md-4">
+				<label for="estadoCuota" class="form-label">Filtrar por
+					estado</label> <select class="form-select" name="estadoCuota"
+					id="estadoCuota">
+					<option value="todas"
+						<%="todas".equals(request.getParameter("estadoCuota")) ? "selected" : ""%>>Todas</option>
+					<option value="pagas"
+						<%="pagas".equals(request.getParameter("estadoCuota")) ? "selected" : ""%>>Pagas</option>
+					<option value="impagas"
+						<%="impagas".equals(request.getParameter("estadoCuota")) || request.getParameter("estadoCuota") == null
+		? "selected"
+		: ""%>>Impagas</option>
+				</select>
+			</div>
+			<div class="col-md-2 d-flex align-items-end">
+				<button type="submit" name="btnFiltrar" class="btn btn-primary">Filtrar</button>
+			</div>
+		</form>
+
+
 		<form method="post" action="PagoCuotasServlet">
+		<input type="hidden" name="estadoCuota" value="<%= request.getAttribute("estadoFiltro") != null ? request.getAttribute("estadoFiltro") : "impagas" %>">
 			<!-- Tabla de cuotas -->
 			<div class="mb-4">
-				<h6>Cuotas pendientes</h6>
+				<h6><%=request.getAttribute("tituloCuotas") != null ? request.getAttribute("tituloCuotas") : "Todas las Cuotas"%></h6>
 				<div class="table-responsive">
 					<table
 						class="table table-bordered table-hover align-middle text-center">
@@ -51,7 +74,7 @@
 							<tr>
 
 								<%
-								List<Cuota> cuotas = (List<Cuota>) request.getAttribute("cuotasPendientes");
+								List<Cuota> cuotas = (List<Cuota>) request.getAttribute("cuotasFiltradas");
 								List<Cuenta> cuentas = (List<Cuenta>) request.getAttribute("cuentasCliente");
 								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 								%>
@@ -62,8 +85,10 @@
 								for (Cuota c : cuotas) {
 							%>
 							<tr>
-								<td><input class="form-check-input" type="radio"
-									name="cuotaId" value="<%=c.getId()%>"></td>
+								<td>
+								<input class="form-check-input" type="radio" name="cuotaId"
+									value="<%=c.getId()%>" <%=c.getEstado() ? "disabled" : ""%>>
+								</td>
 								<td><%=c.getNumeroCuota()%></td>
 								<td>$<%=c.getImporte()%></td>
 								<td><%=sdf.format(c.getFechaVencimiento())%></td>
@@ -71,14 +96,14 @@
 									class="badge <%=c.getEstado() ? "bg-success" : "bg-warning text-dark"%>">
 										<%=c.getEstado() ? "Pago" : "Pendiente"%>
 								</span></td>
-								<td><%=c.getEstado() ? c.getFechaPago(): "-"%></td>
+								<td><%=c.getEstado() ? c.getFechaPago() : "-"%></td>
 							</tr>
 							<%
 							}
 							} else {
 							%>
 							<tr>
-								<td colspan="100%">No hay cuotas pendientes.</td>
+								<td colspan="100%">No hay cuotas para mostrar.</td>
 							</tr>
 							<%
 							}

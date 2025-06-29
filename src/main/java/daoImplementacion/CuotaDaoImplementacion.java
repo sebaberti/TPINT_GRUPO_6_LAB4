@@ -3,6 +3,7 @@ package daoImplementacion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,47 +46,72 @@ public class CuotaDaoImplementacion implements CuotaDao {
 		    }
 		    return cuota;
 	}
-		    
+
 	@Override
-	public List<Cuota> cuotasPendientesPorCliente(int idCliente, boolean soloPendientes) {
-		 List<Cuota> lista = new ArrayList<>();
-		 
-		 String query = "SELECT c.* FROM Cuotas c " +
-                 "INNER JOIN Prestamos p ON c.id_prestamo = p.id " +
-                 "WHERE p.id_cliente = ?";
-		 
-		 if (soloPendientes) {
-	 			query += " AND c.estado = 0";
-	 			}
+	public List<Cuota> cuotasPorClienteYEstado(int idCliente, boolean estado) {
+	    List<Cuota> lista = new ArrayList<>();
 
-		 Connection conexion = null;
-		 PreparedStatement statement = null;
-		 ResultSet rs = null;
-		 
-		    try {
-		        conexion = Conexion.getConexion().getSQLConexion();
-		        statement = conexion.prepareStatement(query);
-		        statement.setInt(1, idCliente);
-		        rs = statement.executeQuery();
+	    String query = "SELECT c.* FROM Cuotas c " +
+	                   "INNER JOIN Prestamos p ON c.id_prestamo = p.id " +
+	                   "WHERE p.id_cliente = ? AND c.estado = ?";
 
-		        while (rs.next()) {
-		            Cuota cuota = new Cuota();
-		            cuota.setId(rs.getInt("id"));
-		            cuota.setPrestamoId(rs.getInt("id_prestamo"));
-		            cuota.setNumeroCuota(rs.getInt("nro_cuota"));
-		            cuota.setImporte(rs.getDouble("importe"));
-		            cuota.setFechaPago(rs.getDate("fecha_pago"));
-		            cuota.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
-		            cuota.setEstado(rs.getBoolean("estado"));
+	    try (Connection conexion = Conexion.getConexion().getSQLConexion();
+	         PreparedStatement stmt = conexion.prepareStatement(query)) {
 
-		            lista.add(cuota);
-		        }
+	        stmt.setInt(1, idCliente);
+	        stmt.setBoolean(2, estado);
 
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-		    return lista;
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                Cuota cuota = mapearCuota(rs);
+	                lista.add(cuota);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
 	}
+
+	@Override
+	public List<Cuota> cuotasPorCliente(int idCliente) {
+	    List<Cuota> lista = new ArrayList<>();
+
+	    String query = "SELECT c.* FROM Cuotas c " +
+	                   "INNER JOIN Prestamos p ON c.id_prestamo = p.id " +
+	                   "WHERE p.id_cliente = ?";
+
+	    try (Connection conexion = Conexion.getConexion().getSQLConexion();
+	         PreparedStatement stmt = conexion.prepareStatement(query)) {
+
+	        stmt.setInt(1, idCliente);
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                Cuota cuota = mapearCuota(rs);
+	                lista.add(cuota);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
+	}
+
+	private Cuota mapearCuota(ResultSet rs) throws SQLException {
+	    Cuota cuota = new Cuota();
+	    cuota.setId(rs.getInt("id"));
+	    cuota.setPrestamoId(rs.getInt("id_prestamo"));
+	    cuota.setNumeroCuota(rs.getInt("nro_cuota"));
+	    cuota.setImporte(rs.getDouble("importe"));
+	    cuota.setFechaPago(rs.getDate("fecha_pago"));
+	    cuota.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
+	    cuota.setEstado(rs.getBoolean("estado"));
+	    return cuota;
+	}
+
 
 	@Override
 	public boolean pagarCuota(int idCuota, int idCuenta) {

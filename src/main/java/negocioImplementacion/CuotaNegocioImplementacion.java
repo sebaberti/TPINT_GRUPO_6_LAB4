@@ -13,11 +13,17 @@ public class CuotaNegocioImplementacion implements CuotaNegocio{
 	}
 	
 	@Override
-	public List<Cuota> cuotasPendientesPorCliente(int idCliente, boolean soloPendientes) {
+	public List<Cuota> cuotasPorClienteYEstado(int idCliente, boolean estado) {
 		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
-		return tsi.cuotasPendientesPorCliente(idCliente, soloPendientes);
+		return tsi.cuotasPorClienteYEstado(idCliente, estado);
 	}
-
+	
+	@Override
+	public List<Cuota> cuotasPorCliente(int idCliente) {
+		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
+		return tsi.cuotasPorCliente(idCliente);
+	}
+	
 	@Override
 	public boolean pagarCuota(int idCuota, int idCuenta) {
 		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
