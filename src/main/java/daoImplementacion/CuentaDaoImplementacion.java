@@ -444,5 +444,26 @@ public class CuentaDaoImplementacion implements CuentaDao {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado) {
+		Connection conexion = null;
+		PreparedStatement statement = null;
+	    String query = "UPDATE Cuentas SET estado = ? WHERE id = ?";
+	    
+	    try {
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	        statement = conexion.prepareStatement(query);
+	        conexion.setAutoCommit(true); // para hacer commit
+	        statement.setBoolean(1, nuevoEstado);
+	        statement.setInt(2, idCuenta);
+	        int filas = statement.executeUpdate();
+	        return filas > 0;
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 
 }

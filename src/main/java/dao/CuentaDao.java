@@ -17,5 +17,6 @@ public interface CuentaDao {
 	public String obtenerUltimoNumeroCuenta();
 	boolean bajaLogica(int idCuenta);
 	public boolean modificarCuenta(Cuenta cuenta);
-	Boolean tienePrestamoActivo(int idCuenta);
+	public Boolean tienePrestamoActivo(int idCuenta);
+	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado);
 }
