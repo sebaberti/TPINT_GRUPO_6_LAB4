@@ -63,7 +63,7 @@
 							%>
 							<tr>
 								<td><input class="form-check-input" type="radio"
-									name="cuotaId" value="<%=c.getId()%>" required></td>
+									name="cuotaId" value="<%=c.getId()%>"></td>
 								<td><%=c.getId()%></td>
 								<td>$<%=c.getImporte()%></td>
 								<td><%=sdf.format(c.getFechaVencimiento())%></td>
@@ -103,7 +103,7 @@
 					}
 					}
 					%>
-				</select> </select>
+				</select>
 			</div>
 
 			<!-- Botón de pago -->
