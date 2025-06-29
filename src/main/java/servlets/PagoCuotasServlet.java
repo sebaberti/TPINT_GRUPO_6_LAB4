@@ -79,13 +79,6 @@ public class PagoCuotasServlet extends HttpServlet {
 						request.setAttribute("mensaje", "La cuenta no tiene saldo suficiente para abonar la cuota.");
 					}
 
-//					// Refrescar vista
-//					List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente);
-//					List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
-//
-//					request.setAttribute("mostrarModalMsj", true);
-//					request.setAttribute("cuotasPendientes", cuotasPendientes);
-//					request.setAttribute("cuentasCliente", cuentasActivas);
 				} else {
 					request.setAttribute("titulo", "Atención!");
 					request.setAttribute("mensaje","Debe seleccionar una cuota y una cuenta desde la cuál hará el pago");

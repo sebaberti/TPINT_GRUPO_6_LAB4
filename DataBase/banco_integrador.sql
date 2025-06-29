@@ -397,18 +397,18 @@ CREATE PROCEDURE pagar_cuota (
 BEGIN
     DECLARE v_importe DECIMAL(15,2);
     DECLARE v_saldo DECIMAL(15,2);
+    DECLARE v_id_cliente INT;
 
     -- Obtener importe de la cuota
     SELECT importe INTO v_importe
     FROM Cuotas
     WHERE id = p_id_cuota;
 
-    -- Obtener saldo actual de la cuenta
-    SELECT saldo INTO v_saldo
+    -- Obtener saldo actual y cliente de la cuenta
+    SELECT saldo, id_cliente INTO v_saldo, v_id_cliente
     FROM Cuentas
     WHERE id = p_id_cuenta;
 
-    -- Verificar si hay saldo suficiente
     IF v_saldo >= v_importe THEN
         -- Descontar saldo
         UPDATE Cuentas
@@ -420,6 +420,23 @@ BEGIN
         SET estado = 1,
             fecha_pago = CURRENT_DATE
         WHERE id = p_id_cuota;
+
+        -- Registrar movimiento
+        INSERT INTO Movimientos (
+            id_cuenta,
+            id_cliente,
+            id_tipo_movimiento,
+            importe,
+            detalle,
+            id_transferencia
+        ) VALUES (
+            p_id_cuenta,
+            v_id_cliente,
+            3, -- ID tipo movimiento: "Pago de Préstamo"
+            -1 * v_importe,
+            CONCAT('Pago de cuota ID ', p_id_cuota),
+            NULL
+        );
 
         SET p_resultado = TRUE;
     ELSE
