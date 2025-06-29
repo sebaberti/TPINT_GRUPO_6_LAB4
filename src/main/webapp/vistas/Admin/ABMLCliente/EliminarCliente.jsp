@@ -17,6 +17,7 @@
 
 </head>
 <body>
+	<jsp:include page="../../Header.jsp" />
 
 	<%! 
 			public String manejarNull(String valor) {
@@ -33,78 +34,49 @@
 			return true;
 		}%>
 
-	<jsp:include page="../../Header.jsp" />
+		<%
+			Cliente cliente = new Cliente();
+		%>
+		
+		<%
+			if (session.getAttribute("objCliente") != null) {
+				cliente = (Cliente) session.getAttribute("objCliente");
+			}
+		%>
+		
 
 	<main
-		class="container py-4 mb-4 d-flex flex-column justify-content-center">
-		<div class="row text-center">
+		class="container py-4 mb-4">
+		<div class="row text-center mb-4">
 			<h2 class="fw-semibold">Eliminar Cliente</h2>
 		</div>
-
-		<%
-		Cliente cliente = new Cliente();
-		String error = (String) request.getAttribute("error");
-		String procesoExitoso = (String) request.getAttribute("procesoExitoso");
-		%>
-
-		<%
-		if (error != null) {
-		%>
-		<div class="alert alert-danger text-center mt-3">
-			<%=error%>
-		</div>
-		<%
-		request.removeAttribute("error");
-		}
-		%>
-
-		<%
-		if (procesoExitoso != null) {
-		%>
-		<div class="alert alert-success text-center mt-3">
-			<%=procesoExitoso%>
-		</div>
-		<%
-		request.removeAttribute("procesoExitoso");
-		}
-		%>
-
-		<%
-		if (session.getAttribute("objCliente") != null) {
-			cliente = (Cliente) session.getAttribute("objCliente");
-		}
-		%>
-
-		<div class="row justify-content-center mb-3">
-			<form class="" method="POST"
+	
+		<div class="border rounded p-4 bg-white shadow-sm">
+			<div class="d-flex flex-row-reverse w-100">
+				<form method="GET"
+				action="${pageContext.request.contextPath}/BajaClienteServlet">
+					<button type="submit" name="btnVolverAListar" class="btn btn-secondary btn-abml mb-3">
+					<i class="bi bi-arrow-return-right me-2"></i>Volver al listado
+						</button>
+				</form>
+			</div>
+			<form method="POST"
 				action="${pageContext.request.contextPath}/BajaClienteServlet">
 				<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
-					<div class="col-12 col-md-9 mb-3">
+				<div class="col mb-3">
 						<label for="DNICliente" class="form-label">Número de
 							documento</label> <input type="text" class="form-control" id="DNICliente"
-							name="DNICliente" placeholder="Ingrese el número de DNI" required
+							name="DNICliente" placeholder="Ingrese el número de DNI" required disabled
 							pattern="^\d{8}$" title="Solo se permiten hasta 8 digitos"
 							value="<%=manejarNull(cliente.getDNI())%>">
 					</div>
 					<div class="col mb-3">
 						<label for="CUILCliente" class="form-label">Número de CUIL</label>
 						<input type="text" class="form-control" id="CUILCliente"
-							name="CUILCliente" placeholder="20-43158994-6" required
+							name="CUILCliente" placeholder="20-43158994-6" required disabled
 							pattern="\d{2}-\d{8}-\d" title="Formato esperado XX-XXXXXXXX-XX"
 							value="<%=manejarNull(cliente.getCUIL())%>">
 					</div>
-					<div class="col d-flex flex-column justify-content-end mb-3">
-						<button type="submit" name="btnBuscar"
-							class="btn btn-secondary btn-md w-100 .btn-abml">Buscar</button>
-					</div>
-				</div>
-			</form>
-			<%
-			if (session.getAttribute("objCliente") != null) {
-			%>
-			<form method="POST"
-				action="${pageContext.request.contextPath}/BajaClienteServlet">
-				<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
 					<div class="col mb-3">
 						<label for="lblNombre" class="form-label">Nombre/s</label> <input
 							type="text" class="form-control" id="lblNombre"
@@ -184,11 +156,98 @@
 					</div>
 				</div>
 			</form>
-			<%
-			}
-			%>
+			</div>
 		</div>
 	</main>
+	
+	<!-- Mostrar modal modificacion éxitosa -->
+	<%
+	Boolean mostrarModal = (Boolean) request.getAttribute("mostrarModalClienteEliminado");
+	if (mostrarModal != null && mostrarModal) {
+	%>
+	<script>
+		window.onload = function() {
+			var modal = new bootstrap.Modal(document
+					.getElementById('mostrarModalClienteEliminado'));
+			modal.show();
+		};
+	</script>
+	<%
+	}
+	%>
+
+	<!-- Modal modificacion éxitosa -->
+	<div class="modal fade" id="mostrarModalClienteEliminado" tabindex="-1"
+		aria-labelledby="mostrarModalClienteEliminado" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="mostrarModalClienteEliminado">Eliminación éxitosa!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Cerrar"></button>
+				</div>
+
+				<div class="modal-body">
+					<%
+					if (cliente != null) {
+					%>
+					<p> El cliente <%=cliente.getNombre()%>, <%=cliente.getApellido()%> con DNI <%=cliente.getDNI()%> y CUIL <%=cliente.getCUIL()%> fue eliminado correctamente.</p>
+					<%
+					}
+					%>
+				</div>
+				<form method="GET"
+				action="${pageContext.request.contextPath}/ModificarClienteServlet">
+					<div class="modal-footer">
+						<button type="submit" name="btnModalClienteModificado" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- Mostrar modal error -->
+	<%
+	Boolean mostrarModalError = (Boolean) request.getAttribute("modalError");
+	if (mostrarModalError != null && mostrarModalError) {
+	%>
+	<script>
+		window.onload = function() {
+			var modal = new bootstrap.Modal(document
+					.getElementById('modalError'));
+			modal.show();
+		};
+	</script>
+	<%
+	}
+	%>
+
+	<!-- Modal error -->
+	<div class="modal fade" id="modalError" tabindex="-1"
+		aria-labelledby="modalError" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalClienteModificado">Ocurrio un error!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Cerrar"></button>
+				</div>
+
+				<div class="modal-body">
+				<% String mensajeError = (String) request.getAttribute("error"); %>
+				<p><%= mensajeError != null ?  mensajeError :"Ocurrio un error" %></p>
+				</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cerrar</button>
+					</div>
+			</div>
+		</div>
+	</div>
 	
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

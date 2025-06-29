@@ -43,8 +43,10 @@ public class CuotaDaoImplementacion implements CuotaDao {
 	public List<Cuota> cuotasPorClienteYEstado(int idCliente, boolean estado) {
 		List<Cuota> lista = new ArrayList<>();
 
-		String query = "SELECT c.* FROM Cuotas c " + "INNER JOIN Prestamos p ON c.id_prestamo = p.id "
-				+ "WHERE p.id_cliente = ? AND c.estado = ?";
+	    String query = "SELECT c.* FROM Cuotas c " +
+	                   "INNER JOIN Prestamos p ON c.id_prestamo = p.id " +
+	                   "WHERE p.id_cliente = ? AND c.estado = ? "+
+	                   "ORDER BY c.fecha_vencimiento ASC";
 
 		try (Connection conexion = Conexion.getConexion().getSQLConexion();
 				PreparedStatement stmt = conexion.prepareStatement(query)) {
@@ -69,8 +71,10 @@ public class CuotaDaoImplementacion implements CuotaDao {
 	public List<Cuota> cuotasPorCliente(int idCliente) {
 		List<Cuota> lista = new ArrayList<>();
 
-		String query = "SELECT c.* FROM Cuotas c " + "INNER JOIN Prestamos p ON c.id_prestamo = p.id "
-				+ "WHERE p.id_cliente = ?";
+	    String query = "SELECT c.* FROM Cuotas c " +
+	                   "INNER JOIN Prestamos p ON c.id_prestamo = p.id " +
+	                   "WHERE p.id_cliente = ? "+
+	                   "ORDER BY c.fecha_vencimiento ASC";
 
 		try (Connection conexion = Conexion.getConexion().getSQLConexion();
 				PreparedStatement stmt = conexion.prepareStatement(query)) {

@@ -1,6 +1,7 @@
 package entidades;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class Cliente {
 	
@@ -102,7 +103,6 @@ public class Cliente {
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
 	}
-
 	
 	@Override
 	public String toString() {
@@ -111,4 +111,31 @@ public class Cliente {
 				+ ", domicilio=" + domicilio + ", email=" + email + ", telefono=" + telefono + ", usuario=" + usuario
 				+ ", estado=" + estado + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(CUIL, DNI, apellido, domicilio.getDireccion(), domicilio.getLocalidad().getId(), domicilio.getLocalidad().getProvincia(), email, estado, fecha_nacimiento, id, nacionalidad.getId(), nombre,
+				sexo, telefono, usuario);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		return Objects.equals(CUIL, other.CUIL) && Objects.equals(DNI, other.DNI)
+				&& Objects.equals(apellido, other.apellido) && domicilio.getId() == other.domicilio.getId()
+				&& domicilio.getLocalidad().getId() == other.domicilio.getLocalidad().getId()
+				&& domicilio.getLocalidad().getProvincia().getId() == other.domicilio.getLocalidad().getProvincia().getId()
+				&& Objects.equals(email, other.email)
+				&& Objects.equals(fecha_nacimiento, other.fecha_nacimiento) && id == other.id
+				&& nacionalidad.getId() == other.nacionalidad.getId() && Objects.equals(nombre, other.nombre)
+				&& Objects.equals(sexo, other.sexo) && Objects.equals(telefono, other.telefono);
+	}
+	
+	
 }

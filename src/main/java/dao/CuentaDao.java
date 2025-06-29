@@ -19,4 +19,6 @@ public interface CuentaDao {
 	public boolean modificarCuenta(Cuenta cuenta);
 	Boolean tienePrestamoActivo(int idCuenta);
 	public int contarCuentas();
+	public Boolean tienePrestamoActivo(int idCuenta);
+	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado);
 }

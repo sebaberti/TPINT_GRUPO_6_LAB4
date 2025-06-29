@@ -80,7 +80,6 @@
 						<th>Estado</th>
 						<th>Modificar</th>
 						<th>Eliminar</th>
-						<th>Crear Usuario</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -97,7 +96,7 @@
 						<td><%=(c.getEstado() != null && c.getEstado()) ? "Activo" : "Inactivo"%></td>
 						<td>
 							<button type="button" class="btn btn-warning btn-sm"
-								onclick="location.href='${pageContext.request.contextPath}/CargarClienteServlet?dni=<%=c.getDNI()%>&cuil=<%=c.getCUIL()%>'">
+								onclick="location.href='${pageContext.request.contextPath}/ModificarClienteServlet?dni=<%=c.getDNI()%>&cuil=<%=c.getCUIL()%>'">
 								<i class="bi bi-pencil-square"></i>
 							</button>
 
@@ -106,12 +105,6 @@
 							<button type="submit" class="btn btn-danger btn-sm"
 								onclick="location.href='${pageContext.request.contextPath}/BajaClienteServlet?dni=<%=c.getDNI()%>&cuil=<%=c.getCUIL()%>&vieneDeListar=btnEliminar'">
 								<i class="bi bi-trash"></i>
-							</button>
-						</td>
-						<td>
-							<button type="button" class="btn btn-success btn-sm"
-								onclick="location.href='../ABMLUsuario/AltaUsuario.jsp'">
-								<i class="bi bi-plus-circle"></i>
 							</button>
 						</td>
 					</tr>

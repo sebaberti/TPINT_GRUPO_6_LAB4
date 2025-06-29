@@ -47,16 +47,16 @@ public class AltaClienteServlet extends HttpServlet {
 		cliente = capturarCampos(request);
 				
 		if(cliente != null) {
-			request.setAttribute("cliente", cliente);			
+			request.setAttribute("nuevoCliente", cliente);			
 			
 		if (request.getParameter("btnAltaCliente")!=null) {
 			if(existeCliente(request, response, cliente)){					
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/MensajesInformativos.jsp");				
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/ABMLCliente/AltaCliente.jsp");				
 				dispatcher.forward(request, response);
 				return;
 			}
 			
-			session.setAttribute("cliente", cliente);				
+			session.setAttribute("nuevoCliente", cliente);				
 			response.sendRedirect(request.getContextPath() + "/AltaUsuarioServlet");
 			return;
 		}
@@ -75,9 +75,7 @@ public class AltaClienteServlet extends HttpServlet {
 				    cliente.setDNI(request.getParameter("DNICliente"));
 				}
 				if (request.getParameter("CUILCliente") != null && !request.getParameter("CUILCliente").isEmpty()) {
-					String cuilOriginal = request.getParameter("CUILCliente");
-				    String cuilSoloNumeros = cuilOriginal.replaceAll("\\D", "");
-					cliente.setCUIL(cuilSoloNumeros);
+					cliente.setCUIL(request.getParameter("CUILCliente"));
 				}
 				if (request.getParameter("nombreCliente") != null && !request.getParameter("nombreCliente").isEmpty()) {
 				    cliente.setNombre(request.getParameter("nombreCliente"));
@@ -137,6 +135,7 @@ public class AltaClienteServlet extends HttpServlet {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				
 			}
 
 		return cliente;
@@ -211,9 +210,10 @@ public class AltaClienteServlet extends HttpServlet {
 		if (!datosValidos) {
 			msj+= "Por favor, intente nuevamente.<br>";
 		    request.setAttribute("mensajeError", msj);
+		    return true;
 		}
 		
-		return dni && cuil;
+		return false;
 		
 	}
 }

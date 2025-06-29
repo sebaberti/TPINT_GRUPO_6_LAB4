@@ -136,7 +136,6 @@ VALUES
 ('30000333', '23-30000333-4', 'Florencia', 'Benítez', 'F', 1, '1989-11-28', 12, 'florencia.benitez@mail.com', '1147586932', 11),
 ('26666111', '20-26666111-3', 'Gonzalo', 'Herrera', 'M', 1, '1984-08-05', 13, 'gonzalo.herrera@mail.com', '1124587541', 10);
 
-DROP TRIGGER IF EXISTS `crear_cuenta_con_saldo`;
 
 INSERT INTO `Cuentas` 
 (`id_cliente`, `fecha_creacion`, `numero_de_cuenta`, `id_tipo_cuenta`, `cbu`, `saldo`, `estado`)
@@ -156,27 +155,6 @@ VALUES
 (10, '2022-07-15', '12345678-0011', 2, '98765432111', 2983500.00, TRUE),
 (11, '2021-09-20', '12345678-0012', 1, '98765432112', 402000.50, TRUE),
 (11, '2020-11-11', '12345678-0013', 2, '98765432113', 600230.00, TRUE);
-
-DELIMITER $$
-CREATE TRIGGER `crear_cuenta_con_saldo`
-BEFORE INSERT ON `cuentas`
-FOR EACH ROW
-BEGIN
-    DECLARE total_cuentas INT;
-
-    SELECT COUNT(*) INTO total_cuentas
-    FROM Cuentas
-    WHERE id_cliente = NEW.id_cliente;
-
-    IF total_cuentas >= 3 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'El cliente no puede tener más de 3 cuentas.';
-    END IF;
-
-    SET NEW.saldo = 10000.00;
-    SET NEW.fecha_creacion = CURRENT_DATE();
-END$$
-DELIMITER ;
 
 INSERT INTO Opciones_Plazo (cantidad_cuotas, tasaAnual) VALUES
 (3, 5.00),

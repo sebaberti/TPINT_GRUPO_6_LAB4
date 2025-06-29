@@ -6,7 +6,19 @@
 <%@ page import="entidades.Localidad"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="negocioImplementacion.Seguridad"%>
+<%
+Object user = session.getAttribute("usuario");
 
+if (!Seguridad.sesionActiva(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+} 
+if (!Seguridad.esAdministrador(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,16 +45,20 @@
 		</div>
 <%
     Cliente cliente = null;
-    Object objCliente = request.getAttribute("cliente");
+    Object objCliente = request.getAttribute("nuevoCliente");
     if (objCliente != null && objCliente instanceof Cliente) {
         cliente = (Cliente) objCliente;
     }
 %>
 
 		<div class="row justify-content-center mb-3">
+			<%if(request.getAttribute("mensajeError")!=null){%>
+				<div class="alert alert-danger" role="alert">
+  					<%= request.getAttribute("mensajeError") %>
+				</div>								
+				<%}%>
 			<form method="POST"
 				action="${pageContext.request.contextPath}/AltaClienteServlet">
-
 				<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
 					<div class="col mb-3">
 						<label for="DNICliente" class="form-label">Número de
