@@ -153,7 +153,24 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	
 	@Override
 	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado) {
-	    return cuentaDao.actualizarEstado(idCuenta, nuevoEstado) ;
+	    Cuenta cuenta = cuentaDao.obtenerCuentaPorId(idCuenta);
+
+	    if (cuenta == null) {
+	        return false;
+	    }
+
+	    
+	    if (nuevoEstado) {  // Si estamos reactivando la cuenta, validamos que no haya 3 ctas activas del cliente
+	        int idCliente = cuenta.getCliente().getId();
+	        List<Cuenta> cuentasActivas = cuentaDao.listarCuentasPorClienteId(idCliente, true);
+
+	        if (cuentasActivas.size() >= 3) {
+	            return false;
+	        }
+	    }
+
+	    return cuentaDao.actualizarEstado(idCuenta, nuevoEstado);
 	}
+
 
 }

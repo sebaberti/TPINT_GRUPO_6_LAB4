@@ -109,7 +109,7 @@ public class EliminarCuentaServlet extends HttpServlet {
 				        if (reactivada) {
 				            request.setAttribute("mensaje", "La cuenta fue reactivada correctamente.");
 				        } else {
-				            request.setAttribute("mensaje", "No se pudo reactivar la cuenta.");
+				            request.setAttribute("mensaje", "No se pudo reactivar la cuenta, el usuario ya posee 3 cuentas activas");
 				        }
 				    } catch (Exception e) {
 				        request.setAttribute("mensajeError", "Error al reactivar la cuenta: " + e.getMessage());
