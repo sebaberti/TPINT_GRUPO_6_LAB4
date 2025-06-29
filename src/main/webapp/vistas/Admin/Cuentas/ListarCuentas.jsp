@@ -2,6 +2,8 @@
 <%@ page import="java.util.List"%>
 <%@ page import="entidades.Cuenta"%>
 <%@ page import="entidades.CuentaTipo"%>
+<%@ page import="negocioImplementacion.Seguridad"%>
+<%@ page import="utilidades.FormatterUtil"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,11 +24,18 @@
 	href="${pageContext.request.contextPath}/css/Cuentas/estiloListarCuentas.css">
 
 <script>
-	$(document).ready(function() {$('#tabla_cuentas').DataTable({
-	searching : false,
-	language : { url : "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"}
-		});
-	});
+	$(document)
+			.ready(
+					function() {
+						$('#tabla_cuentas')
+								.DataTable(
+										{
+											searching : false,
+											language : {
+												url : "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+											}
+										});
+					});
 </script>
 </head>
 
@@ -35,14 +44,12 @@
 
 	<main class="container mt-5 mb-5">
 		<%
-	/* 	if (!Seguridad.sesionActiva(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} 
-	if (!Seguridad.esAdministrador(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} */
+		Object user = session.getAttribute("usuario");
+
+		if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+			response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+			return;
+		}
 
 		List<Cuenta> listaCuentas = (List<Cuenta>) request.getAttribute("listaCuentas");
 		%>
@@ -101,7 +108,7 @@
 						<th>Saldo</th>
 						<th>Estado</th>
 						<th>Modificar</th>
-						<th>Eliminar</th>
+						<th>Activar/Desactivar</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -114,7 +121,7 @@
 						<td><%=c.getCliente().getDNI()%></td>
 						<td><%=c.getTipoCuenta().getDescripcion()%></td>
 						<td><%=c.getCBU()%></td>
-						<td><%=c.getSaldo()%></td>
+						<td>$ <%=FormatterUtil.formatearMiles(c.getSaldo())%></td>
 						<%
 						if (c.isEstado()) {
 						%>
@@ -128,19 +135,34 @@
 						%>
 						<td>
 							<form method="get" action="ModificarCuentaServlet">
-    						<input type="hidden" name="idCuenta" value="<%= c.getId() %>">
-   							<button type="submit" class="btn btn-warning btn-sm">
-       						<i class="bi bi-pencil-square"></i>
-    						</button>
+								<input type="hidden" name="idCuenta" value="<%=c.getId()%>">
+								<button type="submit" class="btn btn-warning btn-sm">
+									<i class="bi bi-pencil-square"></i>
+								</button>
 							</form>
 						</td>
 						<td>
 							<form method="post" action="ManejarCuentaServlet">
 								<input type="hidden" name="idCuenta" value="<%=c.getId()%>">
+								<%
+								if (c.isEstado()) {
+								%>
+								<!-- Botón para eliminar -->
 								<button type="submit" name="btnEliminar" value="eliminar"
-									class="btn btn-danger btn-sm">
+									class="btn btn-danger btn-sm" title="Eliminar">
 									<i class="bi bi-trash"></i>
 								</button>
+								<%
+								} else {
+								%>
+								<!-- Botón para reactivar -->
+								<button type="submit" name="btnReactivar" value="reactivar"
+									class="btn btn-success btn-sm" title="Reactivar">
+									<i class="bi bi-arrow-clockwise"></i>
+								</button>
+								<%
+								}
+								%>
 							</form>
 						</td>
 					</tr>
@@ -159,11 +181,21 @@
 		</div>
 
 
-		<!-- Modal si se quiere eliminar-->
+		<!-- Modal si se quiere desactivar/reactivar-->
 		<%
 		Boolean mostrarModal = (Boolean) request.getAttribute("mostrarModalEliminar");
 		Cuenta cuentaAEliminar = (Cuenta) request.getAttribute("cuentaAElim");
-		if (mostrarModal != null && mostrarModal && cuentaAEliminar!=null) {
+
+		boolean esReactivacion = cuentaAEliminar != null && !cuentaAEliminar.isEstado();
+		String tituloModal = esReactivacion ? "Confirmar Reactivación" : "Confirmar Eliminación";
+		String mensajeModal = esReactivacion
+				? "Está por reactivar una cuenta previamente dada de baja."
+				: "Está por eliminar una cuenta del sistema.";
+		String botonTexto = esReactivacion ? "Reactivar Cuenta" : "Eliminar Cuenta";
+		String botonClase = esReactivacion ? "btn-success" : "btn-danger";
+		String botonIcono = esReactivacion ? "bi-arrow-clockwise" : "bi-trash";
+
+		if (mostrarModal != null && mostrarModal && cuentaAEliminar != null) {
 		%>
 		<script>
 			window.onload = function() {
@@ -176,63 +208,86 @@
 		}
 		%>
 
-<%
-if (mostrarModal != null && mostrarModal && cuentaAEliminar!=null) {
+		<%
+		if (mostrarModal != null && mostrarModal && cuentaAEliminar != null) {
 		%>
-<div class="modal fade" id="modalEliminar" tabindex="-1"
-	aria-labelledby="modalEliminarLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content shadow-lg">
+		<div class="modal fade" id="modalEliminar" tabindex="-1"
+			aria-labelledby="modalEliminarLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content shadow-lg">
 
-			<div class="modal-header bg-primary text-white">
-				<h5 class="modal-title" id="modalEliminarLabel">
-					<i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación
-				</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"
-					aria-label="Cerrar"></button>
+					<div class="modal-header bg-primary text-white">
+						<h5 class="modal-title" id="modalEliminarLabel">
+							<i class="bi bi-exclamation-triangle-fill me-2"></i>
+							<%=tituloModal%>
+						</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Cerrar"></button>
+					</div>
+
+					<div class="modal-body">
+						<p class="mb-4 text-danger fs-5">
+							<strong>¡Atención!</strong>
+							<%=mensajeModal%>
+						</p>
+
+						<ul class="list-group mb-4">
+							<li class="list-group-item"><strong>DNI Cliente:</strong> <%=cuentaAEliminar.getCliente().getDNI()%></li>
+							<li class="list-group-item"><strong>Tipo de Cuenta:</strong>
+								<%=cuentaAEliminar.getTipoCuenta().getDescripcion()%></li>
+							<li class="list-group-item"><strong>CBU:</strong> <%=cuentaAEliminar.getCBU().toString()%></li>
+							<li class="list-group-item"><strong>N° Cuenta:</strong> <%=cuentaAEliminar.getNumeroCuenta()%></li>
+							<li class="list-group-item"><strong>Saldo:</strong> $<%=cuentaAEliminar.getSaldo()%></li>
+							<li class="list-group-item"><strong>Fecha de
+									Creación:</strong> <%=cuentaAEliminar.getFechaCreacion().toString()%></li>
+							<li class="list-group-item"><strong>Estado:</strong> <%=cuentaAEliminar.isEstado() ? "Activa" : "Inactiva"%></li>
+						</ul>
+					</div>
+
+					<div class="modal-footer">
+						<form method="post" action="ManejarCuentaServlet">
+							<input type="hidden" name="idCuenta"
+								value="<%=cuentaAEliminar.getId()%>">
+							<%
+							if (esReactivacion) {
+							%>
+							<button type="submit" name="btnReactivarConfirmado"
+								class="<%=botonClase%> btn">
+								<i class="bi <%=botonIcono%> me-1"></i>
+								<%=botonTexto%>
+							</button>
+							<%
+							} else {
+							%>
+							<button type="submit" name="btnEliminarConfirmado"
+								class="<%=botonClase%> btn">
+								<i class="bi <%=botonIcono%> me-1"></i>
+								<%=botonTexto%>
+							</button>
+							<%
+							}
+							%>
+							<button type="button" class="btn btn-primary"
+								data-bs-dismiss="modal">Cancelar</button>
+						</form>
+					</div>
+
+				</div>
 			</div>
-
-			<div class="modal-body">
-				<p class="mb-4 text-danger fs-5">
-					<strong>¡Atención!</strong> Está por eliminar una cuenta del sistema.
-				</p>
-				<p class="mb-4">Corrobore los datos de la cuenta seleccionada antes de eliminar:</p>
-
-				<ul class="list-group mb-4">
-					<li class="list-group-item"><strong>DNI Cliente:</strong> <%=cuentaAEliminar.getCliente().getDNI()%></li>
-					<li class="list-group-item"><strong>Tipo de Cuenta:</strong> <%=cuentaAEliminar.getTipoCuenta().getDescripcion()%></li>
-					<li class="list-group-item"><strong>CBU:</strong> <%=cuentaAEliminar.getCBU().toString()%></li>
-					<li class="list-group-item"><strong>N° Cuenta:</strong> <%=cuentaAEliminar.getNumeroCuenta()%></li>
-					<li class="list-group-item"><strong>Saldo:</strong> $<%=cuentaAEliminar.getSaldo()%></li>
-					<li class="list-group-item"><strong>Fecha de Creación:</strong> <%=cuentaAEliminar.getFechaCreacion().toString()%></li>
-					<li class="list-group-item"><strong>Estado:</strong> <%=cuentaAEliminar.isEstado() ? "Activa" : "Inactiva"%></li>
-				</ul>
-			</div>
-
-			<div class="modal-footer">
-				<form method="post" action="ManejarCuentaServlet">
-					<input type="hidden" name="idCuenta" value="<%=cuentaAEliminar.getId()%>">
-					<button type="submit" name="btnEliminarConfirmado" class="btn btn-danger">
-						<i class="bi bi-trash me-1"></i> Eliminar Cuenta
-					</button>
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-				</form>
-			</div>
-
 		</div>
-	</div>
-</div>
-<%}	%>
+		<%
+		}
+		%>
 		<!-- Fin Modal -->
-		
-		
+
+
 		<!-- Modal Mensaje-->
 		<%
 		Boolean mostrarModal2 = (Boolean) request.getAttribute("mostrarModalMsj");
 		String mensaje = (String) request.getAttribute("mensaje");
 		if (mostrarModal2 != null && mostrarModal2) {
 		%>
-		
+
 		<script>
 			window.onload = function() {
 				var modal = new bootstrap.Modal(document
@@ -243,32 +298,33 @@ if (mostrarModal != null && mostrarModal && cuentaAEliminar!=null) {
 		<%
 		}
 		%>
-		
+
 		<div class="modal fade" id="modalMensaje" tabindex="-1"
-		aria-labelledby="modalMensajeLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
+			aria-labelledby="modalMensajeLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
 
-				<div class="modal-header">
-					<h5 class="modal-title" id="modalMensajeLabel">Resultado de operación:</h5>
-					
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Cerrar"></button>
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalMensajeLabel">Resultado de
+							operación:</h5>
+
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Cerrar"></button>
+					</div>
+
+					<div class="modal-body">
+						<h4><%=mensaje%></h4>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Cerrar</button>
+					</div>
+
 				</div>
-
-				<div class="modal-body">
-					<h4><%= mensaje %></h4>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Cerrar</button>
-				</div>
-
 			</div>
 		</div>
-	</div>
-		
+
 	</main>
 
 	<jsp:include page="/vistas/Footer.jsp" />

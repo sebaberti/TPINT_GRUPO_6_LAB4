@@ -96,9 +96,12 @@ public class MovimientosServlet extends HttpServlet {
                         }).collect(Collectors.toList());
 
                     } catch (Exception e) {
-                        e.printStackTrace(); // Podés loguear el error si querés
+                        e.printStackTrace(); 
                     }
                 }
+            if (movimientos != null) {
+            	movimientos.sort((m1, m2) -> m2.getFecha().compareTo(m1.getFecha()));
+            	}
             }
         
         

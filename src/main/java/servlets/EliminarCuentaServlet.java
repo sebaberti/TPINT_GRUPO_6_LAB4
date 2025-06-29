@@ -67,29 +67,52 @@ public class EliminarCuentaServlet extends HttpServlet {
 			if (btnEliminarConfirmado != null) {
 				request.setAttribute("mostrarModalEliminar", false);
 				try {
-
-					//
-					// *******previo a avanzar se debe validar que sea posible
-					// eliminar!!//**********
-					//
 					request.setAttribute("mostrarModalMsj", true);
 					if (cuentaNeg.tienePrestamoActivo(idCuenta)) {
 						request.setAttribute("mensaje", "No es posible eliminar la cuenta. Posee prestamos activos");
 					} else {
 						boolean eliminada = cuentaNeg.bajaLogica(idCuenta);
-						
+
 						if (eliminada) {
 							request.setAttribute("mensaje", "La cuenta fue dada de baja correctamente.");
 						} else {
 							request.setAttribute("mensaje",
 									"No se pudo dar de baja la cuenta. Posiblemente ya estaba inactiva.");
 						}
-					}
-
+					}				
 				} catch (Exception e) {
 					request.setAttribute("mensajeError", "Error al eliminar la cuenta: " + e.getMessage());
 				}
 			}
+				// Si se clickeó el botón de reactivar
+				String btnReactivar = request.getParameter("btnReactivar");
+
+				if (btnReactivar != null && idCuentaStr != null) {
+				    idCuenta = Integer.parseInt(idCuentaStr);
+				    cuenta = cuentaNeg.obtenerCuentaPorId(idCuenta);
+				    request.setAttribute("cuenta", cuenta);
+				    request.getSession().setAttribute("idCuenta", cuenta.getId());
+				    request.setAttribute("mostrarModalEliminar", true);
+				    request.setAttribute("cuentaAElim", cuenta);
+				}
+
+				// Si se confirmó la reactivación
+				String btnReactivarConfirmado = request.getParameter("btnReactivarConfirmado");
+				
+				if (btnReactivarConfirmado != null) {
+				    request.setAttribute("mostrarModalEliminar", false);
+				    try {
+				        boolean reactivada = cuentaNeg.actualizarEstado(idCuenta, true);
+				        request.setAttribute("mostrarModalMsj", true);
+				        if (reactivada) {
+				            request.setAttribute("mensaje", "La cuenta fue reactivada correctamente.");
+				        } else {
+				            request.setAttribute("mensaje", "No se pudo reactivar la cuenta, el usuario ya posee 3 cuentas activas");
+				        }
+				    } catch (Exception e) {
+				        request.setAttribute("mensajeError", "Error al reactivar la cuenta: " + e.getMessage());
+				    }
+				}
 
 			// Refresco la lista actualizada
 			List<Cuenta> listaCuentas = cuentaNeg.listarCuentas();

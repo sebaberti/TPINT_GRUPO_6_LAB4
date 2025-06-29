@@ -10,7 +10,10 @@ public class Pais {
 		this.nombre = nombre;
 	}
 	
-	public Pais() {}
+	public Pais() {
+		id=0;
+		nombre="";
+	}
 	
 	public int getId() {
 		return id;

@@ -80,14 +80,14 @@
 							<option value="" disabled
 								<%= (cliente == null || cliente.getSexo() == null) ? "selected" : "" %>>Seleccione
 								un sexo</option>
-							<option value="Femenino"
-								<%= (cliente != null && "Femenino".equals(cliente.getSexo())) ? "selected" : "" %>>Femenino</option>
-							<option value="Masculino"
-								<%= (cliente != null && "Masculino".equals(cliente.getSexo())) ? "selected" : "" %>>Masculino</option>
+							<option value="F"
+								<%= (cliente != null && "F".equals(cliente.getSexo())) ? "selected" : "" %>>Femenino</option>
+							<option value="M"
+								<%= (cliente != null && "M".equals(cliente.getSexo())) ? "selected" : "" %>>Masculino</option>
 						</select>
 					</div>
 
-					<div class="col mb-3"></div>
+		
 					<div class="col mb-3">
 						<label for="fechaNacimientoCliente" class="form-label">Fecha
 							Nacimiento</label>
@@ -102,27 +102,31 @@
 							id="fechaNacimientoCliente" name="fechaNacimientoCliente"
 							required value="<%= fechaFormateada %>">
 					</div>
-
 					<div class="col mb-3">
-						<label for="selectLocalidad" class="form-label">Nacionalidad</label>
-						<select name="selectNacionalidad" class="form-select" required>
-							<option value="">Seleccionar nacionalidad</option>
-							<%
-						int nacionalidadElegida=-1;
+						<label for="selectNacionalidad" class="form-label">Nacionalidad</label>
+						<%
+						int nacionalidadElegida = -1;
 						List<Pais> nacionalidades = (ArrayList<Pais>) request.getAttribute("listaPaises");
 						if (request.getAttribute("nacionalidadElegida") != null) {
 							nacionalidadElegida = Integer.parseInt(String.valueOf(request.getAttribute("nacionalidadElegida")));
-						}						
-						if (nacionalidades != null) {
-						    for (Pais p : nacionalidades) {
-                			boolean esSeleccionada = (p.getId() == nacionalidadElegida);
-    						%>
-							<option value="<%= p.getId() %>"
-								<%= esSeleccionada ? "selected" : "" %>>
-								<%= p.getNombre() %>
-							</option>
-							<%}
-            			}%>
+						}
+						%>
+						<select name="selectNacionalidad" id="selectNacionalidad"
+							class="form-select" required>
+							<option value="" disabled
+								<%=(nacionalidadElegida == -1) ? "selected" : ""%>>Seleccionar
+								nacionalidad</option>
+							<%
+							if (nacionalidades != null) {
+								for (Pais p : nacionalidades) {
+									boolean esSeleccionada = (p.getId() == nacionalidadElegida);
+							%>
+							<option value="<%=p.getId()%>"
+								<%=esSeleccionada ? "selected" : ""%>><%=p.getNombre()%></option>
+							<%
+		    				}
+							}
+						%>
 						</select>
 					</div>
 
@@ -159,8 +163,8 @@
 					</div>
 
 					<div class="col mb-3">
-						<label name="selectLocalidad" class="form-label">Localidad</label>
-						<select name="localidad" class="form-select" required>
+						<label for="selectLocalidad" class="form-label">Localidad</label>
+						<select name="selectLocalidad" id="selectLocalidad" class="form-select" required>
 							<option value="">Seleccionar localidad</option>
 							<%
 						int localidadElegida=-1;

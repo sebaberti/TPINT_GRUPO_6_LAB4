@@ -63,6 +63,25 @@ public class ModificarCuentaServlet extends HttpServlet {
             CuentaTipo tipoCuenta = tipoDao.buscarPorId(idTipoCuenta);
 
             if (cuenta != null && tipoCuenta != null) {
+                
+                boolean seQuiereReactivar = !cuenta.isEstado() && estado;
+
+                if (seQuiereReactivar) {
+                    int cuentasActivas = cuentaNegocio.cuentasActivas(cuenta.getCliente().getId());
+
+                    if (cuentasActivas >= 3) {
+                        request.setAttribute("mostrarModalMsj", true);
+                        request.setAttribute("mensaje", "No se puede reactivar la cuenta. El cliente ya tiene 3 cuentas activas.");
+                        
+                        List<Cuenta> listaCuentas = cuentaNegocio.listarCuentas();
+                        request.setAttribute("listaCuentas", listaCuentas);
+
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/Cuentas/ListarCuentas.jsp");
+                        dispatcher.forward(request, response);
+                        return;
+                    }
+                }
+
                 cuenta.setSaldo(saldo);
                 cuenta.setEstado(estado);
                 cuenta.setTipoCuenta(tipoCuenta);
@@ -75,25 +94,31 @@ public class ModificarCuentaServlet extends HttpServlet {
                 } else {
                     request.setAttribute("mensaje", "Error al actualizar la cuenta.");
                 }
+
             } else {
                 request.setAttribute("mostrarModalMsj", true);
                 request.setAttribute("mensaje", "No se encontró la cuenta o el tipo de cuenta.");
             }
 
-            // Refrescar lista de cuentas
+            
             List<Cuenta> listaCuentas = cuentaNegocio.listarCuentas();
             request.setAttribute("listaCuentas", listaCuentas);
 
-            // Enviar al JSP con el mensaje
             RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/Cuentas/ListarCuentas.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensaje", "Ocurrió un error al modificar la cuenta: " + e.getMessage());
             request.setAttribute("mostrarModalMsj", true);
+            request.setAttribute("mensaje", "Ocurrió un error al modificar la cuenta: " + e.getMessage());
 
+            List<Cuenta> listaCuentas = cuentaNegocio.listarCuentas();
+            request.setAttribute("listaCuentas", listaCuentas);
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/Cuentas/ListarCuentas.jsp");
+            dispatcher.forward(request, response);
         }
-    }   
+    }
+   
 } 
 

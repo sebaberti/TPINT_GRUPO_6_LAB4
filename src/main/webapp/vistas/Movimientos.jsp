@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, entidades.Movimiento, entidades.Cuenta" %>
+<%@ page import="utilidades.FormatterUtil" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -36,7 +37,7 @@
         boolean seleccionada = c.getId() == cuentaSeleccionada;
     %>
         <option value="<%= c.getId() %>" <%= seleccionada ? "selected" : "" %>>
-            <%= c.getTipoCuenta().getDescripcion() %> - CBU: <%= c.getCBU() %> - Saldo: $<%= c.getSaldo() %>
+            <%= c.getTipoCuenta().getDescripcion() %> - CBU: <%= c.getCBU() %> - Saldo: $<%= FormatterUtil.formatearMiles(c.getSaldo()) %>
         </option>
     <% } %>
 	</select>
@@ -61,7 +62,7 @@
         </div>
     </form>
 
-    <!-- Tabla de resultados -->
+    
     <div class="table-responsive">
         <table id="tabla_movimientos" class="table table-bordered text-center align-middle">
             <thead class="table-dark">
@@ -74,15 +75,19 @@
             </thead>
             <tbody>
     <%
+    	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
         List<Movimiento> movimientos = (List<Movimiento>) request.getAttribute("movimientos");
         if (movimientos != null && !movimientos.isEmpty()) {
             for (Movimiento m : movimientos) {
     %>
     <tr>
-        <td><%= m.getFecha().toLocalDate() %></td>
+        <td><%= sdf.format(java.sql.Date.valueOf(m.getFecha().toLocalDate())) %></td>
         <td><%= m.getTipoMovimiento().getDescripcion() %></td>
         <td><%= m.getDetalle() %></td>
-        <td class="<%= m.getImporte() >= 0 ? "text-success" : "text-danger" %>">$<%= m.getImporte() %></td>
+       
+		<td class="<%= m.getImporte() >= 0 ? "text-success" : "text-danger" %>">
+   		 $<%= FormatterUtil.formatearMiles(m.getImporte()) %>
+		</td>
     </tr>
     <%  }
         }
@@ -112,10 +117,15 @@
 
 <script>
 	$(document).ready(function() {$('#tabla_movimientos').DataTable({
+		order: [],
 	searching : false,
 	language : { url : "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"}
 		});
 	});
+	
+	  document.getElementById('cuentaId').addEventListener('change', function() {
+	        this.form.submit();
+	    });
 </script>
 
 </body>

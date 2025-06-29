@@ -169,28 +169,6 @@ CREATE TABLE `Cuotas` (
     CONSTRAINT `FK_prestamo_cuota` FOREIGN KEY (`id_prestamo`) REFERENCES `Prestamos`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TRIGGER IF EXISTS `crear_cuenta_con_saldo`;
-
-DELIMITER $$
-CREATE TRIGGER `crear_cuenta_con_saldo`
-BEFORE INSERT ON `cuentas`
-FOR EACH ROW
-BEGIN
-    DECLARE total_cuentas INT;
-
-    SELECT COUNT(*) INTO total_cuentas
-    FROM Cuentas
-    WHERE id_cliente = NEW.id_cliente;
-
-    IF total_cuentas >= 3 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'El cliente no puede tener más de 3 cuentas.';
-    END IF;
-
-    SET NEW.saldo = 10000.00;
-    SET NEW.fecha_creacion = CURRENT_DATE();
-END$$
-DELIMITER ;
 
 DELIMITER $$
 
@@ -216,20 +194,20 @@ DELIMITER $$
 
 CREATE FUNCTION CalcularCuotaPrestamo(
 	MontoSolicitado DECIMAL(15,2), 
-    IdOpcionPlazo INT)
-RETURNS DECIMAL(15,2)
+    IdOpcionPlazo INT
+) RETURNS DECIMAL(15,2)
 DETERMINISTIC
 BEGIN
 	DECLARE cantMeses INT;
     DECLARE tasa DECIMAL(5,2);
-    Declare importeMensual DECIMAL(15,2);
+    DECLARE importeMensual DECIMAL(15,2);
     
     SELECT cantidad_cuotas, tasaAnual
     INTO cantMeses, tasa
-    From Opciones_Plazo
-    where id= IdOpcionPlazo;
+    FROM Opciones_Plazo
+    WHERE id = IdOpcionPlazo;
     
-	SET importeMensual = ROUND(
+    SET importeMensual = ROUND(
         (MontoSolicitado * (tasa / 100 / 12)) /
         (1 - POW(1 + (tasa / 100 / 12), -cantMeses)), 2);
 	
@@ -237,6 +215,7 @@ BEGIN
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 
@@ -267,26 +246,31 @@ BEGIN
     DECLARE v_fecha_vencimiento DATE;
     DECLARE i INT DEFAULT 1;
 
+    -- Obtener datos del préstamo
     SELECT importe_pedido, id_opcion_plazo, id_cuenta
     INTO v_importe_pedido, v_id_opcion_plazo, v_id_cuenta
     FROM Prestamos
     WHERE id = p_id_prestamo;
 
+    -- Obtener cantidad de cuotas
     SELECT cantidad_cuotas INTO v_cantidad_cuotas
     FROM Opciones_Plazo
     WHERE id = v_id_opcion_plazo;
 
     SET v_importe_mensual = CalcularCuotaPrestamo(v_importe_pedido, v_id_opcion_plazo);
 
+    -- Actualizar estado del préstamo y fecha de alta
     UPDATE Prestamos
     SET estado = 1,
         fecha_alta = CURDATE()
     WHERE id = p_id_prestamo;
 
+    -- Acreditar el dinero en la cuenta del cliente
     UPDATE Cuentas
     SET saldo = saldo + v_importe_pedido
     WHERE id = v_id_cuenta;
 
+    -- Generar cuotas con vencimientos mensuales
     SET v_fecha_vencimiento = DATE_ADD(CURDATE(), INTERVAL 1 MONTH);
 
     WHILE i <= v_cantidad_cuotas DO
@@ -297,6 +281,9 @@ BEGIN
         SET v_fecha_vencimiento = DATE_ADD(v_fecha_vencimiento, INTERVAL 1 MONTH);
     END WHILE;
 END$$
+
+DELIMITER ;
+
 
 DELIMITER ;
 
@@ -336,3 +323,114 @@ BEGIN
 		ROLLBACK;
 	END IF;
 END$$
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_AgregarClienteConUsuario(
+	IN p_nombre_usuario varchar(50),
+    IN p_contrasenia varchar(50),
+    IN p_dni varchar(20),
+    IN p_cuil varchar(20),
+    IN p_nombre_cliente varchar(50),
+    IN p_apellido_cliente varchar(50),
+    IN p_sexo char,
+    IN p_id_nacionalidad int,
+    IN p_fecha_nacimiento date,
+    IN p_correo_electronico varchar(50),
+    IN p_telefono varchar(50),
+    IN p_direccion varchar(150),
+    IN p_id_localidad int,
+    IN p_id_provincia int,
+    OUT p_id_cliente INT
+    ) 
+BEGIN
+	DECLARE v_id_usuario INT;
+    DECLARE v_id_domicilio INT;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+        ROLLBACK;
+        SET p_id_cliente = -1;
+    END; 
+    
+    INSERT INTO usuarios(nombre_usuario, contrasenia, id_rol, estado)
+    VALUES (p_nombre_usuario, p_contrasenia, 2, 1);
+    
+    SET v_id_usuario  = LAST_INSERT_ID();
+    
+    INSERT INTO domicilios(direccion, id_localidad, id_provincia)
+    VALUES (p_direccion, p_id_localidad, p_id_provincia);
+    
+    SET v_id_domicilio= LAST_INSERT_ID();
+    
+    INSERT INTO clientes(dni, cuil, nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado)
+    VALUES (p_dni, p_cuil, p_nombre_cliente, p_apellido_cliente, p_sexo, p_id_nacionalidad, p_fecha_nacimiento,v_id_domicilio, p_correo_electronico, p_telefono, v_id_usuario, 1);
+    
+    SET p_id_cliente = LAST_INSERT_ID();
+    
+    COMMIT;
+    
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE pagar_cuota (
+    IN p_id_cuota INT,
+    IN p_id_cuenta INT,
+    OUT p_resultado BOOLEAN
+)
+BEGIN
+    DECLARE v_importe DECIMAL(15,2);
+    DECLARE v_saldo DECIMAL(15,2);
+    DECLARE v_id_cliente INT;
+    DECLARE v_nro_cuota INT;
+
+    -- Obtener importe y número de cuota
+    SELECT importe, nro_cuota INTO v_importe, v_nro_cuota
+    FROM Cuotas
+    WHERE id = p_id_cuota;
+
+    -- Obtener saldo actual y cliente
+    SELECT saldo, id_cliente INTO v_saldo, v_id_cliente
+    FROM Cuentas
+    WHERE id = p_id_cuenta;
+
+    IF v_saldo >= v_importe THEN
+        -- Descontar saldo
+        UPDATE Cuentas
+        SET saldo = saldo - v_importe
+        WHERE id = p_id_cuenta;
+
+        -- Marcar cuota como pagada
+        UPDATE Cuotas
+        SET estado = 1,
+            fecha_pago = CURRENT_DATE
+        WHERE id = p_id_cuota;
+
+        -- Registrar movimiento
+        INSERT INTO Movimientos (
+            id_cuenta,
+            id_cliente,
+            id_tipo_movimiento,
+            importe,
+            detalle,
+            id_transferencia
+        ) VALUES (
+            p_id_cuenta,
+            v_id_cliente,
+            3, -- ID tipo movimiento: "Pago de Préstamo"
+            -1 * v_importe,
+            CONCAT('Pago de cuota nro ', v_nro_cuota),
+            NULL
+        );
+
+        SET p_resultado = TRUE;
+    ELSE
+        SET p_resultado = FALSE;
+    END IF;
+END$$
+
+DELIMITER ;

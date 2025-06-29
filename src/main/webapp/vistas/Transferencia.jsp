@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="entidades.Cuenta" %>
+<%@ page import="utilidades.FormatterUtil" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +45,7 @@
                                             for (Cuenta cuenta : cuentasCliente) {
                                     %>
                                                 <option value="<%= cuenta.getId() %>">
-                                                    <%= cuenta.getTipoCuenta().getDescripcion() %> - CBU: <%= cuenta.getCBU() %> - Saldo: $<%= cuenta.getSaldo() %>
+                                                    <%= cuenta.getTipoCuenta().getDescripcion() %> - CBU: <%= cuenta.getCBU() %> - Saldo: $<%= FormatterUtil.formatearMiles(cuenta.getSaldo()) %>
                                                 </option>
                                     <%
                                             }
@@ -65,10 +66,6 @@
 	    					
 	    					<div class="mb-3">
 	    						<button type="submit" class="btn btn-success btn-sm w-100">Transferir</button>
-	    						<!-- validar que la cuenta tenga fondos-->
-	    						<!-- validar que el CBU exista-->
-	    						<!-- descontar saldo del cliente -->
-	    						<!-- aumentar saldo de cuenta destino -->
 	    					</div>
 	    					
 	    					<!-- Mensajes de error o éxito -->

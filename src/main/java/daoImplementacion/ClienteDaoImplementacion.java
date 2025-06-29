@@ -432,8 +432,18 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
-			String query = "SELECT c.id, c.nombre, c.apellido, c.dni, c.cuil, c.telefono,c.id_usuario, c.correo_electronico, c.sexo, c.fecha_nacimiento, p.id AS id_nacionalidad, p.nombre AS nacionalidad "
-					+ "FROM Clientes c " + "JOIN Paises p ON c.id_nacionalidad = p.id " + "WHERE c.id_usuario = ?";
+			String query = "SELECT c.id, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, " +
+		               "c.id_nacionalidad, p.nombre AS nacionalidad, c.fecha_nacimiento, " +
+		               "c.correo_electronico, c.telefono, c.estado, " +
+		               "d.direccion AS direccion, " +
+		               "l.nombre AS localidad, " +
+		               "pr.nombre AS provincia " +
+		               "FROM clientes c " +
+		               "JOIN paises p ON p.id = c.id_nacionalidad " +
+		               "JOIN domicilios d ON d.id = c.id_domicilio " +
+		               "JOIN localidades l ON l.id = d.id_localidad " +
+		               "JOIN provincias pr ON pr.id = d.id_provincia " +
+		               "WHERE c.id = ?";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, idUsuario);
 			ResultSet rs = statement.executeQuery();
@@ -449,10 +459,26 @@ public class ClienteDaoImplementacion implements ClienteDao {
 				cliente.setEmail(rs.getString("correo_electronico"));
 				cliente.setSexo(rs.getString("sexo"));
 				cliente.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
+				
 				Pais nacionalidad = new Pais();
 				nacionalidad.setId(rs.getInt("id_nacionalidad"));
 				nacionalidad.setNombre(rs.getString("nacionalidad"));
 				cliente.setNacionalidad(nacionalidad);
+				
+				Direccion direccion = new Direccion();
+				direccion.setDireccion(rs.getString("direccion"));
+
+				Provincia provincia = new Provincia();
+				provincia.setNombre(rs.getString("provincia"));
+
+				Localidad localidad = new Localidad();
+				localidad.setNombre(rs.getString("localidad"));
+				localidad.setProvincia(provincia);
+
+				direccion.setProvincia(provincia);
+				direccion.setLocalidad(localidad);
+
+				cliente.setDomicilio(direccion);
 
 			}
 
