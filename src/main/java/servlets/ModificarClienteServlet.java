@@ -1,181 +1,174 @@
 package servlets;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
-
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import daoImplementacion.ClienteDaoImplementacion;
-import daoImplementacion.LocalidadDaoImplementacion;
 import daoImplementacion.PaisDaoImplementacion;
-import daoImplementacion.ProvinciaDaoImplementacion;
 import entidades.Cliente;
-import entidades.Direccion;
 import entidades.Localidad;
 import entidades.Pais;
 import entidades.Provincia;
 import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.LocalidadNegocioImplementacion;
+import negocioImplementacion.PaisNegocioImplementacion;
 import negocioImplementacion.ProvinciaNegocioImplementacion;
+import utilidades.ClienteHelper;
+import utilidades.ManejarDispatch;
 
 @WebServlet("/ModificarClienteServlet")
 public class ModificarClienteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	ClienteNegocioImplementacion clienteNegocio;
 	LocalidadNegocioImplementacion localidadNegocio;
+	PaisNegocioImplementacion paisNegocio;
 	ProvinciaNegocioImplementacion provinciaNegocio;
 	ArrayList<Localidad> localidades;
+	ArrayList<Provincia> provincias;
+	ArrayList<Pais> paises;
+	Cliente cliente;
+	private String rutaModificarClienteJSP = "/vistas/Admin/ABMLCliente/ModificarCliente.jsp";
+	private String rutaListarClienteJSP = "/vistas/Admin/ABMLCliente/ListarCliente.jsp";
 
 	public ModificarClienteServlet() {
 		super();
 		localidadNegocio = new LocalidadNegocioImplementacion();
 		provinciaNegocio = new ProvinciaNegocioImplementacion();
-		List<Localidad> localidades = new ArrayList<Localidad>();
+		paisNegocio = new PaisNegocioImplementacion();
+		localidades = new ArrayList<Localidad>();
+		provincias = new ArrayList<Provincia>();
+		paises = new ArrayList<Pais>();
+		clienteNegocio = new ClienteNegocioImplementacion();
+		cliente = null;
 	}
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		if(request.getAttribute("listaLocalidadVacia") == null) {
-			localidades = (ArrayList<Localidad>) localidadNegocio.listarLocalidades();
-			request.setAttribute("localidades", localidades);
-			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
+
+		// Redirigo a listar
+		if (request.getParameter("btnVolverAListar") != null) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher(rutaListarClienteJSP);
+			dispatcher.forward(request, response);
+		}
+
+		// Si el cliente se modifica con exito, redirigo a listar nuevamente al cerrar
+		// el modal.
+		if (request.getParameter("btnModalClienteModificado") != null) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher(rutaListarClienteJSP);
+			dispatcher.forward(request, response);
+		}
+
+		// Capturo el cliente que viene de ListarClientes -> BtnModificar
+		String dni = request.getParameter("dni");
+		String cuil = request.getParameter("cuil");
+
+		try {
+			if (!estaNullVacio(dni) && !estaNullVacio(cuil)) {
+				request.setAttribute("modalError", true);
+				ManejarDispatch.redirigir(request, response, "error",
+						"Ocurrio un error al cargar el cliente, intentelo nuevamente.", rutaModificarClienteJSP);
+				return;
+			}
+
+			cliente = clienteNegocio.getCliente(dni, cuil);
+
+			if (cliente != null) {
+				request.setAttribute("cliente", cliente);
+				// Guardo los datos originales para completar campos vacios al generar una
+				// peticion del select Provincia o recargar los datos si intenta modificar un
+				// cliente sin datos nuevos.
+				request.getSession().setAttribute("clienteOriginal", cliente);
+			} else {
+				request.setAttribute("modalError", true);
+				ManejarDispatch.redirigir(request, response, "error",
+						"Ocurrio un error al intentar capturar los campos. Intentelo nuevamente",
+						rutaModificarClienteJSP);
+				return;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("modalError", true);
+			ManejarDispatch.redirigir(request, response, "error",
+					"Ocurrio un error al intentar capturar los campos DNI y CUIL. Intentelo nuevamente",
+					rutaModificarClienteJSP);
 			return;
 		}
-		
+
+		// Seteo los valores originales de nacionalidad, localidad y provincia del
+		// cliente para capturar en <select>
+		request.setAttribute("nacionalidadElegida", cliente.getNacionalidad().getId());
+		request.setAttribute("localidadElegida", cliente.getDomicilio().getLocalidad().getId());
+		request.setAttribute("provinciaElegida", cliente.getDomicilio().getLocalidad().getProvincia().getId());
+
+		// Se cargan los desplegables.
+		ClienteHelper.cargarDesplegables(request, response);
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher(rutaModificarClienteJSP);
+		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		// Filtro localidades según provincia elegida
-		if (request.getParameter("btnCargarLocalidadesFiltradas") != null) {
-			int provinciaID = 0;
-			List<Localidad> localidades = new ArrayList<Localidad>();
-			List<Localidad> localidadesAux = new ArrayList<Localidad>();
-			
-			if (request.getParameter("provincia") != null) {
-				provinciaID = Integer.parseInt(request.getParameter("provincia"));
-				request.setAttribute("provinciaElegida", provinciaID);
-			}
 
-			if (request.getAttribute("localidades") != null) {
-				localidades = (ArrayList<Localidad>) request.getAttribute("localidades");
-			} else {
-				LocalidadDaoImplementacion localidadDao = new LocalidadDaoImplementacion();
-				localidades = localidadDao.listarLocalidades();
-			}
-
-			for (Localidad localidad : localidades) {
-				if (localidad.getProvincia().getId() == provinciaID)
-					localidadesAux.add(localidad);
-			}
-
-			ClienteNegocioImplementacion clienteNegocio = new ClienteNegocioImplementacion();
-			Cliente clienteAux = (Cliente) request.getSession().getAttribute("cliente");
-			Cliente cliente = clienteNegocio.getCliente(clienteAux.getDNI(), clienteAux.getCUIL());
-			request.setAttribute("cliente", capturarCampos(request));
-			request.setAttribute("provincias", new ProvinciaDaoImplementacion().listar());
-			request.setAttribute("localidades", localidadesAux);
-			request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
-			return;
+		// En cada petición generada por el select Provincia recarga los desplegables
+		// para filtrar el listado de localidades.
+		ClienteHelper.cargarDesplegables(request, response);
+		// Guardo los datos del form por cada post generado por el desplegable
+		// Provincia.
+		cliente = ClienteHelper.capturarCamposModificar(request);
+		if (cliente != null) {
+			request.setAttribute("cliente", cliente);
 		}
 
 		if (request.getParameter("btnModificar") != null) {
-			ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
 
-			try {
+			if (cliente != null) {
 
-				int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-				String sexo = request.getParameter("sexo");
-				String nombre = request.getParameter("nombre");
-				String apellido = request.getParameter("apellido");
-				String email = request.getParameter("email");
-				String telefono = request.getParameter("telefono");
-				int idProvincia = Integer.parseInt(request.getParameter("provincia"));
-				int idLocalidad = Integer.parseInt(request.getParameter("localidad"));
-				String direccion = request.getParameter("direccion");
-
-				Cliente cliente = new Cliente();
-				cliente.setId(idCliente);
-				cliente.setSexo(sexo);
-				cliente.setNombre(nombre);
-				cliente.setApellido(apellido);
-				cliente.setEmail(email);
-				cliente.setTelefono(telefono);
-				cliente.getDomicilio().setDireccion(direccion);
-				
-				// Localidad
-				cliente.getDomicilio().getLocalidad().setId(idLocalidad);
-				LocalidadNegocioImplementacion localidadNegocio = new LocalidadNegocioImplementacion();
-				String nombreLocalidad = localidadNegocio.obtenerLocalidadPorID(idLocalidad).getNombre();
-				cliente.getDomicilio().getLocalidad().setNombre(nombreLocalidad);
-				// Provincia
-				cliente.getDomicilio().getProvincia().setId(idProvincia);
-				ProvinciaNegocioImplementacion provinciaNegocio = new ProvinciaNegocioImplementacion();
-				String nombreProvincia = provinciaNegocio.obtenerProvinciaPorID(idProvincia).getNombre();
-				cliente.getDomicilio().getProvincia().setNombre(nombreProvincia);
-
-				boolean exito = clienteDao.modificar(cliente);
-
-				if (exito) {
-					List<Pais> listaPaises = new PaisDaoImplementacion().listar();
-					request.setAttribute("nacionalidades", listaPaises); // ? No se porque esta
-					request.setAttribute("modifico", "El cliente se modifico con exito");
-					request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request,
-							response);
-				} else {
-					request.setAttribute("nacionalidades", new PaisDaoImplementacion().listar());
-					request.setAttribute("error", "No se pudo modificar el cliente.");
-					request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request,
-							response);
+				// Evaluo que el los datos hayan cambiado antes de modificar
+				Cliente clienteAux = (Cliente) request.getSession().getAttribute("clienteOriginal");
+				if (clienteAux.equals(cliente)) {
+					request.setAttribute("cliente", clienteAux);
+					request.setAttribute("modalError", true);
+					ManejarDispatch.redirigir(request, response, "error", "Realice cambios para modificar el cliente.",
+							rutaModificarClienteJSP);
+					return;
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				request.setAttribute("nacionalidades", new PaisDaoImplementacion().listar());
-				request.setAttribute("error", "Ocurrió un error inesperado.");
-				request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request,
-						response);
+
+				try {
+
+					request.setAttribute("cliente", cliente);
+					boolean exito = clienteNegocio.modificar(cliente);
+
+					if (exito) {
+						request.setAttribute("mostrarModalClienteModificado", true);
+						request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request,
+								response);
+						return;
+					} else {
+						request.setAttribute("modalError", true);
+						ManejarDispatch.redirigir(request, response, "error",
+								"Ocurrio un error al modificar el cliente.", rutaModificarClienteJSP);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					request.setAttribute("modalError", true);
+					ManejarDispatch.redirigir(request, response, "error",
+							"Ocurrió un error inesperado al intentar modificar el cliente.", rutaModificarClienteJSP);
+				}
 			}
 		}
-	}
-	
-	public Cliente capturarCampos(HttpServletRequest request) {
-		
-		Cliente clienteAux = (Cliente)request.getSession().getAttribute("cliente");
-		int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-		String dni = clienteAux.getDNI();
-		String cuil = clienteAux.getCUIL();
-		String sexo = request.getParameter("sexo");
-		String nombre = request.getParameter("nombre");
-		String apellido = request.getParameter("apellido");
-		String email = request.getParameter("email");
-		String telefono = request.getParameter("telefono");
-		String nacionalidad = request.getParameter("nacionalidad");
-		int idProvincia = Integer.parseInt(request.getParameter("provincia"));
-		int idLocalidad = Integer.parseInt(request.getParameter("localidad"));
-		String direccion = request.getParameter("direccion");
 
-		Cliente cliente = new Cliente();
-		cliente.setId(idCliente);
-		cliente.setDNI(dni);
-		cliente.setCUIL(cuil);
-		cliente.setSexo(sexo);
-		cliente.setNombre(nombre);
-		cliente.setApellido(apellido);
-		cliente.setFecha_nacimiento(clienteAux.getFecha_nacimiento());
-		cliente.setEmail(email);
-		cliente.setTelefono(telefono);
-		cliente.getNacionalidad().setNombre(clienteAux.getNacionalidad().getNombre());
-		cliente.getDomicilio().setDireccion(direccion);
-		cliente.getDomicilio().getProvincia().setId(idProvincia);
-		cliente.getDomicilio().getLocalidad().setId(idLocalidad);
-		
-		return cliente;
+		request.getRequestDispatcher("/vistas/Admin/ABMLCliente/ModificarCliente.jsp").forward(request, response);
+		return;
+	}
+
+	private boolean estaNullVacio(String valor) {
+		return valor != null && !valor.isEmpty();
 	}
 }
