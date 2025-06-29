@@ -75,8 +75,10 @@ public class ClienteDaoImplementacion implements ClienteDao {
 				  Clientes.nombre = ?,
 				  Clientes.apellido = ?,
 				  Clientes.sexo = ?,
+				  Clientes.fecha_nacimiento = ?,
 				  Clientes.correo_electronico = ?,
 				  Clientes.telefono = ?,
+				  Clientes.id_nacionalidad = ?,
 				  Domicilios.direccion = ?,
 				  Domicilios.id_provincia = ?,
 				  Domicilios.id_localidad = ?
@@ -90,12 +92,14 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			stmt.setString(1, cliente.getNombre());
 			stmt.setString(2, cliente.getApellido());
 			stmt.setString(3, cliente.getSexo());
-			stmt.setString(4, cliente.getEmail());
-			stmt.setString(5, cliente.getTelefono());
-			stmt.setString(6, cliente.getDomicilio().getDireccion());
-			stmt.setInt(7, cliente.getDomicilio().getProvincia().getId());
-			stmt.setInt(8, cliente.getDomicilio().getLocalidad().getId());
-			stmt.setInt(9, cliente.getId());
+			stmt.setDate(4, cliente.getFecha_nacimiento());
+			stmt.setString(5, cliente.getEmail());
+			stmt.setString(6, cliente.getTelefono());
+			stmt.setInt(7, cliente.getNacionalidad().getId());
+			stmt.setString(8, cliente.getDomicilio().getDireccion());
+			stmt.setInt(9, cliente.getDomicilio().getLocalidad().getProvincia().getId());
+			stmt.setInt(10, cliente.getDomicilio().getLocalidad().getId());
+			stmt.setInt(11, cliente.getId());
 
 			if (stmt.executeUpdate() > 0) {
 				conexion.commit();
