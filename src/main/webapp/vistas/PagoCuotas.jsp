@@ -1,4 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List"%>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="entidades.Cuenta"%>
+<%@ page import="entidades.Cuota"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,7 +41,32 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input class="form-check-input" type="radio" name="cuotaId" value="1" required></td>
+                        
+                        <%
+List<Cuota> cuotas = (List<Cuota>) request.getAttribute("cuotasPendientes");
+List<Cuenta> cuentas = (List<Cuenta>) request.getAttribute("cuentasCliente");
+SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+%>
+
+<tbody>
+<% if (cuotas != null) {
+    for (Cuota c : cuotas) {
+%>
+    <tr>
+        <td><input class="form-check-input" type="radio" name="cuotaId" value="<%=c.getId()%>" required></td>
+        <td><%=c.getId()%></td>
+        <td>$<%=c.getImporte()%></td>
+        <td><%=sdf.format(c.getFechaVencimiento())%></td>
+        <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+        <td>-</td>
+    </tr>
+<%  }
+} else { %>
+    <tr><td colspan="100%">No hay cuotas pendientes.</td></tr>
+<% } %>
+</tbody>
+                        
+                           <!--  <td><input class="form-check-input" type="radio" name="cuotaId" value="1" required></td>
                             <td>1</td>
                             <td>$1.500</td>
                             <td>30/06/2025</td>
@@ -50,7 +79,7 @@
                             <td>$1.500</td>
                             <td>30/07/2025</td>
                             <td><span class="badge bg-warning text-dark">Pendiente</span></td>
-                            <td>-</td>
+                            <td>-</td> -->
                         </tr>
                     </tbody>
                 </table>
@@ -60,10 +89,16 @@
         <!-- Selección de cuenta -->
         <div class="mb-4">
             <h6>Cuenta de origen</h6>
-            <select class="form-select" name="cuentaId" required>
-                <option value="">Seleccione una cuenta...</option>
-                <option value="101">Caja de Ahorro - $25.000</option>
-                <option value="102">Cuenta Corriente - $8.000</option>
+                <select class="form-select" name="cuentaId" required>
+    <option value="">Seleccione una cuenta...</option>
+<% if (cuentas != null) {
+    for (Cuenta cuenta : cuentas) { %>
+        <option value="<%=cuenta.getId()%>">
+            <%=cuenta.getTipoCuenta().getDescripcion()%> - $<%=cuenta.getSaldo()%>
+        </option>
+<%  }
+} %>
+</select>
             </select>
         </div>
 
