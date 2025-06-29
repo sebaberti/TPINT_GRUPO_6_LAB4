@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page import="negocioImplementacion.Seguridad"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,14 +22,12 @@
 
 	<main class="container py-4">
 	<%
-	/* 	if (!Seguridad.sesionActiva(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} 
-	if (!Seguridad.esAdministrador(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} */
+	Object user = session.getAttribute("usuario");
+	
+ 	if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+}
 	%>
 	
 		<div class="text-center mb-3">

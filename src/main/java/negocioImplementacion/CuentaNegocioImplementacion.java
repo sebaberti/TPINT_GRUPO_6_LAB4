@@ -13,17 +13,18 @@ import entidades.MovimientoTipo;
 import negocio.CuentaNegocio;
 
 public class CuentaNegocioImplementacion implements CuentaNegocio {
+	private CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
+	
 	@Override
 	public boolean insertarCuenta(Cuenta cuenta) {
-		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
-		
+
 		cuenta.setCBU(generarCBU()); // Generar el CBU único
 		java.util.Date fechaActual = new java.util.Date();
 		cuenta.setFechaCreacion(new java.sql.Date(fechaActual.getTime())); // seteo fecha actual
 		cuenta.setNumeroCuenta(generarNroCta());
 		cuenta.setEstado(true);
 		
-		boolean insertada = cuentas.insertarCuenta(cuenta);
+		boolean insertada = cuentaDao.insertarCuenta(cuenta);
 
 	    if (insertada) {
 	        // Crear movimiento por apertura
@@ -35,7 +36,7 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	        movimiento.setDetalle("Alta de cuenta");
 
 	        MovimientoTipo tipoMovimiento = new MovimientoTipo();
-	        tipoMovimiento.setId(1); // Asumimos que ID 1 es "Alta de cuenta"
+	        tipoMovimiento.setId(1); // Id 1 es "Alta de cuenta"
 	        movimiento.setTipoMovimiento(tipoMovimiento);
 
 	        MovimientoDaoImplementacion movDao = new MovimientoDaoImplementacion();
@@ -68,14 +69,12 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 
 
 	private boolean validarCBU(BigInteger cbu) {
-		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
-		return cuentas.existeCbu(cbu);
+		return cuentaDao.existeCbu(cbu);
 	}
 
 
 	private String generarNroCta() {
-		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
-		String ultimoNumeroCuenta = cuentas.obtenerUltimoNumeroCuenta(); // ejemplo: "12345678-0004"
+		String ultimoNumeroCuenta = cuentaDao.obtenerUltimoNumeroCuenta(); // ejemplo: "12345678-0004"
 
 		String baseFija = "12345678";
 
@@ -98,20 +97,17 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 
 	@Override
 	public List<Cuenta> listarCuentas() {
-		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
-		return cuentas.listar();
+		return cuentaDao.listar();
 	}
 	
 	@Override
 	public List<Cuenta> listarCuentasPorDNI(int dni) {
-		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
-		return cuentas.listarPorDNI(dni);
+		return cuentaDao.listarPorDNI(dni);
 	}
 	
 	@Override
 	public List<Cuenta> listarCuentasPorClienteId(int clienteId,boolean soloActivas) {
-	    CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
-	    return cuentas.listarCuentasPorClienteId(clienteId,soloActivas); 
+	    return cuentaDao.listarCuentasPorClienteId(clienteId,soloActivas); 
 	}
 
 	@Override
@@ -127,38 +123,54 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	
 	@Override
 	public Cuenta obtenerCuentaPorCBU(String cbu) {
-	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.obtenerCuentaPorCBU(cbu);
 	}
 
 	@Override
 	public Cuenta obtenerCuentaPorId(int id) {
-	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.obtenerCuentaPorId(id);
 	}
 
 	@Override
 	public boolean bajaLogica(int idCuenta) {
-		CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.bajaLogica(idCuenta);
 	}
 	
 	@Override
 	public boolean modificarCuenta(Cuenta cuenta) {
-	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.modificarCuenta(cuenta);
 	}
 
 	@Override
 	public Boolean tienePrestamoActivo(int idCuenta) {
-		CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.tienePrestamoActivo(idCuenta);
 	}
 	
 	@Override
 	public int cuentasActivas(int idCliente) {
-		CuentaDaoImplementacion dao = new CuentaDaoImplementacion();
-	    return dao.cuentasActivas(idCliente);
+	    return cuentaDao.cuentasActivas(idCliente);
 	}
+	
+	@Override
+	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado) {
+	    Cuenta cuenta = cuentaDao.obtenerCuentaPorId(idCuenta);
+
+	    if (cuenta == null) {
+	        return false;
+	    }
+
+	    
+	    if (nuevoEstado) {  // Si estamos reactivando la cuenta, validamos que no haya 3 ctas activas del cliente
+	        int idCliente = cuenta.getCliente().getId();
+	        List<Cuenta> cuentasActivas = cuentaDao.listarCuentasPorClienteId(idCliente, true);
+
+	        if (cuentasActivas.size() >= 3) {
+	            return false;
+	        }
+	    }
+
+	    return cuentaDao.actualizarEstado(idCuenta, nuevoEstado);
+	}
+
 
 }

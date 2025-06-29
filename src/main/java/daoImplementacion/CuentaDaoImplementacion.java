@@ -28,6 +28,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
 			statement = conexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			conexion.setAutoCommit(false);
 			
 			statement.setInt(1, cuenta.getCliente().getId());
 			statement.setDate(2, new java.sql.Date(cuenta.getFechaCreacion().getTime()));
@@ -37,7 +38,9 @@ public class CuentaDaoImplementacion implements CuentaDao {
 			statement.setDouble(6, cuenta.getSaldo());
 			statement.setBoolean(7, cuenta.isEstado());
 			
-			if (statement.executeUpdate() > 0) {
+			int filas = statement.executeUpdate();
+			System.out.println("Filas insertadas: " + filas);
+			if (filas > 0) {
 	            ResultSet generatedKeys = statement.getGeneratedKeys();
 	            if (generatedKeys.next()) {
 	                cuenta.setId(generatedKeys.getInt(1)); // Obtener ID generado
@@ -46,7 +49,8 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	            return true;
 	        }		
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Error al insertar cuenta: " + e.getMessage());
+		    e.printStackTrace();
 		}
 		return false;
 	}
@@ -207,7 +211,6 @@ public class CuentaDaoImplementacion implements CuentaDao {
         PreparedStatement statement= null;
    	 	ResultSet rs= null;
    	 	
-	    //String query = "SELECT * FROM cuentas WHERE cbu = ?";
 	    String query = "SELECT c.*, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " +
                 "FROM cuentas c " +
                 "JOIN clientes cl ON c.id_cliente = cl.id " +
@@ -443,6 +446,27 @@ public class CuentaDaoImplementacion implements CuentaDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado) {
+		Connection conexion = null;
+		PreparedStatement statement = null;
+	    String query = "UPDATE Cuentas SET estado = ? WHERE id = ?";
+	    
+	    try {
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	        statement = conexion.prepareStatement(query);
+	        conexion.setAutoCommit(true); // para hacer commit
+	        statement.setBoolean(1, nuevoEstado);
+	        statement.setInt(2, idCuenta);
+	        int filas = statement.executeUpdate();
+	        return filas > 0;
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 }

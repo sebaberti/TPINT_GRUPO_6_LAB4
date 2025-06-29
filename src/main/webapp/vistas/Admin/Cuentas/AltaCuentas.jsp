@@ -27,15 +27,11 @@
 
 	<%
 	Object user = session.getAttribute("usuario");
-
-/* 	if (!Seguridad.sesionActiva(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} 
-	if (!Seguridad.esAdministrador(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} */
+	
+ 	if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+}
 	
 	Cliente cliente = (Cliente) request.getAttribute("cliente");
 	%>
