@@ -52,8 +52,9 @@ public class ModificarClienteServlet extends HttpServlet {
 
 		// Redirigo a listar
 		if (request.getParameter("btnVolverAListar") != null) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher(rutaListarClienteJSP);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/ListarClientesServlet");
 			dispatcher.forward(request, response);
+			return;
 		}
 
 		// Si el cliente se modifica con exito, redirigo a listar nuevamente al cerrar

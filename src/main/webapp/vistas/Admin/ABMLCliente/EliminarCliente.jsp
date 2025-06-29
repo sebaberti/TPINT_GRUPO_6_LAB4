@@ -198,9 +198,9 @@
 					%>
 				</div>
 				<form method="GET"
-				action="${pageContext.request.contextPath}/ModificarClienteServlet">
+				action="${pageContext.request.contextPath}/ListarClientesServlet">
 					<div class="modal-footer">
-						<button type="submit" name="btnModalClienteModificado" class="btn btn-secondary"
+						<button type="submit" class="btn btn-secondary"
 						data-bs-dismiss="modal">Cerrar</button>
 					</div>
 				</form>
@@ -245,6 +245,57 @@
 						<button type="button" class="btn btn-secondary"
 						data-bs-dismiss="modal">Cerrar</button>
 					</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Mostrar modal confirmar eliminar -->
+	<%
+	Boolean mostrarModalEliminar = (Boolean) request.getAttribute("ModalConfirmarEliminacion");
+	if (mostrarModalEliminar != null && mostrarModalEliminar) {
+	%>
+	<script>
+		window.onload = function() {
+			var modal = new bootstrap.Modal(document
+					.getElementById('ModalConfirmarEliminacion'));
+			modal.show();
+		};
+	</script>
+	<%
+	}
+	%>
+
+	<!-- Modal eliminar -->
+	<div class="modal fade" id="ModalConfirmarEliminacion" tabindex="-1"
+		aria-labelledby="ModalConfirmarEliminacion" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header bg-danger">
+					<h5 class="modal-title" id="ModalConfirmarEliminacion">Confirmar eliminación</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Cerrar"></button>
+				</div>
+
+				<div class="modal-body">
+					<%
+					if (cliente != null) {
+					%>
+					<p> Esta seguro que desea eliminar el cliente? </p>
+					<%
+					}
+					%>
+					<div class="d-flex modal-footer justify-content-end">
+						<div class="">
+							<button type="button" name="btnConfirmarEliminacion" class="btn btn-danger" onclick="location.href='${pageContext.request.contextPath}/BajaClienteServlet?id=<%=cliente.getId()%>&ConfirmarEliminacion=<%=true%>'"
+							data-bs-dismiss="modal">Confirmar</button>
+						</div>
+						<div class="">
+							<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Cancelar</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

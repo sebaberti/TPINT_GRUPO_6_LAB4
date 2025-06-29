@@ -240,7 +240,7 @@
 					%>
 				</div>
 				<form method="GET"
-				action="${pageContext.request.contextPath}/ModificarClienteServlet">
+				action="${pageContext.request.contextPath}/ListarClientesServlet">
 					<div class="modal-footer">
 						<button type="submit" name="btnModalClienteModificado" class="btn btn-secondary"
 						data-bs-dismiss="modal">Cerrar</button>
