@@ -4,8 +4,7 @@
 <%@ page import="entidades.CuentaTipo"%>
 <%@ page import="java.math.BigInteger"%>
 <%@ page import="utilidades.FormatterUtil" %>
-
-
+<%@ page import="negocioImplementacion.Seguridad"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,8 +19,17 @@
     <jsp:include page="/vistas/Header.jsp" />
 
     <main class="container mt-5 mb-5">
+    
         <h1 class="text-center mb-4">Mis Cuentas</h1>
+		<%
+		Object user = session.getAttribute("usuario");
+		
+	 	if (!Seguridad.sesionActiva(user) || Seguridad.esAdministrador(user) ) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+	    return;
+	}
 
+		%>
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-light">

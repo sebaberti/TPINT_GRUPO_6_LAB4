@@ -2,6 +2,7 @@
 <%@ page import="java.util.List"%>
 <%@ page import="entidades.Cuenta"%>
 <%@ page import="entidades.CuentaTipo"%>
+<%@ page import="negocioImplementacion.Seguridad"%>
 <%@ page import="utilidades.FormatterUtil" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -36,14 +37,12 @@
 
 	<main class="container mt-5 mb-5">
 		<%
-	/* 	if (!Seguridad.sesionActiva(user)) {
+		Object user = session.getAttribute("usuario");
+		
+	 	if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
 		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
 	    return;
-	} 
-	if (!Seguridad.esAdministrador(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} */
+	}
 
 		List<Cuenta> listaCuentas = (List<Cuenta>) request.getAttribute("listaCuentas");
 		%>

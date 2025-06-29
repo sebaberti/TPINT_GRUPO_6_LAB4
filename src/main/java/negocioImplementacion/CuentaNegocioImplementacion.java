@@ -35,7 +35,7 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	        movimiento.setDetalle("Alta de cuenta");
 
 	        MovimientoTipo tipoMovimiento = new MovimientoTipo();
-	        tipoMovimiento.setId(1); // Asumimos que ID 1 es "Alta de cuenta"
+	        tipoMovimiento.setId(1); // Id 1 es "Alta de cuenta"
 	        movimiento.setTipoMovimiento(tipoMovimiento);
 
 	        MovimientoDaoImplementacion movDao = new MovimientoDaoImplementacion();

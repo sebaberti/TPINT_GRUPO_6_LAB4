@@ -2,6 +2,7 @@
 <%@ page import="entidades.Cuenta" %>
 <%@ page import="entidades.Cliente" %>
 <%@ page import="entidades.CuentaTipo" %>
+<%@ page import="negocioImplementacion.Seguridad"%>
 <%@ page import="java.util.ArrayList" %>
 
 <%
@@ -26,14 +27,13 @@
 
 	<main class="container">
 	<%
-	/* 	if (!Seguridad.sesionActiva(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} 
-	if (!Seguridad.esAdministrador(user)) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	} */
+	Object user = session.getAttribute("usuario");
+	
+ 	if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+}
+
 	%>
 		<div class="form-card">
 			<h2 class="form-title">Modificar Cuenta</h2>
