@@ -23,7 +23,7 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 	}
 
 	public Boolean modificar(Cliente cliente) {
-		return true;
+		return clienteNegocio.modificar(cliente);
 	}
 
 	public Boolean bajaLogica(String dni, String cuil) {
