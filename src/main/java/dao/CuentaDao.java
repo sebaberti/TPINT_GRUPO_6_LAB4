@@ -18,4 +18,5 @@ public interface CuentaDao {
 	boolean bajaLogica(int idCuenta);
 	public boolean modificarCuenta(Cuenta cuenta);
 	Boolean tienePrestamoActivo(int idCuenta);
+	public int contarCuentas();
 }
