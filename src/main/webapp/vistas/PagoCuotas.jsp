@@ -40,7 +40,7 @@
 						<thead class="table-dark">
 							<tr>
 								<th>Seleccionar</th>
-								<th>ID Cuota</th>
+								<th>Nro de Cuota</th>
 								<th>Monto</th>
 								<th>Vencimiento</th>
 								<th>Estado</th>
@@ -64,11 +64,14 @@
 							<tr>
 								<td><input class="form-check-input" type="radio"
 									name="cuotaId" value="<%=c.getId()%>"></td>
-								<td><%=c.getId()%></td>
+								<td><%=c.getNumeroCuota()%></td>
 								<td>$<%=c.getImporte()%></td>
 								<td><%=sdf.format(c.getFechaVencimiento())%></td>
-								<td><span class="badge bg-warning text-dark">Pendiente</span></td>
-								<td>-</td>
+								<td><span
+									class="badge <%=c.getEstado() ? "bg-success" : "bg-warning text-dark"%>">
+										<%=c.getEstado() ? "Pago" : "Pendiente"%>
+								</span></td>
+								<td><%=c.getEstado() ? c.getFechaPago(): "-"%></td>
 							</tr>
 							<%
 							}
@@ -108,7 +111,8 @@
 
 			<!-- Botón de pago -->
 			<div class="text-end">
-				<button type="submit" name="btnPagar" value="pagar" class="btn btn-success">
+				<button type="submit" name="btnPagar" value="pagar"
+					class="btn btn-success">
 					<i class="bi bi-cash-coin me-1"></i> Pagar cuota seleccionada
 				</button>
 			</div>
@@ -132,12 +136,12 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header bg-primary text-white">
-						<h5 class="modal-title"><%= titulo %></h5>
+						<h5 class="modal-title"><%=titulo%></h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Cerrar"></button>
 					</div>
 					<div class="modal-body">
-						<p><%= mensaje %></p>
+						<p><%=mensaje%></p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"

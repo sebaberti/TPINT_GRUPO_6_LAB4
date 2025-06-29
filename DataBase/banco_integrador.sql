@@ -169,28 +169,6 @@ CREATE TABLE `Cuotas` (
     CONSTRAINT `FK_prestamo_cuota` FOREIGN KEY (`id_prestamo`) REFERENCES `Prestamos`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TRIGGER IF EXISTS `crear_cuenta_con_saldo`;
-
-DELIMITER $$
-CREATE TRIGGER `crear_cuenta_con_saldo`
-BEFORE INSERT ON `cuentas`
-FOR EACH ROW
-BEGIN
-    DECLARE total_cuentas INT;
-
-    SELECT COUNT(*) INTO total_cuentas
-    FROM Cuentas
-    WHERE id_cliente = NEW.id_cliente;
-
-    IF total_cuentas >= 3 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'El cliente no puede tener más de 3 cuentas.';
-    END IF;
-
-    SET NEW.saldo = 10000.00;
-    SET NEW.fecha_creacion = CURRENT_DATE();
-END$$
-DELIMITER ;
 
 DELIMITER $$
 
@@ -216,20 +194,20 @@ DELIMITER $$
 
 CREATE FUNCTION CalcularCuotaPrestamo(
 	MontoSolicitado DECIMAL(15,2), 
-    IdOpcionPlazo INT)
-RETURNS DECIMAL(15,2)
+    IdOpcionPlazo INT
+) RETURNS DECIMAL(15,2)
 DETERMINISTIC
 BEGIN
 	DECLARE cantMeses INT;
     DECLARE tasa DECIMAL(5,2);
-    Declare importeMensual DECIMAL(15,2);
+    DECLARE importeMensual DECIMAL(15,2);
     
     SELECT cantidad_cuotas, tasaAnual
     INTO cantMeses, tasa
-    From Opciones_Plazo
-    where id= IdOpcionPlazo;
+    FROM Opciones_Plazo
+    WHERE id = IdOpcionPlazo;
     
-	SET importeMensual = ROUND(
+    SET importeMensual = ROUND(
         (MontoSolicitado * (tasa / 100 / 12)) /
         (1 - POW(1 + (tasa / 100 / 12), -cantMeses)), 2);
 	
@@ -237,6 +215,7 @@ BEGIN
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 
@@ -267,26 +246,31 @@ BEGIN
     DECLARE v_fecha_vencimiento DATE;
     DECLARE i INT DEFAULT 1;
 
+    -- Obtener datos del préstamo
     SELECT importe_pedido, id_opcion_plazo, id_cuenta
     INTO v_importe_pedido, v_id_opcion_plazo, v_id_cuenta
     FROM Prestamos
     WHERE id = p_id_prestamo;
 
+    -- Obtener cantidad de cuotas
     SELECT cantidad_cuotas INTO v_cantidad_cuotas
     FROM Opciones_Plazo
     WHERE id = v_id_opcion_plazo;
 
     SET v_importe_mensual = CalcularCuotaPrestamo(v_importe_pedido, v_id_opcion_plazo);
 
+    -- Actualizar estado del préstamo y fecha de alta
     UPDATE Prestamos
     SET estado = 1,
         fecha_alta = CURDATE()
     WHERE id = p_id_prestamo;
 
+    -- Acreditar el dinero en la cuenta del cliente
     UPDATE Cuentas
     SET saldo = saldo + v_importe_pedido
     WHERE id = v_id_cuenta;
 
+    -- Generar cuotas con vencimientos mensuales
     SET v_fecha_vencimiento = DATE_ADD(CURDATE(), INTERVAL 1 MONTH);
 
     WHILE i <= v_cantidad_cuotas DO
@@ -297,6 +281,9 @@ BEGIN
         SET v_fecha_vencimiento = DATE_ADD(v_fecha_vencimiento, INTERVAL 1 MONTH);
     END WHILE;
 END$$
+
+DELIMITER ;
+
 
 DELIMITER ;
 
@@ -387,6 +374,7 @@ END$$
 
 DELIMITER ;
 
+
 DELIMITER $$
 
 CREATE PROCEDURE pagar_cuota (
@@ -398,13 +386,14 @@ BEGIN
     DECLARE v_importe DECIMAL(15,2);
     DECLARE v_saldo DECIMAL(15,2);
     DECLARE v_id_cliente INT;
+    DECLARE v_nro_cuota INT;
 
-    -- Obtener importe de la cuota
-    SELECT importe INTO v_importe
+    -- Obtener importe y número de cuota
+    SELECT importe, nro_cuota INTO v_importe, v_nro_cuota
     FROM Cuotas
     WHERE id = p_id_cuota;
 
-    -- Obtener saldo actual y cliente de la cuenta
+    -- Obtener saldo actual y cliente
     SELECT saldo, id_cliente INTO v_saldo, v_id_cliente
     FROM Cuentas
     WHERE id = p_id_cuenta;
@@ -434,7 +423,7 @@ BEGIN
             v_id_cliente,
             3, -- ID tipo movimiento: "Pago de Préstamo"
             -1 * v_importe,
-            CONCAT('Pago de cuota ID ', p_id_cuota),
+            CONCAT('Pago de cuota nro ', v_nro_cuota),
             NULL
         );
 

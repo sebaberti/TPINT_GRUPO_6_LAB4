@@ -47,12 +47,16 @@ public class CuotaDaoImplementacion implements CuotaDao {
 	}
 		    
 	@Override
-	public List<Cuota> cuotasPendientesPorCliente(int idCliente) {
+	public List<Cuota> cuotasPendientesPorCliente(int idCliente, boolean soloPendientes) {
 		 List<Cuota> lista = new ArrayList<>();
 		 
 		 String query = "SELECT c.* FROM Cuotas c " +
                  "INNER JOIN Prestamos p ON c.id_prestamo = p.id " +
-                 "WHERE p.id_cliente = ? AND c.estado = 0";
+                 "WHERE p.id_cliente = ?";
+		 
+		 if (soloPendientes) {
+	 			query += " AND c.estado = 0";
+	 			}
 
 		 Connection conexion = null;
 		 PreparedStatement statement = null;

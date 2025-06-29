@@ -51,7 +51,7 @@ public class PagoCuotasServlet extends HttpServlet {
 				idCliente = cliente.getId();
 
 				// Cuotas pendientes
-				List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente);
+				List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente, false);
 
 				// Cuentas activas
 				List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
@@ -85,7 +85,7 @@ public class PagoCuotasServlet extends HttpServlet {
 					request.setAttribute("mostrarModalMsj", true);
 				}
 				// Refrescar vista
-				List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente);
+				List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente, false);
 				List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
 
 				request.setAttribute("mostrarModalMsj", true);
