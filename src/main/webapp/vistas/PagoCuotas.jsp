@@ -63,6 +63,7 @@
 						<thead class="table-dark">
 							<tr>
 								<th>Seleccionar</th>
+								<th>Cód. Prestamo</th>
 								<th>Nro de Cuota</th>
 								<th>Monto</th>
 								<th>Vencimiento</th>
@@ -89,6 +90,7 @@
 								<input class="form-check-input" type="radio" name="cuotaId"
 									value="<%=c.getId()%>" <%=c.getEstado() ? "disabled" : ""%>>
 								</td>
+								<td><%=c.getPrestamoId()%></td>
 								<td><%=c.getNumeroCuota()%></td>
 								<td>$<%=c.getImporte()%></td>
 								<td><%=sdf.format(c.getFechaVencimiento())%></td>

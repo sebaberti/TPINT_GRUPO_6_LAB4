@@ -46,4 +46,12 @@ public class Usuario {
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nombreUsuario=" + nombreUsuario + ", contrasenia=" + contrasenia + ", idRol="
+				+ idRol + ", estado=" + estado + "]";
+	}
+    
+    
 }

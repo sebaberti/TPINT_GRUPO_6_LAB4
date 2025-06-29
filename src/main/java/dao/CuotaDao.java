@@ -10,4 +10,9 @@ public interface CuotaDao {
 	public List<Cuota> cuotasPorClienteYEstado(int idCliente, boolean estado);
 	public List<Cuota> cuotasPorCliente(int idCliente);
 	public Cuota obtenerCuotaPorId(int idCuota);	
+	public int contarCuotasPagas();
+	public int contarCuotasImpagas();
+	double sumarSaldosImpagos();
+
+
 }

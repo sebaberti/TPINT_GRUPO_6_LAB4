@@ -105,4 +105,33 @@ public class MovimientoDaoImplementacion implements MovimientoDao {
 
         return movimientos;
     }
+    
+    @Override
+    public double sumarMovimientosPorTipo(String tipoMovimiento) {
+        double total = 0.0;
+
+        String query = """
+            SELECT SUM(m.importe) AS total
+            FROM movimientos m
+            INNER JOIN tipos_movimientos tm ON m.id_tipo_movimiento = tm.id
+            WHERE tm.descripcion = ?
+        """;
+
+        try (Connection conexion = Conexion.getConexion().getSQLConexion();
+             PreparedStatement stmt = conexion.prepareStatement(query)) {
+
+            stmt.setString(1, tipoMovimiento.toUpperCase());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getDouble("total");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
 }
