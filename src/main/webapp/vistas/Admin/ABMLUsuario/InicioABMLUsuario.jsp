@@ -37,8 +37,8 @@
 							</div>
 							<h6 class="card-title mb-2">Alta de Usuario</h6>
 						</div>
-						<button class="btn btn-success btn-sm w-100 btn-abml"
-							onclick="location.href='AltaUsuario.jsp'">Seleccionar</button>
+						<a href="${pageContext.request.contextPath}/AltaUsuarioServlet"
+							class="btn btn-primary btn-sm w-100 btn-abml">Seleccionar </a>
 					</div>
 				</div>
 			</div>

@@ -28,6 +28,11 @@ public class UsuarioNegocioImpl implements UsuarioNegocio {
     public boolean validarPassword(String nombreUsuario, String password) {
         return usuarioDao.validarPassword(nombreUsuario, password);
     }
+
+	@Override
+	public boolean agregarUsuarioAdministrador(Usuario usuario) {
+		return usuarioDao.agregarUsuarioAdministrador(usuario);
+	}
     
   
 }

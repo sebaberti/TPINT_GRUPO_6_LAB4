@@ -124,5 +124,25 @@ public class UsuarioDaoImpl implements UsuarioDao {
    
         return valido;
     }
-    
+
+    @Override
+    public boolean agregarUsuarioAdministrador(Usuario usuario) {
+        String query = "INSERT INTO usuarios (nombre_usuario, contrasenia, id_rol, estado) "
+                     + "VALUES (?, ?, 1, 1)";
+
+        try {
+            Connection conexion = Conexion.getConexion().getSQLConexion();
+            PreparedStatement stmt = conexion.prepareStatement(query);
+
+            stmt.setString(1, usuario.getNombreUsuario());
+            stmt.setString(2, usuario.getContrasenia());
+
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

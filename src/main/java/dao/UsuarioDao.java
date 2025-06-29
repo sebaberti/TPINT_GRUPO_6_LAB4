@@ -10,4 +10,6 @@ public interface UsuarioDao {
     public boolean existeUsuarioActivo(String nombreUsuario);
     
     boolean validarPassword(String nombreUsuario, String password);
+    
+    boolean agregarUsuarioAdministrador(Usuario usuario);
 }

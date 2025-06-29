@@ -11,4 +11,6 @@ public interface UsuarioNegocio {
     public boolean existeUsuarioActivo(String nombreUsuario);
     
     public boolean validarPassword(String nombreUsuario, String password);
+    
+    public boolean agregarUsuarioAdministrador(Usuario usuario);
 }

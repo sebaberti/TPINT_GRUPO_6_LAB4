@@ -26,44 +26,58 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	private String bajaQuery = "UPDATE Clientes SET estado = 0 WHERE id=?";
 
 	public Boolean insertar(Cliente cliente) {
-		int rows = 0;
+		Connection conexion = null;
+	    CallableStatement statement = null;
 
 		try {
-			Connection conexion = Conexion.getConexion().getSQLConexion();
-			PreparedStatement statement = conexion.prepareStatement(insertQuery);
-			System.out.println(cliente.getDNI());
-		        statement.setString(1, cliente.getDNI());
-		        statement.setString(2, cliente.getCUIL());
-		        statement.setString(3, cliente.getNombre());
-		        statement.setString(4, cliente.getApellido());
-		        statement.setString(5, cliente.getSexo());
+			conexion = Conexion.getConexion().getSQLConexion();
+			conexion.setAutoCommit(false);
+			statement = conexion.prepareCall("CALL sp_AgregarClienteConUsuario(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");		
+		
+		        statement.setString(1, cliente.getUsuario().getNombreUsuario());
+		        statement.setString(2, cliente.getUsuario().getContrasenia());
+				statement.setString(3, cliente.getDNI());
+			    statement.setString(4, cliente.getCUIL());
+				statement.setString(5, cliente.getNombre());
+				statement.setString(6, cliente.getApellido());		
+		        statement.setString(7, cliente.getSexo());
+		        statement.setInt(8, cliente.getNacionalidad().getId());
+		        statement.setDate(9, cliente.getFecha_nacimiento());
+		        statement.setString(10, cliente.getEmail());
+		        statement.setString(11, cliente.getTelefono());
+		        statement.setString(12, cliente.getDomicilio().getDireccion());
+		        statement.setInt(13, cliente.getDomicilio().getLocalidad().getId());
+		        statement.setInt(14, cliente.getDomicilio().getProvincia().getId());
+		        statement.registerOutParameter(15, java.sql.Types.INTEGER);
+		        statement.execute();
+		        
+		        int idCliente = statement.getInt(15);
 
-		        statement.setInt(6, cliente.getNacionalidad().getId());
-		        statement.setDate(7, cliente.getFecha_nacimiento());
-
-		        statement.setInt(8, cliente.getDomicilio().getProvincia().getId());
-		        statement.setInt(9, cliente.getDomicilio().getLocalidad().getId());
-		        statement.setString(10, cliente.getDomicilio().getDireccion());
-
-		        statement.setString(11, cliente.getEmail());
-		        statement.setString(12, cliente.getTelefono());
-
-		        if (cliente.getUsuario() != null) {
-		            statement.setInt(13, cliente.getUsuario().getId());
-		        } else {
-		            statement.setNull(13, java.sql.Types.INTEGER);
-		        }
-
-		        statement.setBoolean(14, cliente.getEstado());
-
-		        if (statement.executeUpdate() > 0) {
+		        if (idCliente != -1) {
 		            conexion.commit();
 		            return true;
-		        }			
+		        } else {
+		            conexion.rollback();
+		        }	
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+			 try {
+		            if (conexion != null) {
+		                conexion.rollback();
+		            }
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		        }
+		} finally {
+	        try {
+	            if (statement != null) statement.close();
+	            if (conexion != null) conexion.setAutoCommit(true);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
 		return false;
 	}
 
