@@ -117,10 +117,15 @@
 
 <script>
 	$(document).ready(function() {$('#tabla_movimientos').DataTable({
+		order: [],
 	searching : false,
 	language : { url : "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"}
 		});
 	});
+	
+	  document.getElementById('cuentaId').addEventListener('change', function() {
+	        this.form.submit();
+	    });
 </script>
 
 </body>

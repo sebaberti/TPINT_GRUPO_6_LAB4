@@ -66,10 +66,6 @@
 	    					
 	    					<div class="mb-3">
 	    						<button type="submit" class="btn btn-success btn-sm w-100">Transferir</button>
-	    						<!-- validar que la cuenta tenga fondos-->
-	    						<!-- validar que el CBU exista-->
-	    						<!-- descontar saldo del cliente -->
-	    						<!-- aumentar saldo de cuenta destino -->
 	    					</div>
 	    					
 	    					<!-- Mensajes de error o éxito -->
