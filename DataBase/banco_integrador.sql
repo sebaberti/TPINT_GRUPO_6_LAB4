@@ -386,3 +386,45 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE pagar_cuota (
+    IN p_id_cuota INT,
+    IN p_id_cuenta INT,
+    OUT p_resultado BOOLEAN
+)
+BEGIN
+    DECLARE v_importe DECIMAL(15,2);
+    DECLARE v_saldo DECIMAL(15,2);
+
+    -- Obtener importe de la cuota
+    SELECT importe INTO v_importe
+    FROM Cuotas
+    WHERE id = p_id_cuota;
+
+    -- Obtener saldo actual de la cuenta
+    SELECT saldo INTO v_saldo
+    FROM Cuentas
+    WHERE id = p_id_cuenta;
+
+    -- Verificar si hay saldo suficiente
+    IF v_saldo >= v_importe THEN
+        -- Descontar saldo
+        UPDATE Cuentas
+        SET saldo = saldo - v_importe
+        WHERE id = p_id_cuenta;
+
+        -- Marcar cuota como pagada
+        UPDATE Cuotas
+        SET estado = 1,
+            fecha_pago = CURRENT_DATE
+        WHERE id = p_id_cuota;
+
+        SET p_resultado = TRUE;
+    ELSE
+        SET p_resultado = FALSE;
+    END IF;
+END$$
+
+DELIMITER ;

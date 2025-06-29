@@ -5,7 +5,7 @@ import java.util.List;
 import entidades.Cuota;
 
 public interface CuotaDao {
-
-	List<Cuota> cuotasPendientesPorCliente(int idCliente);
-
+	public Cuota cuotaPorId(int idCuota);
+	public List<Cuota> cuotasPendientesPorCliente(int idCliente);
+	public boolean pagarCuota(int idCuota, int idCuenta);	
 }

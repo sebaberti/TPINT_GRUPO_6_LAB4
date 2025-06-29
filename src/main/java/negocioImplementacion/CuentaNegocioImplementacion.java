@@ -13,7 +13,7 @@ import entidades.MovimientoTipo;
 import negocio.CuentaNegocio;
 
 public class CuentaNegocioImplementacion implements CuentaNegocio {
-
+	@Override
 	public boolean insertarCuenta(Cuenta cuenta) {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 		
@@ -45,7 +45,7 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    return false;
 	}
 	
-	
+
 	private BigInteger generarCBU() {
 		
 		// Generar un número de 22 dígitos
@@ -66,10 +66,12 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		return cbu;
 	}
 
+
 	private boolean validarCBU(BigInteger cbu) {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 		return cuentas.existeCbu(cbu);
 	}
+
 
 	private String generarNroCta() {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
@@ -94,11 +96,13 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		return baseFija + "-" + sufijoFormateado;
 	}
 
+	@Override
 	public List<Cuenta> listarCuentas() {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 		return cuentas.listar();
 	}
 	
+	@Override
 	public List<Cuenta> listarCuentasPorDNI(int dni) {
 		CuentaDaoImplementacion cuentas = new CuentaDaoImplementacion();
 		return cuentas.listarPorDNI(dni);
@@ -110,6 +114,7 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    return cuentas.listarCuentasPorClienteId(clienteId,soloActivas); 
 	}
 
+	@Override
 	public boolean existeCuenta(Cuenta cuenta) {
 		List<Cuenta> cuentas = listarCuentas();
 		
@@ -118,15 +123,15 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 				return true;
 		}
 		return false;
-	}
+	}	
 	
-	
+	@Override
 	public Cuenta obtenerCuentaPorCBU(String cbu) {
 	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.obtenerCuentaPorCBU(cbu);
 	}
 
-	
+	@Override
 	public Cuenta obtenerCuentaPorId(int id) {
 	    CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
 	    return cuentaDao.obtenerCuentaPorId(id);
@@ -150,11 +155,10 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    return cuentaDao.tienePrestamoActivo(idCuenta);
 	}
 	
-	
+	@Override
 	public int cuentasActivas(int idCliente) {
 		CuentaDaoImplementacion dao = new CuentaDaoImplementacion();
 	    return dao.cuentasActivas(idCliente);
 	}
-
 
 }

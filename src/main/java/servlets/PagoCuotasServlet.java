@@ -35,26 +35,60 @@ public class PagoCuotasServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-	    Cliente cliente = (Cliente) session.getAttribute("clienteActivo");
+	    try {
+	        HttpSession session = request.getSession();
+	        Cliente cliente = (Cliente) session.getAttribute("clienteActivo");
+	        String btnPagar = request.getParameter("btnPagar");
+	        request.setAttribute("mostrarModalMsj", false);
+	        int idCliente = 0;
 
-	    if (cliente != null) {
-	        int idCliente = cliente.getId();
-
-	        // Obtener cuotas pendientes del cliente
 	        CuotaNegocioImplementacion cuotaNeg = new CuotaNegocioImplementacion();
-	        List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente);
-
-	        // Obtener cuentas activas del cliente
 	        CuentaNegocioImplementacion cuentaNeg = new CuentaNegocioImplementacion();
-	        List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
+	        
+			if (cliente != null) {
+		        idCliente = cliente.getId();
 
-	        // Enviar datos al JSP
-	        request.setAttribute("cuotasPendientes", cuotasPendientes);
-	        request.setAttribute("cuentasCliente", cuentasActivas);
+		        //Cuotas pendientes
+		        List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente);
+
+		        //Cuentas activas
+		        List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
+
+		        // Enviar datos al JSP
+		        request.setAttribute("cuotasPendientes", cuotasPendientes);
+		        request.setAttribute("cuentasCliente", cuentasActivas);
+		    }
+	        
+			//si presionan "pagar"
+			if(btnPagar!=null) {
+				int idCuota = Integer.parseInt(request.getParameter("cuotaId"));
+		        int idCuenta = Integer.parseInt(request.getParameter("cuentaId"));
+		        
+				boolean pagado = cuotaNeg.pagarCuota(idCuota, idCuenta);
+
+		        if (pagado) {
+		        	request.setAttribute("titulo", "Operación realizada");
+		            request.setAttribute("mensaje", "La cuota fue pagada correctamente.");
+		        } else {
+		        	request.setAttribute("titulo", "Operación no permitida");
+		            request.setAttribute("mensaje", "La cuenta no tiene saldo suficiente para abonar la cuota.");
+		        }
+
+		        // Refrescar vista
+		        List<Cuota> cuotasPendientes = cuotaNeg.cuotasPendientesPorCliente(idCliente);
+		        List<Cuenta> cuentasActivas = cuentaNeg.listarCuentasPorClienteId(idCliente, true);
+
+		        request.setAttribute("mostrarModalMsj", true);
+		        request.setAttribute("cuotasPendientes", cuotasPendientes);
+		        request.setAttribute("cuentasCliente", cuentasActivas);
+			}
+			request.getRequestDispatcher("/vistas/PagoCuotas.jsp").forward(request, response);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        request.setAttribute("titulo", "Error inesperado");
+	        request.setAttribute("mensaje", "Ocurrió un error al procesar el pago.");
+	        request.getRequestDispatcher("/vistas/PagoCuotas.jsp").forward(request, response);
 	    }
-
-	    request.getRequestDispatcher("/vistas/PagoCuotas.jsp").forward(request, response);
 
 	}
 
