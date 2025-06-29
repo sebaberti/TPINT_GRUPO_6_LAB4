@@ -1,6 +1,6 @@
 package servlets;
 
-import java.io.IOException;
+import java.io.IOException;	
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,10 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import entidades.Cliente;
 import entidades.Cuenta;
-import utilidades.ruta;
 import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
 
