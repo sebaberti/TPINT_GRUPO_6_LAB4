@@ -207,14 +207,11 @@ public class CuentaDaoImplementacion implements CuentaDao {
         PreparedStatement statement= null;
    	 	ResultSet rs= null;
    	 	
+   	 	// String query = "SELECT * FROM cuentas WHERE cbu = ?";
 	    String query = "SELECT c.*, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " +
                 "FROM cuentas c " +
                 "JOIN clientes cl ON c.id_cliente = cl.id " +
                 "WHERE c.cbu = ?";
-
-		// String query = "SELECT * FROM cuentas WHERE cbu = ?";
-		String query = "SELECT c.*, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " + "FROM cuentas c "
-				+ "JOIN clientes cl ON c.id_cliente = cl.id " + "WHERE c.cbu = ?";
 
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
