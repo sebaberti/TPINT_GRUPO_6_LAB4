@@ -36,12 +36,15 @@ public class ModificarUsuarioServlet extends HttpServlet {
 		try {
 			UsuarioDaoImpl usuarioDaoImpl= new UsuarioDaoImpl();
 			
-			Boolean actualizado=usuarioDaoImpl.modificarEstado(estado);
+			System.out.println("🔎 nombreUsuario recibido: " + nombreUsuario);
+			System.out.println("🔎 estado recibido: " + estado);
+			Boolean actualizado=usuarioDaoImpl.modificarEstado(nombreUsuario,estado);
 			
 			
 			if(actualizado) 
 			 {
 				request.setAttribute("mensajeInformativo", "El usuario fue modificado exitosamente");
+				
 			 } else {
 					request.setAttribute("mensajeInformativo", "Ocurrió un error. El usuario no se puedo registrar");
 			 }

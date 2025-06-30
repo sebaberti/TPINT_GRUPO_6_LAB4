@@ -44,6 +44,7 @@ boolean estado = "true".equals(estadoParam);
 							<label for="lblUsuario" class="form-label">Usuario</label> 
 							<div class="d-flex gap-2">
 								<input	type="text" class="form-control" name="lblUsuario" value="<%= nombreUsuario %>" required disabled>
+								<input type="hidden" name="nombreUsuario" value="<%= nombreUsuario %>">
 								 <button type="button" class="btn btn-warning btn-sm">
                                 	<i class="bi bi-pencil-square" style="font-size: 1rem;"></i>
                             	</button>

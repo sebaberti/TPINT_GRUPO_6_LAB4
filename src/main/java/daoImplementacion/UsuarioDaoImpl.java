@@ -148,9 +148,26 @@ public class UsuarioDaoImpl implements UsuarioDao {
 
 
 	@Override
-	public boolean modificarEstado(Boolean estado) {
+	public boolean modificarEstado(String nombreUsuario, Boolean nuevoEstado) {
 		
-		return true;
+		  String query = "UPDATE usuarios SET estado = ? WHERE nombre_usuario = ?";
+
+		    try {
+		        Connection conexion = Conexion.getConexion().getSQLConexion();
+		        PreparedStatement stmt = conexion.prepareStatement(query);
+
+		        stmt.setInt(1, nuevoEstado ? 1 : 0); 
+		        stmt.setString(2, nombreUsuario);
+
+		        int filasAfectadas = stmt.executeUpdate();
+		        conexion.commit(); //confirmo la modificacion
+		        return filasAfectadas > 0;
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+
+		    return false;
 	}
     
 }

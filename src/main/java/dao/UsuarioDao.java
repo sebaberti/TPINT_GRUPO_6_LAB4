@@ -13,5 +13,5 @@ public interface UsuarioDao {
     
     boolean agregarUsuarioAdministrador(Usuario usuario);
     
-    public boolean modificarEstado(Boolean estado);
+    public boolean modificarEstado(String nombreUsuario,Boolean estado);
 }
