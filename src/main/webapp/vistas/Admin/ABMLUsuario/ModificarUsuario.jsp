@@ -1,6 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%@ page import="negocioImplementacion.Seguridad"%>
+<%@ page import="entidades.Usuario"%>
+<%
+Object user = session.getAttribute("usuario");
+
+if (!Seguridad.sesionActiva(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+} 
+if (!Seguridad.esAdministrador(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+}
+%>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -10,9 +24,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
-	
-
-</head>
+	</head>
 <body>
 	<jsp:include page="../../Header.jsp" />
 	
@@ -21,7 +33,7 @@
 			<h2 class="text-center mb-4">Modificar Usuario</h2>
 			<div class="row justify-content-center">
 				<div class="col-md-6">
-					<form action="LoginServlet" method="post">
+					<form action="${pageContext.request.contextPath}/AltaUsuarioServlet" method="post">
 						<div class="col mb-3">
 							<label for="lblDNI" class="form-label">Número de documento</label> 
 							<input type="text" class="form-control" id="lblDNI" placeholder="Ingrese su número de DNI" required pattern="^\d+$" title="Solo se permiten números">
