@@ -120,15 +120,23 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	    PreparedStatement statement= null;
 	  	 	ResultSet rs= null;
 	   
-	  	 String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, " +
-	         "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " +
-	         "FROM cuentas c " +
-	         "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id " +
-	         "WHERE c.id_cliente = ? AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
+	  	 	String query = """
+	  	 			SELECT 
+					c.id as cuenta_id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, 
+					tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion,
+					cl.nombre, cl.apellido, cl.dni
+	  	 			FROM cuentas c
+	  	 			INNER JOIN tipos_cuentas tc 
+	  	 			ON c.id_tipo_cuenta = tc.id
+	  	 			INNER JOIN Clientes AS cl
+	  	 			ON cl.id = c.id_cliente
+	  	 			WHERE c.id_cliente = ? AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')
+	  	 			""";
+	  	 	
+	  	 		if (soloActivas) {
+  	 				query += " AND c.estado = 1";
+  	 			}
 
-	  	 			if (soloActivas) {
-	  	 			query += " AND c.estado = 1";
-	  	 			}
 
 	    try {
 	    	conexion = Conexion.getConexion().getSQLConexion();
@@ -154,9 +162,10 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	    PreparedStatement statement= null;
 	  	 	ResultSet rs= null;
 	  	 	
-	    String query = "SELECT c.*, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " +
+	    String query = "SELECT c.id as cuenta_id, c.fecha_creacion, c.numero_de_cuenta, c.id_tipo_cuenta, c.cbu, c.saldo, c.estado, t.tipo_descripcion as tipo_descripcion ,cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " +
 	            "FROM cuentas c " +
 	            "JOIN clientes cl ON c.id_cliente = cl.id " +
+	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id" +
 	            "WHERE c.cbu = ?";
 
 	    try { 
@@ -461,8 +470,8 @@ public class CuentaDaoImplementacion implements CuentaDao {
         CuentaTipo tipoCuenta = new CuentaTipo();
 
         cuenta.setId(rs.getInt("cuenta_id"));
-        cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
-        cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+        cuenta.setFechaCreacion(rs.getDate("c.fecha_creacion"));
+        cuenta.setNumeroCuenta(rs.getString("c.numero_de_cuenta"));
 
         tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
         cuenta.setTipoCuenta(tipoCuenta);
@@ -471,9 +480,9 @@ public class CuentaDaoImplementacion implements CuentaDao {
         cuenta.setSaldo(rs.getDouble("saldo"));
         cuenta.setEstado(rs.getBoolean("estado"));
 
-        cliente.setNombre(rs.getString("nombre"));
-        cliente.setApellido(rs.getString("apellido"));
-        cliente.setDNI(rs.getString("dni"));
+        cliente.setNombre(rs.getString("cl.nombre"));
+        cliente.setApellido(rs.getString("cl.apellido"));
+        cliente.setDNI(rs.getString("cl.dni"));
         cuenta.setCliente(cliente);
 
 	    return cuenta;

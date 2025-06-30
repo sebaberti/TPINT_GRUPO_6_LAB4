@@ -457,7 +457,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		               "JOIN domicilios d ON d.id = c.id_domicilio " +
 		               "JOIN localidades l ON l.id = d.id_localidad " +
 		               "JOIN provincias pr ON pr.id = d.id_provincia " +
-		               "WHERE c.id = ?";
+		               "WHERE c.id_usuario = ?";
 			PreparedStatement statement = conexion.prepareStatement(query);
 			statement.setInt(1, idUsuario);
 			ResultSet rs = statement.executeQuery();
