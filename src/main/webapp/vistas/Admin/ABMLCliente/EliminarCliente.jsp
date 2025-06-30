@@ -157,7 +157,6 @@
 				</div>
 			</form>
 			</div>
-		</div>
 	</main>
 	
 	<!-- Mostrar modal modificacion éxitosa -->

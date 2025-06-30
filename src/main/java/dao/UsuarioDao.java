@@ -12,4 +12,6 @@ public interface UsuarioDao {
     boolean validarPassword(String nombreUsuario, String password);
     
     boolean agregarUsuarioAdministrador(Usuario usuario);
+    
+    public boolean modificarEstado(Boolean estado);
 }

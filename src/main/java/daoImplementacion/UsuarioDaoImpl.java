@@ -145,4 +145,12 @@ public class UsuarioDaoImpl implements UsuarioDao {
         }
         return false;
     }
+
+
+	@Override
+	public boolean modificarEstado(Boolean estado) {
+		
+		return true;
+	}
+    
 }

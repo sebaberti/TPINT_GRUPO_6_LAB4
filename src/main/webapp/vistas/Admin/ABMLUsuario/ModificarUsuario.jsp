@@ -38,7 +38,7 @@ boolean estado = "true".equals(estadoParam);
 			<h2 class="text-center mb-4">Modificar Usuario</h2>
 			<div class="row justify-content-center">
 				<div class="col-md-6">
-					<form action="${pageContext.request.contextPath}/AltaUsuarioServlet" method="post">
+					<form id="frmModificar" action="${pageContext.request.contextPath}/ModificarUsuarioServlet" method="post">
 						
 						<div class="mb-3">
 							<label for="lblUsuario" class="form-label">Usuario</label> 
@@ -57,7 +57,7 @@ boolean estado = "true".equals(estadoParam);
 							</select>						   
 						</div>
 						<div class="d-grid">
-							<button type="submit" class="btn btn-warning">Modificar usuario</button>
+							<button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#modalConfirmarModificacion"> Modificar usuario</button>							   							
 						</div>
 					</form>
 				</div>
@@ -65,7 +65,28 @@ boolean estado = "true".equals(estadoParam);
 		</div>
 	</main>
 
+	<!-- Modal Confirmación -->
+<div class="modal fade" id="modalConfirmarModificacion" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="tituloModal">Confirmar modificación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
 
+      <div class="modal-body">
+        <p>Una vez confirmado se modificara el estado de este usuario. ¿Esta seguro?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-warning" form="frmModificar">Confirmar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 	<jsp:include page="../../Footer.jsp" />
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
