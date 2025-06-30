@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List"%>
 <%@ page import="entidades.Cliente"%>
+<%@ page import="negocioImplementacion.Seguridad" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,6 +14,16 @@
 </head>
 
 <body>
+
+	<%
+		Object user = session.getAttribute("usuario");
+		
+		if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+			response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+			return;
+			}
+	%>
+
 <jsp:include page="/vistas/Header.jsp" />
 
     <main class="container mt-5 mb-5">

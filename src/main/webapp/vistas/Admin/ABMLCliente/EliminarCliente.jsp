@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="entidades.Cliente"%>
+<%@ page import="negocioImplementacion.Seguridad" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,10 +36,15 @@
 		}%>
 
 		<%
+			Object user = session.getAttribute("usuario");
+			
+		 	if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+			response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+		    return;
+			}
+			
 			Cliente cliente = new Cliente();
-		%>
 		
-		<%
 			if (session.getAttribute("objCliente") != null) {
 				cliente = (Cliente) session.getAttribute("objCliente");
 			}

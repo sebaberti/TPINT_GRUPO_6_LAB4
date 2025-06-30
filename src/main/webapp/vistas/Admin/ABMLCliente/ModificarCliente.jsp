@@ -8,18 +8,7 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
-
-<%
-	// Guardo en session el cliente que viene de ListarClientes -> Botón modificar -> CargarClienteServlet.
-	Cliente cliente = null;
-	if(request.getAttribute("cliente")  != null) {
-		cliente = (Cliente) request.getAttribute("cliente");
-	} 
-	else
-	{
-		// No se encontro el cliente o se intenta compilar desde Modificar directamente.
-	}
-%>
+<%@ page import="negocioImplementacion.Seguridad" %>
 
 <!DOCTYPE html>
 <html>
@@ -36,6 +25,27 @@
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
 <body>
+
+	<%
+	
+		Object user = session.getAttribute("usuario");
+		
+			if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+		return;
+		}
+			
+		// Guardo en session el cliente que viene de ListarClientes -> Botón modificar -> CargarClienteServlet.
+		Cliente cliente = null;
+		if(request.getAttribute("cliente")  != null) {
+			cliente = (Cliente) request.getAttribute("cliente");
+		} 
+		else
+		{
+			// No se encontro el cliente o se intenta compilar desde Modificar directamente.
+		}
+	%>
+
 	<jsp:include page="../../Header.jsp" />
 
 	<main class="container py-4 mb-4">
