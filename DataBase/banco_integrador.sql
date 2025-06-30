@@ -293,6 +293,7 @@ CREATE PROCEDURE SP_BAJA_CLIENTE(IN dni_cliente VARCHAR(8), IN cuil_cliente VARC
 BEGIN
     DECLARE id_usuario INT;
     DECLARE id_cliente INT;
+    DECLARE id_domicilio INT;
     DECLARE fila_cliente INT DEFAULT 0;
     DECLARE fila_usuario INT DEFAULT 0;
     DECLARE resultado INT DEFAULT 0;
@@ -301,7 +302,7 @@ BEGIN
 
     IF EXISTS (SELECT 1 FROM Clientes WHERE dni = dni_cliente AND cuil = cuil_cliente) THEN 
 		
-        SELECT C.id INTO id_cliente FROM Clientes AS C WHERE C.dni = dni_cliente AND C.cuil = cuil_cliente;
+        SELECT C.id, C.id_domicilio INTO id_cliente, id_domicilio FROM Clientes AS C WHERE C.dni = dni_cliente AND C.cuil = cuil_cliente;
 		SELECT C.id_usuario INTO id_usuario FROM  Clientes AS C WHERE dni = dni_cliente AND cuil = cuil_cliente;
 
         IF EXISTS(SELECT 1 FROM Usuarios WHERE id = id_usuario) THEN
@@ -311,6 +312,7 @@ BEGIN
 			UPDATE Usuarios SET estado = false WHERE id = id_usuario;
             SET fila_usuario = ROW_COUNT();
             UPDATE Cuentas AS Cuenta SET estado = false WHERE Cuenta.id_cliente = id_cliente;
+            UPDATE Domicilios AS D SET estado = false WHERE D.id = id_domicilio
 		ELSE
 			ROLLBACK;
 		END IF;
