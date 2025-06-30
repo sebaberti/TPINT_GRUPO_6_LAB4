@@ -13,4 +13,6 @@ public interface UsuarioNegocio {
     public boolean validarPassword(String nombreUsuario, String password);
     
     public boolean agregarUsuarioAdministrador(Usuario usuario);
+    
+    public boolean modificarEstado(String nombreUsuario,Boolean estado);
 }

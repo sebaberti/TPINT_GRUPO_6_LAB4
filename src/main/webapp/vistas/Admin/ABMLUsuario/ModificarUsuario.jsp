@@ -66,7 +66,7 @@ boolean estado = "true".equals(estadoParam);
 		</div>
 	</main>
 
-	<!-- Modal Confirmación -->
+	<!-- Modal Confirmar modificacion -->
 <div class="modal fade" id="modalConfirmarModificacion" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

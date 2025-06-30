@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import daoImplementacion.UsuarioDaoImpl;
+import negocio.UsuarioNegocio;
+import negocioImplementacion.UsuarioNegocioImpl;
 
 
 @WebServlet("/ModificarUsuarioServlet")
@@ -34,13 +36,12 @@ public class ModificarUsuarioServlet extends HttpServlet {
 		boolean estado = Boolean.parseBoolean(request.getParameter("estado"));
 		
 		try {
-			UsuarioDaoImpl usuarioDaoImpl= new UsuarioDaoImpl();
+			UsuarioNegocio usuarioNegocio = new UsuarioNegocioImpl();
+	        boolean actualizado = usuarioNegocio.modificarEstado(nombreUsuario, estado);
 			
 			System.out.println("🔎 nombreUsuario recibido: " + nombreUsuario);
 			System.out.println("🔎 estado recibido: " + estado);
-			Boolean actualizado=usuarioDaoImpl.modificarEstado(nombreUsuario,estado);
-			
-			
+									
 			if(actualizado) 
 			 {
 				request.setAttribute("mensajeInformativo", "El usuario fue modificado exitosamente");
