@@ -61,7 +61,13 @@
 	    					
 	    					 <div class="mb-3">
                                 <label for="lblMonto" class="form-label">Ingrese el monto a transferir</label>
-                                <input type="number" id="lblMonto" name="monto" class="form-control" step="0.01" min="0.01" required>
+                                <!--<input type="number" id="lblMonto" name="monto" class="form-control" step="0.01" min="0.01" required>-->
+                                
+                                <!-- Input visible con formato -->
+								<input type="text" id="lblMontoVisible" class="form-control" required>
+								
+								<!-- Input oculto que se envía al servidor -->
+								<input type="hidden" id="lblMonto" name="monto">
                             </div>
 	    					
 	    					<div class="mb-3">
@@ -90,5 +96,6 @@
 	</main>
 	
 	<jsp:include page="Footer.jsp" />
+<script src="${pageContext.request.contextPath}/js/transferencia.js"></script>
 </body>
 </html>

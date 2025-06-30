@@ -19,6 +19,7 @@ import entidades.Usuario;
 import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
 import negocioImplementacion.CuentaTipoNegocioImplementacion;
+import validaciones.ExcepLimiteCtasActivas;
 import validaciones.ValidacionesCuentas;
 
 /**
@@ -67,28 +68,29 @@ public class AltaCuentaServlet extends HttpServlet {
     		}
 
     		// si clickeo la opcion "Crear cuenta":
-    		if (btnCrear != null) {
-    			try {
-    				if (!validarCampo.campoVacio(request.getParameter("usuario"))) { // chequeo que haya un usuario antes de intentar crear una cuenta
-    					request.setAttribute("error", "Primero debe seleccionar un Cliente activo");
-    				} else { // en este caso hay un usuario seleccionado, procede a validar que haya un tipo de cta seleccionado
-    					request.getSession().setAttribute("nombreUsuario", request.getParameter("usuario")); //lo guardo en session para no perderlo
-    					request.getSession().setAttribute("dniCliente", request.getParameter("DniCliente")); //lo guardo en session para no perderlo
-    					
-    					if(request.getParameter("tipoCuenta") != null) { //hay un tipo de cta seleccionado, procede a crear la cta
-    						crearCuenta(request, response);
-    					}else { //Si no hay un tipo de cta seleccionado, no avanza
-    					request.setAttribute("errorTipoCuenta", "Debe seleccionar un tipo de Cuenta");
-    					}
-    				}
-    			} catch (Exception e) {
-    				e.printStackTrace();
-    				response.getWriter().println("Error al querer crear cuenta: " + e.getMessage());
-    			}
-    		}
-    		
-    		request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
-    	} catch (Exception e) {
+            if (btnCrear != null) {
+                try {
+                    if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
+                        request.setAttribute("error", "Primero debe seleccionar un Cliente activo");
+                    } else {
+                        request.getSession().setAttribute("nombreUsuario", request.getParameter("usuario"));
+                        request.getSession().setAttribute("dniCliente", request.getParameter("DniCliente"));
+
+                        if (request.getParameter("tipoCuenta") != null) {
+                            crearCuenta(request, response);  // si lanza excepción, la capturo en el catch
+                        } else {
+                            request.setAttribute("errorTipoCuenta", "Debe seleccionar un tipo de Cuenta");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    request.setAttribute("mostrarModalCuentaCreada", true);
+                }
+            }
+
+            request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
+    	}
+    	catch (Exception e) {
     		e.printStackTrace();
     		response.getWriter().println("Error al obtener el cliente: " + e.getMessage());
     	}
@@ -100,7 +102,7 @@ public class AltaCuentaServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
-    	doGet(request, response);
+			doGet(request, response);
     }
 
     private void crearCuenta(HttpServletRequest request, HttpServletResponse response)
@@ -117,8 +119,7 @@ public class AltaCuentaServlet extends HttpServlet {
     		// Validar la cantidad de cuentas activas del cliente
     		if (!c.admiteNuevaCuenta(idCliente)) {
     			request.setAttribute("mostrarModalLimiteAlcanzado", true);
-    			request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
-    			return; // No avanza con la creacion
+    			throw new ExcepLimiteCtasActivas();
     		}
 
     		Cliente cliente = new Cliente();
@@ -154,8 +155,14 @@ public class AltaCuentaServlet extends HttpServlet {
     		} else {
     			request.setAttribute("error", "Error al crear la cuenta.");
     		}
+    	}
 
-    	} catch (NumberFormatException e) {
+    	 catch (ExcepLimiteCtasActivas ex) {
+            request.setAttribute("errorLimite", ex.getMessage());
+            System.out.println("Excepción personalizada capturada: " + ex.getMessage());
+            ex.printStackTrace();
+         }
+         catch (NumberFormatException e) {
     		e.printStackTrace();
     		request.setAttribute("error", "Error en el tipo de datos ingresados para el DNI");
     	} catch (Exception e) {
@@ -163,4 +170,5 @@ public class AltaCuentaServlet extends HttpServlet {
     		request.setAttribute("error", "Error no esperado");
     	}
     }
+
 }
