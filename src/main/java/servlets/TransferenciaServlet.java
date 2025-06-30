@@ -1,17 +1,18 @@
 package servlets;
 
-import entidades.Cuenta;
+import entidades.Cuenta;	
 import entidades.Transferencia;
 import negocio.CuentaNegocio;
 import negocio.TransferenciaNegocio;
+import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
 import negocioImplementacion.TransferenciaNegocioImplementacion;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
+import negocio.ClienteNegocio;
 
 @WebServlet("/TransferenciaServlet")
 public class TransferenciaServlet extends HttpServlet {
@@ -20,11 +21,13 @@ public class TransferenciaServlet extends HttpServlet {
 
     private TransferenciaNegocio transferenciaNegocio = new TransferenciaNegocioImplementacion();
     private CuentaNegocio cuentaNegocio = new CuentaNegocioImplementacion();
+    private ClienteNegocio clienteNegocio = new ClienteNegocioImplementacion();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession sesion = request.getSession();
-        Integer idCliente = (Integer) sesion.getAttribute("usuarioId");
+        Integer idUsuario = (Integer) sesion.getAttribute("usuarioId");
+        Integer idCliente = (clienteNegocio.obtenerClientePorIdUsuario(idUsuario)).getId();
 
         if (idCliente == null) {
             response.sendRedirect("login.jsp");

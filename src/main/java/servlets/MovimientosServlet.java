@@ -2,8 +2,10 @@ package servlets;
 
 import entidades.Cuenta;
 import entidades.Movimiento;
+import negocio.ClienteNegocio;
 import negocio.CuentaNegocio;
 import negocio.MovimientoNegocio;
+import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
 import negocioImplementacion.MovimientoNegocioImplementacion;
 
@@ -21,21 +23,23 @@ public class MovimientosServlet extends HttpServlet {
 
     private CuentaNegocio cuentaNegocio = new CuentaNegocioImplementacion();
     private MovimientoNegocio movimientoNegocio = new MovimientoNegocioImplementacion();
+    private ClienteNegocio clienteNegocio = new ClienteNegocioImplementacion();
     
 
-    @Override
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession sesion = request.getSession();
-        Integer clienteId = (Integer) sesion.getAttribute("usuarioId");
+        Integer idUsuario = (Integer) sesion.getAttribute("usuarioId");
+        Integer idCliente = (clienteNegocio.obtenerClientePorIdUsuario(idUsuario)).getId();
 
-        if (clienteId == null) {
+        if (idCliente == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        List<Cuenta> cuentas = cuentaNegocio.listarCuentasPorClienteId(clienteId, true);
+        List<Cuenta> cuentas = cuentaNegocio.listarCuentasPorClienteId(idCliente, true);
         request.setAttribute("cuentasCliente", cuentas);
 
         // Si viene una cuenta seleccionada:
