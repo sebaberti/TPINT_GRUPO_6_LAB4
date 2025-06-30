@@ -62,6 +62,7 @@ public class ModificarClienteServlet extends HttpServlet {
 		if (request.getParameter("btnModalClienteModificado") != null) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher(rutaListarClienteJSP);
 			dispatcher.forward(request, response);
+			return;
 		}
 
 		// Capturo el cliente que viene de ListarClientes -> BtnModificar
@@ -155,6 +156,7 @@ public class ModificarClienteServlet extends HttpServlet {
 						request.setAttribute("modalError", true);
 						ManejarDispatch.redirigir(request, response, "error",
 								"Ocurrio un error al modificar el cliente.", rutaModificarClienteJSP);
+						return;
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
