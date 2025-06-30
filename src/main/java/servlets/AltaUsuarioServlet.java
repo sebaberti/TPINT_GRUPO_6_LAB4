@@ -30,15 +30,15 @@ public class AltaUsuarioServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	session= request.getSession();
 	
-	if(session.getAttribute("nuevoCliente")!=null) {
-		nuevoCliente= (Cliente) session.getAttribute("nuevoCliente");
+	if(session.getAttribute("nuevoClienteUsuario")!=null) {
+		nuevoCliente= (Cliente) session.getAttribute("nuevoClienteUsuario");
 		request.setAttribute("TipoUserElegido", 2);
 	} else {
 		request.setAttribute("TipoUserElegido", 1);
-	}	
-	
+	}		
 	RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/ABMLUsuario/AltaUsuario.jsp");
 	dispatcher.forward(request, response);	
+	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -86,12 +86,13 @@ public class AltaUsuarioServlet extends HttpServlet {
 			ClienteNegocioImplementacion cni= new ClienteNegocioImplementacion();
 			if(cni.insertar(nuevoCliente)) {
 				exito=true;
+				session.removeAttribute("nuevoClienteUsuario");						
 			} 
 			}
 			
 			if(idRol==1){
 			    if(uni.agregarUsuarioAdministrador(usuario)) {
-			    exito=true;
+			    exito=true;			    
 			    }
 			}
 			

@@ -35,7 +35,7 @@
 							<div class="icono text-success">
 								<i class="bi bi-plus-circle"></i>
 							</div>
-							<h6 class="card-title mb-2">Alta de Usuario</h6>
+							<h6 class="card-title mb-2">Alta de Administrador</h6>
 						</div>
 						<a href="${pageContext.request.contextPath}/AltaUsuarioServlet"
 							class="btn btn-primary btn-sm w-100 btn-abml">Seleccionar </a>

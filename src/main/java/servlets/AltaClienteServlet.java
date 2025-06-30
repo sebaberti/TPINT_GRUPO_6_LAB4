@@ -56,7 +56,7 @@ public class AltaClienteServlet extends HttpServlet {
 				return;
 			}
 			
-			session.setAttribute("nuevoCliente", cliente);				
+			session.setAttribute("nuevoClienteUsuario", cliente);				
 			response.sendRedirect(request.getContextPath() + "/AltaUsuarioServlet");
 			return;
 		}
