@@ -62,11 +62,12 @@ public class CuentaDaoImplementacion implements CuentaDao {
 		ResultSet rs = null;
 
 		String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "
-				+ "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, " + "cl.nombre, cl.apellido, cl.dni, "
-				+ "t.descripcion AS tipo_descripcion FROM cuentas c "
-				+ "INNER JOIN Clientes cl ON c.id_cliente = cl.id "
-				+ "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id";
-
+		        + "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "
+		        + "cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, "
+		        + "t.descripcion AS tipo_descripcion "
+		        + "FROM cuentas c "
+		        + "INNER JOIN Clientes cl ON c.id_cliente = cl.id "
+		        + "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id";
 		try {
 			conexion = Conexion.getConexion().getSQLConexion();
 			statement = conexion.prepareStatement(query);
@@ -91,7 +92,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	   
 	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
 	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
-	       		"cl.nombre, cl.apellido, cl.dni, "+
+	       		"cl.id AS cliente_id,cl.nombre, cl.apellido, cl.dni, "+
 	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
 	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
 	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id "+
@@ -122,14 +123,13 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	   
 	  	 	String query = """
 	  	 			SELECT 
-					c.id as cuenta_id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, 
-					tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion,
-					cl.nombre, cl.apellido, cl.dni
+	  	 				c.id as cuenta_id, c.cbu, c.saldo, c.numero_de_cuenta, 
+	  	 				c.fecha_creacion, c.estado, 
+	  	 				tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion,
+	  	 				cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni
 	  	 			FROM cuentas c
-	  	 			INNER JOIN tipos_cuentas tc 
-	  	 			ON c.id_tipo_cuenta = tc.id
-	  	 			INNER JOIN Clientes AS cl
-	  	 			ON cl.id = c.id_cliente
+	  	 			INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id
+	  	 			INNER JOIN Clientes AS cl ON cl.id = c.id_cliente
 	  	 			WHERE c.id_cliente = ? AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')
 	  	 			""";
 	  	 	
@@ -162,11 +162,11 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	    PreparedStatement statement= null;
 	  	 	ResultSet rs= null;
 	  	 	
-	    String query = "SELECT c.id as cuenta_id, c.fecha_creacion, c.numero_de_cuenta, c.id_tipo_cuenta, c.cbu, c.saldo, c.estado, t.tipo_descripcion as tipo_descripcion ,cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " +
-	            "FROM cuentas c " +
-	            "JOIN clientes cl ON c.id_cliente = cl.id " +
-	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id" +
-	            "WHERE c.cbu = ?";
+	    String query = "SELECT c.id as cuenta_id, c.fecha_creacion, c.numero_de_cuenta, c.id_tipo_cuenta, c.cbu, c.saldo, c.estado, t.descripcion as tipo_descripcion ,cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " +
+	    	    "FROM cuentas c " +
+	    	    "JOIN clientes cl ON c.id_cliente = cl.id " +
+	    	    "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id " +
+	    	    "WHERE c.cbu = ?";
 
 	    try { 
 	    	conexion = Conexion.getConexion().getSQLConexion();
@@ -194,7 +194,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
    	 	
 	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
 	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
-	       		"cl.id,cl.nombre, cl.apellido, cl.dni, "+
+	       		"cl.id AS cliente_id,cl.nombre, cl.apellido, cl.dni, "+
 	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
 	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
 	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.id = ?";
@@ -278,7 +278,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	  	 	
 	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
 	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
-	       		"cl.id,cl.nombre, cl.apellido, cl.dni, "+
+	       		"cl.id AS cliente_id,cl.nombre, cl.apellido, cl.dni, "+
 	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
 	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
 	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.cbu LIKE ?";
@@ -480,6 +480,8 @@ public class CuentaDaoImplementacion implements CuentaDao {
         cuenta.setSaldo(rs.getDouble("saldo"));
         cuenta.setEstado(rs.getBoolean("estado"));
 
+        
+        cliente.setId(rs.getInt("cliente_id")); 
         cliente.setNombre(rs.getString("cl.nombre"));
         cliente.setApellido(rs.getString("cl.apellido"));
         cliente.setDNI(rs.getString("cl.dni"));
