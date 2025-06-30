@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <!-- Tabla de cuentas -->
+        <!-- Tabla de Usuarios -->
         <div class="table-responsive mt-5">
             <table class="table table-bordered table-hover align-middle text-center tabla-cuentas">
                 <thead class="table-light">
@@ -82,9 +82,9 @@
 						<td>Inactivo</td>
 						<% } %>
                         <td>
-                            <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/TPINT_GRUPO_6_LAB4/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp'">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
+                            <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/TPINT_GRUPO_6_LAB4/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp?nombreUsuario=<%= c.getUsuario().getNombreUsuario() %>&estado=<%= c.getEstado() %>'">
+						    <i class="bi bi-pencil-square"></i>
+						</button>
                         </td>
                     </tr>
                     <%
