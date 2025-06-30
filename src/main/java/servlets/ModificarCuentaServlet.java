@@ -81,18 +81,26 @@ public class ModificarCuentaServlet extends HttpServlet {
                         return;
                     }
                 }
-
-                cuenta.setSaldo(saldo);
-                cuenta.setEstado(estado);
-                cuenta.setTipoCuenta(tipoCuenta);
-
-                boolean exito = cuentaNegocio.modificarCuenta(cuenta);
-
-                request.setAttribute("mostrarModalMsj", true);
-                if (exito) {
-                    request.setAttribute("mensaje", "Cuenta actualizada correctamente.");
+                
+                boolean saldoValido = saldo >= 0;
+                
+                if(saldoValido) {
+                	
+                	cuenta.setSaldo(saldo);
+                	cuenta.setEstado(estado);
+                	cuenta.setTipoCuenta(tipoCuenta);
+                	
+                	boolean exito = cuentaNegocio.modificarCuenta(cuenta);
+                	
+                	request.setAttribute("mostrarModalMsj", true);
+                	if (exito) {
+                		request.setAttribute("mensaje", "Cuenta actualizada correctamente.");
+                	} else {
+                		request.setAttribute("mensaje", "Error al actualizar la cuenta.");
+                	}
                 } else {
-                    request.setAttribute("mensaje", "Error al actualizar la cuenta.");
+                	request.setAttribute("mostrarModalMsj", true);
+                    request.setAttribute("mensaje", "El saldo no puede ser negativo.");
                 }
 
             } else {
