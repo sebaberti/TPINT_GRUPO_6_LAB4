@@ -38,9 +38,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 			statement.setDouble(6, cuenta.getSaldo());
 			statement.setBoolean(7, cuenta.isEstado());
 			
-			int filas = statement.executeUpdate();
-			System.out.println("Filas insertadas: " + filas);
-			if (filas > 0) {
+			if (statement.executeUpdate() > 0) {
 	            ResultSet generatedKeys = statement.getGeneratedKeys();
 	            if (generatedKeys.next()) {
 	                cuenta.setId(generatedKeys.getInt(1)); // Obtener ID generado
@@ -75,28 +73,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 			rs = statement.executeQuery();
 
 			while (rs.next()) {
-				Cuenta cuenta = new Cuenta();
-				Cliente cliente = new Cliente();
-				CuentaTipo tipoCuenta = new CuentaTipo();
-
-				cuenta.setId(rs.getInt("cuenta_id"));
-				cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
-				cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
-
-				tipoCuenta
-						.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
-				cuenta.setTipoCuenta(tipoCuenta);
-
-				cuenta.setCBU(new BigInteger(rs.getString("cbu")));
-				cuenta.setSaldo(rs.getDouble("saldo"));
-				cuenta.setEstado(rs.getBoolean("estado"));
-
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setDNI(rs.getString("dni"));
-				cuenta.setCliente(cliente);
-
-				cuentas.add(cuenta);
+				cuentas.add(mapearCuenta(rs));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -106,192 +83,127 @@ public class CuentaDaoImplementacion implements CuentaDao {
 
 	@Override
 	public List<Cuenta> listarPorDNI(int dni) {
-		List<Cuenta> cuentas = new ArrayList<Cuenta>();
-
-		Connection conexion = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;
-
-		String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "
-				+ "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, " + "cl.nombre, cl.apellido, cl.dni, "
-				+ "t.descripcion AS tipo_descripcion FROM cuentas c "
-				+ "INNER JOIN Clientes cl ON c.id_cliente = cl.id "
-				+ "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id " + "WHERE cl.dni LIKE ?";
-
-		try {
-			conexion = Conexion.getConexion().getSQLConexion();
-			statement = conexion.prepareStatement(query);
-			statement.setString(1, "%" + dni + "%");
-			rs = statement.executeQuery();
-
-			while (rs.next()) {
-				Cuenta cuenta = new Cuenta();
-				Cliente cliente = new Cliente();
-				CuentaTipo tipoCuenta = new CuentaTipo();
-
-				cuenta.setId(rs.getInt("cuenta_id"));
-				cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
-				cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
-
-				tipoCuenta
-						.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
-				cuenta.setTipoCuenta(tipoCuenta);
-
-				cuenta.setCBU(new BigInteger(rs.getString("cbu")));
-				cuenta.setSaldo(rs.getDouble("saldo"));
-				cuenta.setEstado(rs.getBoolean("estado"));
-
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setDNI(rs.getString("dni"));
-				cuenta.setCliente(cliente);
-
-				cuentas.add(cuenta);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return cuentas;
+	    List<Cuenta> cuentas = new ArrayList<Cuenta>();
+	    
+	    Connection conexion = null;
+	    PreparedStatement statement= null;
+	  	 	ResultSet rs= null;
+	   
+	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
+	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
+	       		"cl.nombre, cl.apellido, cl.dni, "+
+	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
+	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
+	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id "+
+	            "WHERE cl.dni LIKE ?";
+	    
+	    try {
+	       	conexion = Conexion.getConexion().getSQLConexion();
+	       	 statement = conexion.prepareStatement(query);
+	       	 statement.setString(1, "%" + dni + "%");
+	       	 rs = statement.executeQuery();
+	       	 
+	        while (rs.next()) {
+	        	cuentas.add(mapearCuenta(rs));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return cuentas;
 	}
 
+	@Override
 	public List<Cuenta> listarCuentasPorClienteId(int clienteId, boolean soloActivas) {
-		List<Cuenta> lista = new ArrayList<>();
+	    List<Cuenta> cuentas = new ArrayList<>();
+	    
+	    Connection conexion = null;
+	    PreparedStatement statement= null;
+	  	 	ResultSet rs= null;
+	   
+	  	 String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, " +
+	         "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " +
+	         "FROM cuentas c " +
+	         "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id " +
+	         "WHERE c.id_cliente = ? AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
 
-		Connection conexion = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;
+	  	 			if (soloActivas) {
+	  	 			query += " AND c.estado = 1";
+	  	 			}
 
-		String query = "SELECT c.id, c.cbu, c.saldo, c.numero_de_cuenta, c.fecha_creacion, c.estado, "
-				+ "tc.id AS id_tipo_cuenta, tc.descripcion AS tipo_descripcion " + "FROM cuentas c "
-				+ "INNER JOIN tipos_cuentas tc ON c.id_tipo_cuenta = tc.id "
-				+ "WHERE c.id_cliente = ? AND tc.descripcion IN ('Caja de ahorro', 'Cuenta corriente')";
+	    try {
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	    	statement.setInt(1, clienteId);
+	    	rs = statement.executeQuery();
 
-		if (soloActivas) {
-			query += " AND c.estado = 1";
-		}
+	        while (rs.next()) {
+	        	cuentas.add(mapearCuenta(rs));
+	        }
 
-		try {
-			conexion = Conexion.getConexion().getSQLConexion();
-			statement = conexion.prepareStatement(query);
-			statement.setInt(1, clienteId);
-			rs = statement.executeQuery();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-			while (rs.next()) {
-				Cuenta cuenta = new Cuenta();
-				cuenta.setId(rs.getInt("id"));
-				cuenta.setCBU(new BigInteger(rs.getString("cbu")));
-				cuenta.setSaldo(rs.getDouble("saldo"));
-				cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
-				cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
-				cuenta.setEstado(rs.getBoolean("estado"));
-
-				CuentaTipo tipoCuenta = new CuentaTipo();
-				tipoCuenta.setId(rs.getInt("id_tipo_cuenta"));
-				tipoCuenta.setDescripcion(rs.getString("tipo_descripcion"));
-				cuenta.setTipoCuenta(tipoCuenta);
-
-				lista.add(cuenta);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return lista;
+	    return cuentas;
 	}
 
 	@Override
 	public Cuenta obtenerCuentaPorCBU(String cbu) {
 	    Cuenta cuenta = null;
 	    Connection conexion = null;
-        PreparedStatement statement= null;
-   	 	ResultSet rs= null;
-   	 	
-   	 	// String query = "SELECT * FROM cuentas WHERE cbu = ?";
+	    PreparedStatement statement= null;
+	  	 	ResultSet rs= null;
+	  	 	
 	    String query = "SELECT c.*, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni " +
-                "FROM cuentas c " +
-                "JOIN clientes cl ON c.id_cliente = cl.id " +
-                "WHERE c.cbu = ?";
+	            "FROM cuentas c " +
+	            "JOIN clientes cl ON c.id_cliente = cl.id " +
+	            "WHERE c.cbu = ?";
 
-		try {
-			conexion = Conexion.getConexion().getSQLConexion();
-			statement = conexion.prepareStatement(query);
-			statement.setString(1, cbu);
-			rs = statement.executeQuery();
+	    try { 
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	    	statement.setString(1, cbu);
+	    	rs = statement.executeQuery();
 
-			if (rs.next()) {
-				cuenta = new Cuenta();
-				cuenta.setId(rs.getInt("id"));
-				cuenta.setCBU(new BigInteger(rs.getString("cbu")));
-				cuenta.setSaldo(rs.getDouble("saldo"));
-				cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
-				cuenta.setEstado(rs.getBoolean("estado"));
+	        if (rs.next()) {
+	        	cuenta = mapearCuenta(rs);
+	        }
 
-				Cliente cliente = new Cliente();
-				cliente.setId(rs.getInt("cliente_id"));
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setDNI(rs.getString("dni"));
-				cuenta.setCliente(cliente);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return cuenta;
+	    return cuenta;
 	}
 
 	@Override
 	public Cuenta obtenerCuentaPorId(int id) {
-		Cuenta cuenta = null;
-		Connection conexion = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;
+	    Cuenta cuenta = null;
+	    Connection conexion = null;
+        PreparedStatement statement= null;
+   	 	ResultSet rs= null;
+   	 	
+	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
+	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
+	       		"cl.id,cl.nombre, cl.apellido, cl.dni, "+
+	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
+	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
+	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.id = ?";
 
-		String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "
-				+ "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "
-				+ "cl.id,cl.nombre, cl.apellido, cl.dni, " + "t.descripcion AS tipo_descripcion FROM cuentas c "
-				+ "INNER JOIN Clientes cl ON c.id_cliente = cl.id "
-				+ "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.id = ?";
+	    try{ 
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	        
+	    	statement.setInt(1, id);
+	    	rs = statement.executeQuery();
 
-		try {
-			conexion = Conexion.getConexion().getSQLConexion();
-			statement = conexion.prepareStatement(query);
-
-			statement.setInt(1, id);
-			rs = statement.executeQuery();
-
-			if (rs.next()) {
-				cuenta = new Cuenta();
-				Cliente cliente = new Cliente();
-				CuentaTipo tipoCuenta = new CuentaTipo();
-
-				cuenta.setId(rs.getInt("cuenta_id"));
-				cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
-				cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
-
-				tipoCuenta.setId(rs.getInt("tipo_cuenta_id"));
-				tipoCuenta
-						.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
-				cuenta.setTipoCuenta(tipoCuenta);
-
-				cuenta.setCBU(new BigInteger(rs.getString("cbu")));
-				cuenta.setSaldo(rs.getDouble("saldo"));
-				cuenta.setEstado(rs.getBoolean("estado"));
-
-				cliente.setId(rs.getInt("cl.id"));
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setDNI(rs.getString("dni"));
-				cuenta.setCliente(cliente);
-
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return cuenta;
+	        if (rs.next()) {
+	        	cuenta = mapearCuenta(rs);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return cuenta;
 	}
 
 	@Override
@@ -316,6 +228,66 @@ public class CuentaDaoImplementacion implements CuentaDao {
 			e.printStackTrace();
 		}
 		return cuentasActivas;
+	}
+	
+	@Override
+	public List<Cuenta> listarPorNro(String nro) {
+	    List<Cuenta> cuentas= new ArrayList<>();
+	    Connection conexion = null;
+	    PreparedStatement statement= null;
+	  	 	ResultSet rs= null;
+	  	 	
+	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
+	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
+	       		"cl.id,cl.nombre, cl.apellido, cl.dni, "+
+	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
+	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
+	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.numero_de_cuenta LIKE ?";
+
+	    try{ 
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	        
+	    	statement.setString(1,"%"+ nro+"%");
+	    	rs = statement.executeQuery();
+
+	        while (rs.next()) {
+	        	cuentas.add(mapearCuenta(rs));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return cuentas;
+	}
+
+	@Override
+	public List<Cuenta> listarPorCBU(BigInteger cbu) {
+	    List<Cuenta> cuentas = new ArrayList<>();
+	    Connection conexion = null;
+	    PreparedStatement statement= null;
+	  	ResultSet rs= null;
+	  	 	
+	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
+	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
+	       		"cl.id,cl.nombre, cl.apellido, cl.dni, "+
+	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
+	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
+	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.cbu LIKE ?";
+
+	    try{ 
+	    	conexion = Conexion.getConexion().getSQLConexion();
+	    	statement = conexion.prepareStatement(query);
+	        
+	    	statement.setString(1,"%"+ cbu+"%");
+	    	rs = statement.executeQuery();
+
+	        if (rs.next()) {
+	        	cuentas.add(mapearCuenta(rs));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return cuentas;
 	}
 
 	@Override
@@ -482,4 +454,28 @@ public class CuentaDaoImplementacion implements CuentaDao {
 		return total;
 	}
 
+	
+	private Cuenta mapearCuenta(ResultSet rs) throws SQLException {
+	    Cuenta cuenta = new Cuenta();
+	    Cliente cliente = new Cliente();
+        CuentaTipo tipoCuenta = new CuentaTipo();
+
+        cuenta.setId(rs.getInt("cuenta_id"));
+        cuenta.setFechaCreacion(rs.getDate("fecha_creacion"));
+        cuenta.setNumeroCuenta(rs.getString("numero_de_cuenta"));
+
+        tipoCuenta.setDescripcion(ManejoCaractEspecial.manejarCaracterEspecial(rs.getString("tipo_descripcion")));
+        cuenta.setTipoCuenta(tipoCuenta);
+        
+        cuenta.setCBU(new BigInteger(rs.getString("cbu")));
+        cuenta.setSaldo(rs.getDouble("saldo"));
+        cuenta.setEstado(rs.getBoolean("estado"));
+
+        cliente.setNombre(rs.getString("nombre"));
+        cliente.setApellido(rs.getString("apellido"));
+        cliente.setDNI(rs.getString("dni"));
+        cuenta.setCliente(cliente);
+
+	    return cuenta;
+	}
 }

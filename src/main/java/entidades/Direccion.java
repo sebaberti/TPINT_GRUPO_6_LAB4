@@ -5,6 +5,7 @@ public class Direccion {
 	private String direccion;
 	private Localidad localidad;
 	private Provincia provincia;
+	private boolean estado;
 	
 	public Direccion(int id, String direccion, Localidad localidad, Provincia provincia) {
 		super();
@@ -57,11 +58,21 @@ public class Direccion {
 		this.provincia = provincia;
 	}
 
+	public boolean isEstado() {
+		return estado;
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+
 	@Override
 	public String toString() {
 		return "Direccion [id=" + id + ", direccion=" + direccion + ", localidad=" + localidad + ", provincia="
-				+ provincia + "]";
+				+ provincia + ", estado=" + estado + "]";
 	}
+
+
 	
 	
 }

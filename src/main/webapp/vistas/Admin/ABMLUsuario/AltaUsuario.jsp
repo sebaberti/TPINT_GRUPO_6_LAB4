@@ -41,26 +41,28 @@ if (!Seguridad.esAdministrador(user)) {
 			
     				<form action="${pageContext.request.contextPath}/AltaUsuarioServlet" method="post">
 						<div class="mb-3">
-							<label for="Usuario" class="form-label">Usuario</label> 
-							<input type="text" class="form-control" name="Usuario" 
-    						placeholder="Ingrese el nombre de usuario"
-       						value="<%= request.getAttribute("nombreUsuario") != null ? request.getAttribute("nombreUsuario") : "" %>" 
-       						required minlength="4" maxlength="50" pattern="[A-Za-z0-9_]+" 
-       						title="Solo letras, números y guiones bajos.">
+							<label for="Usuario" class="form-label">Usuario</label> <input
+								type="text" class="form-control" name="Usuario"
+								placeholder="Ingrese el nombre de usuario"
+								value="<%= request.getAttribute("nombreUsuario") != null ? request.getAttribute("nombreUsuario") : "" %>"
+								required minlength="4" maxlength="50" pattern="[A-Za-z0-9_]+"
+								title="Solo letras, números y guiones bajos.">
 						</div>
 						<div class="mb-3">
-							<label for="Clave" class="form-label">Contraseña</label>
-							<input type="password" class="form-control" name="Clave"							
-							placeholder="Ingrese la contraseña" 							
-							required>
+							<label for="Clave" class="form-label">Contraseña</label> <input
+								type="password" class="form-control" name="Clave"
+								placeholder="Ingrese la contraseña" required pattern=".*\S.*"
+								title="La contraseña no puede ser solo espacios en blanco">
 						</div>
+
 						<div class="mb-3">
-							<label for="RepetirClave" class="form-label">Repetir contraseña</label> 
-							<input type="password" class="form-control" name="RepetirClave"
-								required placeholder="Repita la contraseña" 								
-								required>
+							<label for="RepetirClave" class="form-label">Repetir
+								contraseña</label> <input type="password" class="form-control"
+								name="RepetirClave" required placeholder="Repita la contraseña"
+								pattern=".*\S.*"
+								title="La contraseña no puede ser solo espacios en blanco">
 						</div>
-							<%
+						<%
 							String tipoSeleccionado = String.valueOf(request.getAttribute("TipoUserElegido"));
 							%>
 						<div class="mb-3">

@@ -44,6 +44,7 @@ CREATE TABLE `Domicilios` (
   `direccion` VARCHAR(150) NOT NULL,
   `id_localidad` INT NOT NULL,
   `id_provincia` INT NOT NULL,
+  `estado` BOOLEAN NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`id`),
   INDEX `id_localidad_idx` (`id_localidad` ASC),
   INDEX `id_provincia_idx` (`id_provincia` ASC),

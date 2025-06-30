@@ -33,6 +33,14 @@ public class UsuarioNegocioImpl implements UsuarioNegocio {
 	public boolean agregarUsuarioAdministrador(Usuario usuario) {
 		return usuarioDao.agregarUsuarioAdministrador(usuario);
 	}
+
+	@Override
+	public boolean modificarEstado(String nombreUsuario, Boolean estado) {
+		
+		return usuarioDao.modificarEstado(nombreUsuario, estado);
+	}
+	
+	
     
   
 }

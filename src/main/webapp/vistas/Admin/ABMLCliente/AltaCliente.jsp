@@ -79,15 +79,17 @@ if (!Seguridad.esAdministrador(user)) {
 						<label for="nombreCliente" class="form-label">Nombre/s</label> <input
 							type="text" class="form-control" id="nombreCliente"
 							name="nombreCliente" placeholder="Ingrese su nombre" required
-							pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras"
-							value="<%= cliente != null && cliente.getNombre() !=null ? cliente.getNombre() :"" %>">
+							pattern=".*[A-Za-zÁÉÍÓÚáéíóúÑñ].*"
+							title="Debe contener al menos una letra. Solo se permiten letras y espacios"
+							value="<%=cliente != null && cliente.getNombre() != null ? cliente.getNombre() : ""%>">
 					</div>
 					<div class="col mb-3">
 						<label for="apellidoCliente" class="form-label">Apellido/s</label>
 						<input type="text" class="form-control" id="apellidoCliente"
 							name="apellidoCliente" placeholder="Ingrese su apellido" required
-							pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras"
-							value="<%= cliente != null && cliente.getApellido() != null ? cliente.getApellido() :"" %>">
+							pattern=".*[A-Za-zÁÉÍÓÚáéíóúÑñ].*"
+							title="Debe contener al menos una letra. Solo se permiten letras y espacios"
+							value="<%=cliente != null && cliente.getApellido() != null ? cliente.getApellido() : ""%>">
 					</div>
 
 					<div class="col mb-3">
@@ -103,7 +105,7 @@ if (!Seguridad.esAdministrador(user)) {
 						</select>
 					</div>
 
-		
+
 					<div class="col mb-3">
 						<label for="fechaNacimientoCliente" class="form-label">Fecha
 							Nacimiento</label>

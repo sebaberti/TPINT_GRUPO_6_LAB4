@@ -20,4 +20,6 @@ public interface CuentaDao {
 	public int contarCuentas();
 	public Boolean tienePrestamoActivo(int idCuenta);
 	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado);
+	public List<Cuenta> listarPorNro(String nro);
+	public List<Cuenta> listarPorCBU(BigInteger cbu);
 }
