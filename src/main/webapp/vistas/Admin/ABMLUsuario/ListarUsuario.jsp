@@ -62,7 +62,6 @@
                         <th>Apellido/s</th>
                         <th>Estado</th>
                         <th>Modificar</th>
-                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,11 +84,6 @@
                         <td>
                             <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/TPINT_GRUPO_6_LAB4/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp'">
                                 <i class="bi bi-pencil-square"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="location.href='/TPINT_GRUPO_6_LAB4/vistas/Admin/ABMLUsuario/EliminarUsuario.jsp'">
-                                <i class="bi bi-trash"></i>
                             </button>
                         </td>
                     </tr>
