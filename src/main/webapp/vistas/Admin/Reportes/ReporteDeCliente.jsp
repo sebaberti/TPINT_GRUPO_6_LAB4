@@ -1,6 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="entidades.ReporteDeCliente" %>
 <%@ page import="java.time.Year" %>
+<%@ page import="negocioImplementacion.Seguridad"%>
+<%
+Object user = session.getAttribute("usuario");
+
+if (!Seguridad.sesionActiva(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+} 
+if (!Seguridad.esAdministrador(user)) {
+	response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+    return;
+}
+%>
 <!DOCTYPE html>
 <html>
 <head>
