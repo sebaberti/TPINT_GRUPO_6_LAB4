@@ -5,8 +5,7 @@ VALUES
 ('Alta de cuenta'),
 ('Alta de prestamo'),
 ('Pago de prestamo'),
-('Transferencia Entrada'),
-('Transferencia Salida');
+('Transferencia');
 
 INSERT INTO `Tipos_Cuentas` (`descripcion`)
  VALUES
