@@ -5,8 +5,7 @@ VALUES
 ('Alta de cuenta'),
 ('Alta de prestamo'),
 ('Pago de prestamo'),
-('Transferencia Entrada'),
-('Transferencia Salida');
+('Transferencia');
 
 INSERT INTO `Tipos_Cuentas` (`descripcion`)
  VALUES
@@ -143,7 +142,7 @@ VALUES
 (1, '2025-04-15', '12345678-0001', 1, '98765432101', 1500450.00, TRUE),
 (1, '2025-04-15', '12345678-0201', 2, '98765432201', 2900000.00, TRUE),
 (2, '2020-02-10', '12345678-0002', 1, '98765432102', 3275020.50, TRUE),
-(2, '2020-02-10', '12345678-0202', 2, '98765432202', 900000.50, TRUE),
+(2, '2020-02-10', '12345678-0202', 2, '98765432202', 1800000.00, TRUE),
 (3, '2023-09-30', '12345678-0003', 1, '98765432103', 0.00, TRUE),
 (4, '2024-03-13', '12345678-0004', 2, '98765432104', 98000.75, TRUE),
 (5, '2025-01-20', '12345678-0005', 1, '98765432105', 2120500.00, TRUE),
@@ -172,10 +171,73 @@ INSERT INTO Opciones_Plazo (cantidad_cuotas, tasaAnual) VALUES
 INSERT INTO Prestamos (id_cliente, id_cuenta, fecha_alta, importe_pedido, id_opcion_plazo, estado)
 VALUES 
 (1, 1, null, 30000000.00, 2, 0),
-(2, 2, null, 4500000.00, 5, 0),
+(2, 2, null, 4500000.00, 3, 0),
 (2, 2, null, 500000.00, 3, 0), 
-(2, 2, null, 2000000.00, 4, 1), 
+(2, 2, null, 2000000.00, 4, 0), 
 (3, 3, null, 500000000.00, 3, 2); 
 
 CALL AutorizarPrestamo(1);
 CALL AutorizarPrestamo(2);
+CALL AutorizarPrestamo(3);
+
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-01-15', fecha_vencimiento= '2025-01-15' WHERE id = 7;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-02-15', fecha_vencimiento= '2025-02-15'  WHERE id = 8;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-03-15', fecha_vencimiento= '2025-03-15' WHERE id = 9;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-04-15', fecha_vencimiento= '2025-04-15' WHERE id = 10;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-05-15', fecha_vencimiento= '2025-05-15'  WHERE id = 11;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-06-15', fecha_vencimiento= '2025-06-15' WHERE id = 12;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-07-15', fecha_vencimiento= '2025-07-15'  WHERE id = 13;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-08-15', fecha_vencimiento= '2025-08-15'  WHERE id = 14;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-09-15', fecha_vencimiento= '2025-09-15'  WHERE id = 15;
+
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-01-15', fecha_vencimiento= '2025-01-15' WHERE id = 16;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-02-15', fecha_vencimiento= '2025-02-15'  WHERE id = 17;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-03-15', fecha_vencimiento= '2025-03-15' WHERE id = 18;
+UPDATE Cuotas SET estado = 1, fecha_pago = '2025-04-15', fecha_vencimiento= '2025-04-15' WHERE id = 19;
+UPDATE Cuotas SET fecha_vencimiento= '2025-05-15'  WHERE id = 20;
+UPDATE Cuotas SET fecha_vencimiento= '2025-06-15' WHERE id = 21;
+UPDATE Cuotas SET fecha_vencimiento= '2025-07-15'  WHERE id = 22;
+UPDATE Cuotas SET fecha_vencimiento= '2025-08-15'  WHERE id = 23;
+UPDATE Cuotas SET fecha_vencimiento= '2025-09-15'  WHERE id = 24;
+
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-01-15', 5102578.12, 'pago cuota 1');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-02-15', 5102578.12, 'pago cuota 2');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-03-15', 5102578.12, 'pago cuota 3');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-04-15', 5102578.12, 'pago cuota 4');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-05-15', 5102578.12, 'pago cuota 5');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-06-15', 5102578.12, 'pago cuota 6');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-07-15', 5102578.12, 'pago cuota 7');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-08-15', 5102578.12, 'pago cuota 8');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-09-15', 5102578.12, 'pago cuota 9');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,3,3,'2025-01-15', 5102578.12, 'pago cuota 1');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,3,3,'2025-02-15', 5102578.12, 'pago cuota 2');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,3,3,'2025-03-15', 5102578.12, 'pago cuota 3');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,3,'2025-04-15', 5102578.12, 'pago cuota 4');
+
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,4,'2025-01-10', 150000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,4,'2025-02-10', 150000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,4,'2025-03-10', 150000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,4,'2025-04-10', 150000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,4,'2025-05-10', 150000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,4,'2025-06-10', 150000, 'transferencias recibidas');
+
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,5,'2025-01-10', 100000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,5,'2025-02-10', 100000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,5,'2025-03-10', 100000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,5,'2025-04-10', 100000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,5,'2025-05-10', 100000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,5,'2025-06-10', 100000, 'transferencias salidas');
+
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,4,'2024-01-10', 50000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,4,'2024-02-10', 150000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,4,'2024-03-10', 120000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,4,'2024-04-10', 130000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,4,'2024-05-10', 50000, 'transferencias recibidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,4,'2024-06-10', 50000, 'transferencias recibidas');
+
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,5,'2024-01-10', 30000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,5,'2024-02-10', 40000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(3,2,5,'2024-03-10', 500000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,5,'2024-04-10', 5000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,5,'2024-05-10', 40000, 'transferencias salidas');
+INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle) values(4,2,5,'2024-06-10', 6000, 'transferencias salidas');

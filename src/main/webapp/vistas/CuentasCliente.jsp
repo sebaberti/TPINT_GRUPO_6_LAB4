@@ -10,8 +10,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Mis Cuentas</title>
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
 <body>
@@ -21,17 +27,17 @@
     <main class="container mt-5 mb-5">
     
         <h1 class="text-center mb-4">Mis Cuentas</h1>
-		<%
-		Object user = session.getAttribute("usuario");
-		
-	 	if (!Seguridad.sesionActiva(user) || Seguridad.esAdministrador(user) ) {
-		response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-	    return;
-	}
+        <%
+            Object user = session.getAttribute("usuario");
+        
+            if (!Seguridad.sesionActiva(user) || Seguridad.esAdministrador(user)) {
+                response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+                return;
+            }
+        %>
 
-		%>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center">
+            <table id="tabla_cuentas" class="table table-bordered table-hover text-center">
                 <thead class="table-light">
                     <tr>
                         <th>Nro Cuenta</th>
@@ -77,6 +83,28 @@
 
     <jsp:include page="/vistas/Footer.jsp" />
 
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> <!-- jQuery primero -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#tabla_cuentas').DataTable({
+                order: [],
+                pageLength: 5,
+                lengthMenu: [5, 10, 25, 50],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                },
+                autoWidth: false,
+                responsive: true
+            });
+        });
+    </script>
+
 </body>
 </html>
