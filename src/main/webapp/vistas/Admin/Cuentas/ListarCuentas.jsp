@@ -38,14 +38,14 @@
 
     <h1 class="text-center mb-4">Listado de Cuentas</h1>
 
-    <!-- Botón Nueva Cuenta -->
+    
     <div class="mb-4 d-flex justify-content-end">
         <a href="${pageContext.request.contextPath}/AltaCuentaServlet" class="btn btn-primary">
             <i class="bi bi-plus-circle me-2"></i> Nueva Cuenta
         </a>
     </div>
 
-    <!-- Formulario de búsqueda -->
+    
     <div class="row justify-content-center">
         <div class="col-md-6">
             <form action="${pageContext.request.contextPath}/ListarCuentasServlet" method="post">
@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    <!-- Tabla -->
+    
     <div class="table-responsive mt-5">
         <table id="tabla_cuentas" class="table table-striped table-bordered text-center align-middle">
             <thead class="table-dark">
