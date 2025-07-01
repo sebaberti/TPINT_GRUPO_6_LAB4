@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import daoImplementacion.ClienteDaoImplementacion;
-import daoImplementacion.CuentaTipoDaoImplementacion;
 import entidades.Cliente;
 import entidades.Cuenta;
 import entidades.CuentaTipo;
@@ -44,7 +42,7 @@ public class AltaCuentaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
     	try {
-    		ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
+    		ClienteNegocioImplementacion clienteNeg = new ClienteNegocioImplementacion();
     		
     		Cliente cliente = null;
     		String btnBuscar = request.getParameter("btnBuscar");
@@ -55,7 +53,7 @@ public class AltaCuentaServlet extends HttpServlet {
     		if (btnBuscar != null && dniFiltro != null && !dniFiltro.trim().isEmpty()) {
     			try {
     				int dni = Integer.parseInt(dniFiltro); // valido que hayan completado con un int
-    				cliente = clienteDao.clientePorDNI(dni);
+    				cliente = clienteNeg.clientePorDNI(dni);
     				if(cliente!=null) {
         				request.setAttribute("cliente", cliente);
         				request.getSession().setAttribute("idCliente", cliente.getId()); //lo guardo en session para no perderlo
@@ -73,11 +71,12 @@ public class AltaCuentaServlet extends HttpServlet {
                     if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
                         request.setAttribute("error", "Primero debe seleccionar un Cliente activo");
                     } else {
-                        request.getSession().setAttribute("nombreUsuario", request.getParameter("usuario"));
+                        request.getSession().setAttribute("nombreUsuarioAlta", request.getParameter("usuario"));
                         request.getSession().setAttribute("dniCliente", request.getParameter("DniCliente"));
 
                         if (request.getParameter("tipoCuenta") != null) {
-                            crearCuenta(request, response);  // si lanza excepción, la capturo en el catch
+                            
+                        	crearCuenta(request, response);  // si lanza excepción, la capturo en el catch
                         } else {
                             request.setAttribute("errorTipoCuenta", "Debe seleccionar un tipo de Cuenta");
                         }
@@ -104,7 +103,7 @@ public class AltaCuentaServlet extends HttpServlet {
     		throws ServletException, IOException {
 			doGet(request, response);
     }
-
+    
     private void crearCuenta(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
     	final double montoInicial = 10000;
@@ -125,7 +124,7 @@ public class AltaCuentaServlet extends HttpServlet {
     		Cliente cliente = new Cliente();
     		Usuario usuario = new Usuario();
     		String dniCliente = session.getAttribute("dniCliente").toString();
-    		String nombreUsuario = session.getAttribute("nombreUsuario").toString();
+    		String nombreUsuario = session.getAttribute("nombreUsuarioAlta").toString();
     		cliente.setId(idCliente);
     		cliente.setDNI(dniCliente);
     		

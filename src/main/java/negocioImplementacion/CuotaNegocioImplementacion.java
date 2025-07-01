@@ -7,32 +7,35 @@ import negocio.CuotaNegocio;
 
 public class CuotaNegocioImplementacion implements CuotaNegocio{
 
+	private CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
+	
 	@Override
 	public Cuota cuotaPorId(int idCuota) {
-	    return new CuotaDaoImplementacion().cuotaPorId(idCuota);
+	    return tsi.cuotaPorId(idCuota);
 	}
 	
 	@Override
 	public List<Cuota> cuotasPorClienteYEstado(int idCliente, boolean estado) {
-		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
 		return tsi.cuotasPorClienteYEstado(idCliente, estado);
 	}
 	
 	@Override
 	public List<Cuota> cuotasPorCliente(int idCliente) {
-		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
 		return tsi.cuotasPorCliente(idCliente);
 	}
 	
 	@Override
 	public boolean pagarCuota(int idCuota, int idCuenta) {
-		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
 		return tsi.pagarCuota(idCuota, idCuenta);
 	}
 
 	@Override
-	public Cuota obtenerCuotaPorId(int idCuota) {
-		CuotaDaoImplementacion tsi= new CuotaDaoImplementacion();
+	public Cuota obtenerCuotaPorId(int idCuota) {		
 		return tsi.obtenerCuotaPorId(idCuota);
+	}
+
+	@Override
+	public boolean adeudaCuotaPrevia(int idPrestamo, int nroCuotaActual) {
+		return tsi.adeudaCuotaPrevia(idPrestamo, nroCuotaActual);
 	}
 }
