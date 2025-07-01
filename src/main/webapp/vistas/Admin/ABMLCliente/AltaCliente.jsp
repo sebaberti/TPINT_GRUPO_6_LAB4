@@ -76,20 +76,21 @@ if (!Seguridad.esAdministrador(user)) {
 
 					</div>
 					<div class="col mb-3">
-						<label for="nombreCliente" class="form-label">Nombre/s</label> <input
-							type="text" class="form-control" id="nombreCliente"
-							name="nombreCliente" placeholder="Ingrese su nombre" required
-							pattern=".*[A-Za-zÁÉÍÓÚáéíóúÑñ].*"
-							title="Debe contener al menos una letra. Solo se permiten letras y espacios"
-							value="<%=cliente != null && cliente.getNombre() != null ? cliente.getNombre() : ""%>">
+						<label for="nombreCliente" class="form-label">Nombre/s</label>
+						<input type="text" class="form-control" id="nombreCliente"
+						name="nombreCliente" placeholder="Ingrese su nombre" required
+						pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+						title="Solo se permiten letras y espacios"
+						value="<%=cliente != null && cliente.getNombre() != null ? cliente.getNombre() : ""%>">
 					</div>
+					
 					<div class="col mb-3">
 						<label for="apellidoCliente" class="form-label">Apellido/s</label>
 						<input type="text" class="form-control" id="apellidoCliente"
-							name="apellidoCliente" placeholder="Ingrese su apellido" required
-							pattern=".*[A-Za-zÁÉÍÓÚáéíóúÑñ].*"
-							title="Debe contener al menos una letra. Solo se permiten letras y espacios"
-							value="<%=cliente != null && cliente.getApellido() != null ? cliente.getApellido() : ""%>">
+						name="apellidoCliente" placeholder="Ingrese su apellido" required
+						pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+						title="Solo se permiten letras y espacios"
+						value="<%=cliente != null && cliente.getApellido() != null ? cliente.getApellido() : ""%>">
 					</div>
 
 					<div class="col mb-3">
@@ -217,9 +218,9 @@ if (!Seguridad.esAdministrador(user)) {
 					<div class="col mb-3">
 						<label for="telefonoCliente" class="form-label">Teléfono</label>
 						<input type="text" class="form-control" id="telefonoCliente"
-							name="telefonoCliente" placeholder="Ej: 1126440749" required
-							pattern="^\d+$" title="Solo se permiten números"
-							value="<%= cliente != null && cliente.getTelefono()!=null ? cliente.getTelefono() :"" %>">
+						name="telefonoCliente" placeholder="Ej: 1126440749" required
+						pattern="^\d+$" title="Solo se permiten números"
+						value="<%= cliente != null && cliente.getTelefono()!=null ? cliente.getTelefono() :"" %>">
 					</div>
 				</div>
 				<div class="row">
@@ -267,7 +268,18 @@ if (!Seguridad.esAdministrador(user)) {
 	
 	    e.target.value = digitsOnly;
 	});
+		
+		document.getElementById("telefonoCliente").addEventListener("input", function (e) {
+		    let digitsOnly = e.target.value.replace(/\D/g, '');
+		    
+		    if (digitsOnly.length >11) {
+		        digitsOnly = digitsOnly.slice(0, 11);
+		    }
+		
+		    e.target.value = digitsOnly;
+		});
 	</script>
+	
 
 	<jsp:include page="../../Footer.jsp" />
 	<script
