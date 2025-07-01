@@ -12,7 +12,6 @@ public interface CuotaDao {
 	public Cuota obtenerCuotaPorId(int idCuota);	
 	public int contarCuotasPagas();
 	public int contarCuotasImpagas();
-	double sumarSaldosImpagos();
-
-
+	public double sumarSaldosImpagos();
+	public boolean adeudaCuotaPrevia(int idPrestamo, int nroCuotaActual);
 }

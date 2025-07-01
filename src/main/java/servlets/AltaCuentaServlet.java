@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import daoImplementacion.ClienteDaoImplementacion;
-import daoImplementacion.CuentaTipoDaoImplementacion;
 import entidades.Cliente;
 import entidades.Cuenta;
 import entidades.CuentaTipo;
@@ -44,7 +42,7 @@ public class AltaCuentaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
     	try {
-    		ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
+    		ClienteNegocioImplementacion clienteNeg = new ClienteNegocioImplementacion();
     		
     		Cliente cliente = null;
     		String btnBuscar = request.getParameter("btnBuscar");
@@ -55,7 +53,7 @@ public class AltaCuentaServlet extends HttpServlet {
     		if (btnBuscar != null && dniFiltro != null && !dniFiltro.trim().isEmpty()) {
     			try {
     				int dni = Integer.parseInt(dniFiltro); // valido que hayan completado con un int
-    				cliente = clienteDao.clientePorDNI(dni);
+    				cliente = clienteNeg.clientePorDNI(dni);
     				if(cliente!=null) {
         				request.setAttribute("cliente", cliente);
         				request.getSession().setAttribute("idCliente", cliente.getId()); //lo guardo en session para no perderlo
@@ -77,7 +75,8 @@ public class AltaCuentaServlet extends HttpServlet {
                         request.getSession().setAttribute("dniCliente", request.getParameter("DniCliente"));
 
                         if (request.getParameter("tipoCuenta") != null) {
-                            crearCuenta(request, response);  // si lanza excepción, la capturo en el catch
+                            
+                        	crearCuenta(request, response);  // si lanza excepción, la capturo en el catch
                         } else {
                             request.setAttribute("errorTipoCuenta", "Debe seleccionar un tipo de Cuenta");
                         }
