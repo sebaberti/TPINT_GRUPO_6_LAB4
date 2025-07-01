@@ -312,7 +312,7 @@ BEGIN
 			UPDATE Usuarios SET estado = false WHERE id = id_usuario;
             SET fila_usuario = ROW_COUNT();
             UPDATE Cuentas AS Cuenta SET estado = false WHERE Cuenta.id_cliente = id_cliente;
-            UPDATE Domicilios AS D SET estado = false WHERE D.id = id_domicilio
+            UPDATE Domicilios AS D SET estado = false WHERE D.id = id_domicilio;
 		ELSE
 			ROLLBACK;
 		END IF;
