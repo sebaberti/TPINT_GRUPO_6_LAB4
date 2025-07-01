@@ -96,6 +96,7 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 					<td class="d-none">
 						<%= p.getId() %>
 						<input type="hidden" name="idPrestamo" value="<%=p.getId()%>">
+						<input type="hidden" name="DniCliente" value="<%= p.getCliente().getDNI() %>">
 					</td>
 					<td><%=p.getCliente().getApellido() + ", " + p.getCliente().getNombre()%></td>
 					<td><%=p.getCuenta().getNumeroCuenta()%></td>
@@ -103,12 +104,11 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 					<td><%=p.getPlazo().getCantidadCuotas()%></td>
 					<td>$<%=formato.format(importeMensual)%></td>
 					<td><%=p.getEstadoTexto()%></td>
-					<% if (p.getEstado() == 0) { %>
-						<td><input type="submit" name="btnReportes" value="Ver Reporte" class="btn btn-sm btn-outline-primary"></td>
+					<td><input type="submit" name="btnReportes" value="Ver Reporte" class="btn btn-sm btn-outline-primary"></td>
+					<% if (p.getEstado() == 0) { %>						
 						<td><input type="submit" name="btnAprobar" value="Aprobar" class="btn btn-sm btn-success"></td>
 						<td><input type="submit" name="btnRechazar" value="Rechazar" class="btn btn-sm btn-danger"></td>
-					<% } else { %>
-						<td></td>
+					<% } else { %>					
 						<td></td>
 						<td></td>
 					<% } %>

@@ -58,7 +58,11 @@ public class AutorizarPrestamosServlet extends HttpServlet {
         int idPrestamo = Integer.parseInt(idPrestamoParam);
 
         if (request.getParameter("btnReportes") != null) {
-       
+        	HttpSession session = request.getSession();        
+        	int dni = Integer.parseInt(request.getParameter("DniCliente"));       	 
+        	session.setAttribute("dni", dni);
+        	response.sendRedirect(request.getContextPath() + "/ReporteDeClienteServlet");
+            return;
         }
 
         if (request.getParameter("btnAprobar") != null) {
