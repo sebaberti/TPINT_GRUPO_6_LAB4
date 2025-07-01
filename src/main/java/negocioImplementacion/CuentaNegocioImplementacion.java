@@ -7,14 +7,20 @@ import java.util.Random;
 
 import daoImplementacion.CuentaDaoImplementacion;
 import daoImplementacion.MovimientoDaoImplementacion;
+import entidades.Cliente;
 import entidades.Cuenta;
+import entidades.CuentaTipo;
 import entidades.Movimiento;
 import entidades.MovimientoTipo;
+import entidades.Usuario;
 import negocio.CuentaNegocio;
+import validaciones.ExcepLimiteCtasActivas;
 
 public class CuentaNegocioImplementacion implements CuentaNegocio {
 	private CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
-	
+    private ClienteNegocioImplementacion clienteNeg = new ClienteNegocioImplementacion();
+    private CuentaTipoNegocioImplementacion tipoDao = new CuentaTipoNegocioImplementacion();
+
 	@Override
 	public boolean insertarCuenta(Cuenta cuenta) {
 
@@ -180,6 +186,5 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 
 	    return cuentaDao.actualizarEstado(idCuenta, nuevoEstado);
 	}
-
 
 }

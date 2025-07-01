@@ -71,7 +71,7 @@ public class AltaCuentaServlet extends HttpServlet {
                     if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
                         request.setAttribute("error", "Primero debe seleccionar un Cliente activo");
                     } else {
-                        request.getSession().setAttribute("nombreUsuario", request.getParameter("usuario"));
+                        request.getSession().setAttribute("nombreUsuarioAlta", request.getParameter("usuario"));
                         request.getSession().setAttribute("dniCliente", request.getParameter("DniCliente"));
 
                         if (request.getParameter("tipoCuenta") != null) {
@@ -103,7 +103,7 @@ public class AltaCuentaServlet extends HttpServlet {
     		throws ServletException, IOException {
 			doGet(request, response);
     }
-
+    
     private void crearCuenta(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
     	final double montoInicial = 10000;
@@ -124,7 +124,7 @@ public class AltaCuentaServlet extends HttpServlet {
     		Cliente cliente = new Cliente();
     		Usuario usuario = new Usuario();
     		String dniCliente = session.getAttribute("dniCliente").toString();
-    		String nombreUsuario = session.getAttribute("nombreUsuario").toString();
+    		String nombreUsuario = session.getAttribute("nombreUsuarioAlta").toString();
     		cliente.setId(idCliente);
     		cliente.setDNI(dniCliente);
     		
