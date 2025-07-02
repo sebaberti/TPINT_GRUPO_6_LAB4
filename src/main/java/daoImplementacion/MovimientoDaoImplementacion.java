@@ -16,25 +16,23 @@ public class MovimientoDaoImplementacion implements MovimientoDao {
     public boolean insertarMovimiento(Movimiento movimiento) {
     	Connection conexion = null;
         PreparedStatement stmt= null;
-        String query = "INSERT INTO movimientos (id_cuenta, id_cliente, id_tipo_movimiento, fecha_movimiento, importe, detalle, id_transferencia) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO movimientos (id_cuenta, id_tipo_movimiento, fecha_movimiento, importe, detalle, id_transferencia) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
         	
         	conexion = Conexion.getConexion().getSQLConexion();
         	stmt = conexion.prepareStatement(query);
-            stmt.setInt(1, movimiento.getCuenta().getId());
-            stmt.setInt(2, movimiento.getCliente().getId());
-            stmt.setInt(3, movimiento.getTipoMovimiento().getId());
-            stmt.setTimestamp(4, Timestamp.valueOf(movimiento.getFecha()));
-            stmt.setDouble(5, movimiento.getImporte());
-            stmt.setString(6, movimiento.getDetalle());
-            
+        	stmt.setInt(1, movimiento.getCuenta().getId());
+        	stmt.setInt(2, movimiento.getTipoMovimiento().getId());
+        	stmt.setTimestamp(3, Timestamp.valueOf(movimiento.getFecha()));
+        	stmt.setDouble(4, movimiento.getImporte());
+        	stmt.setString(5, movimiento.getDetalle());
 
-            if (movimiento.getIdTransferencia() != null) {
-                stmt.setInt(7, movimiento.getIdTransferencia());
-            } else {
-                stmt.setNull(7, Types.INTEGER);
-            }
+        	if (movimiento.getIdTransferencia() != null) {
+        	    stmt.setInt(6, movimiento.getIdTransferencia());
+        	} else {
+        	    stmt.setNull(6, Types.INTEGER);
+        	}
 
             if (stmt.executeUpdate() > 0) {
                 conexion.commit();
@@ -57,11 +55,12 @@ public class MovimientoDaoImplementacion implements MovimientoDao {
         ResultSet rs= null;
         
         String query = """
-                SELECT m.*, tm.descripcion AS tipo_descripcion
-                FROM movimientos m
-                INNER JOIN tipos_movimientos tm ON m.id_tipo_movimiento = tm.id
-                WHERE m.id_cuenta = ?
-                ORDER BY m.fecha_movimiento DESC
+                SELECT m.*, tm.descripcion AS tipo_descripcion, c.id_cliente
+				FROM movimientos m
+				INNER JOIN tipos_movimientos tm ON m.id_tipo_movimiento = tm.id
+				INNER JOIN cuentas c ON m.id_cuenta = c.id
+				WHERE m.id_cuenta = ?
+				ORDER BY m.fecha_movimiento DESC
                 """;
 
         try {
