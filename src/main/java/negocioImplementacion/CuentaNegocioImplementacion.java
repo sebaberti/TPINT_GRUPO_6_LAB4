@@ -1,6 +1,7 @@
 package negocioImplementacion;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -226,6 +227,7 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    
 	    return cuenta;
 	}
+	
 	@Override
 	public int contarCuentas(LocalDate desde, LocalDate hasta) {
 		 
@@ -249,5 +251,4 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		
 		return promedioCuentasXCliente;
 	}
-	
 }

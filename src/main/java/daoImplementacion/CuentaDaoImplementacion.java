@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -443,7 +444,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	        return false;
 	    }
 	}
-
+	
 	@Override
 	public int contarCuentas(LocalDate desde, LocalDate hasta) {
 	    int total = 0;
@@ -495,6 +496,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 
 	    return cuenta;
 	}
+
 	@Override
 	public int cantidadCuentasXcliente(LocalDate desde, LocalDate hasta) {
 		
@@ -556,4 +558,5 @@ public class CuentaDaoImplementacion implements CuentaDao {
 
 	
 	}
+
 }
