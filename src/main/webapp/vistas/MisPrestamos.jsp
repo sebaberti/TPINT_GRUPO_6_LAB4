@@ -9,6 +9,7 @@
     <title>Mis Préstamos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
@@ -27,11 +28,11 @@
         }
     %>
 
-    <form class="d-flex flex-row-reverse" method="post" action="Inicio.jsp">
-        <button type="submit" class="btn btn-secondary mb-3">
-            <i class="bi bi-arrow-return-left me-2"></i>Volver
-        </button>
-    </form>
+    	<form class="d-flex flex-row-reverse" method="post" action="vistas/Inicio.jsp">
+			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+				<i class="bi bi-arrow-return-right me-2"></i>Volver menú
+			</button>
+		</form>
 
     <div class="table-responsive">
         <table id="tabla_prestamos" class="table table-bordered table-hover text-center">
