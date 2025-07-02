@@ -54,13 +54,6 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 <body>
 <jsp:include page="/vistas/Header.jsp" />
 
-<% 
-	ArrayList<Prestamo> listaPrestamos = null;
-	if (request.getAttribute("listaPrestamos") != null) {
-		listaPrestamos = (ArrayList<Prestamo>) request.getAttribute("listaPrestamos");
-	}
-%>
-
 <main class="container mt-5 mb-5">
 	<h1 class="text-center mb-4">Listado de Préstamos Solicitados</h1>
 	<form method="GET" action="vistas/Inicio.jsp" class="d-flex flex-row-reverse">
@@ -91,39 +84,44 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 				<th>Rechazar</th>
 			</tr>
 		</thead>
-		<tbody>
-		<%
-			PrestamoNegocioImplementacion pni = new PrestamoNegocioImplementacion();
-
-			if (listaPrestamos != null)
-			for (Prestamo p : listaPrestamos) {
-				BigDecimal importeMensual = pni.calcularCuota(p.getImportePedido(), p.getPlazo().getId());
-		%>
-			<tr>
-				<form method="post" action="AutorizarPrestamosServlet">
-					<td class="d-none">
-						<%= p.getId() %>
-						<input type="hidden" name="idPrestamo" value="<%=p.getId()%>">
-						<input type="hidden" name="DniCliente" value="<%= p.getCliente().getDNI() %>">
-					</td>
-					<td><%=p.getCliente().getApellido() + ", " + p.getCliente().getNombre()%></td>
-					<td><%=p.getCuenta().getNumeroCuenta()%></td>
-					<td>$<%=formato.format(p.getImportePedido())%></td>
-					<td><%=p.getPlazo().getCantidadCuotas()%></td>
-					<td>$<%=formato.format(importeMensual)%></td>
-					<td><%=p.getEstadoTexto()%></td>
-					<td><input type="submit" name="btnReportes" value="Ver Reporte" class="btn btn-sm btn-outline-primary"></td>
-					<% if (p.getEstado() == 0) { %>						
-						<td><input type="submit" name="btnAprobar" value="Aprobar" class="btn btn-sm btn-success"></td>
-						<td><input type="submit" name="btnRechazar" value="Rechazar" class="btn btn-sm btn-danger"></td>
-					<% } else { %>					
-						<td></td>
-						<td></td>
-					<% } %>
-				</form>
-			</tr>
-		<% } %>
-		</tbody>
+<tbody>
+<%
+    ArrayList<Prestamo> listaPrestamos = (ArrayList<Prestamo>) request.getAttribute("listaPrestamos");
+    PrestamoNegocioImplementacion pni = new PrestamoNegocioImplementacion();
+    if (listaPrestamos != null)
+    for (Prestamo p : listaPrestamos) {
+        BigDecimal importeMensual = pni.calcularCuota(p.getImportePedido(), p.getPlazo().getId());
+%>
+   
+   		
+   		 <tr>
+   		 <form method="post" action="AutorizarPrestamosServlet">
+        <td class="d-none">
+         <input type="hidden" name="idPrestamo" value="<%=p.getId()%>">
+         <input type="hidden" name="DniCliente" value="<%=p.getCliente().getDNI()%>">
+        </td>
+        <td><%=p.getCliente().getApellido() + ", " + p.getCliente().getNombre()%></td>
+        <td><%=p.getCuenta().getNumeroCuenta()%></td>
+        <td>$<%=formato.format(p.getImportePedido())%></td>
+        <td><%=p.getPlazo().getCantidadCuotas()%></td>
+        <td>$<%=formato.format(importeMensual)%></td>
+        <td><%=p.getEstadoTexto()%></td>
+        <td><input type="submit" name="btnReportes" value="Ver Reporte" class="btn btn-sm btn-outline-primary"></td>
+                <% if (p.getEstado() == 0) { %>
+                   <td><input type="submit" name="btnAprobar" value="Aprobar" class="btn btn-sm btn-success"></td>
+                   <td><input type="submit" name="btnRechazar" value="Rechazar" class="btn btn-sm btn-danger"></td>
+                <% } else{%>
+                <td>-</td>
+                <td>-</td>
+                <%} %>
+         </form>
+         </tr>
+        
+    
+<%
+    }
+%>
+</tbody>
 	</table>
 	</div>
 </main>

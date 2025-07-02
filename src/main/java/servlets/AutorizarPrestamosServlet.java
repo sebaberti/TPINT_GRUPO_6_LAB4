@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -25,6 +26,7 @@ public class AutorizarPrestamosServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
+			
         Object user = (session != null) ? session.getAttribute("usuario") : null;
         
         if (!Seguridad.sesionActiva(user)) {
@@ -58,8 +60,9 @@ public class AutorizarPrestamosServlet extends HttpServlet {
         int idPrestamo = Integer.parseInt(idPrestamoParam);
 
         if (request.getParameter("btnReportes") != null) {              	
-        	 HttpSession session = request.getSession();         	
-        	    session.setAttribute("dni", request.getParameter("DniCliente"));
+        	 HttpSession session = request.getSession(); 
+        	 String dniParam= request.getParameter("DniCliente");
+        	    session.setAttribute("dniBuscado", dniParam);
         	    response.sendRedirect(request.getContextPath() + "/ReporteDeClienteServlet");
         	    return;
         }

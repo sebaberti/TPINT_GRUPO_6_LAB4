@@ -27,18 +27,15 @@ if (!Seguridad.esAdministrador(user)) {
 
 <jsp:include page="/vistas/Header.jsp" />
 
-<!-- Formulario de búsqueda por DNI -->
 <form action="${pageContext.request.contextPath}/ReporteDeClienteServlet" method="get"
       class="container mt-5 p-4 border rounded shadow-sm bg-light" style="max-width: 500px;">
     <h4 class="mb-4 text-center">Consultar Reporte de Cliente</h4>
     <div class="mb-3">
-        <label for="dni" class="form-label">DNI del cliente</label>
-        <input type="text" name="dni" id="dni" required class="form-control" placeholder="Ingrese el DNI del cliente">
+        <label for="dniIngresado" class="form-label">DNI del cliente</label>
+        <input type="text" name="dniIngresado" value="<%= request.getAttribute("dniIngresado") != null ? request.getAttribute("dniIngresado").toString() : "" %>" id="dni" required class="form-control" placeholder="Ingrese el DNI del cliente">
     </div>
     <div class="text-center">
-        <button type="submit" name="btnReporte" class="btn btn-primary">
-            <i class="bi bi-file-earmark-text"></i> Ver reporte
-        </button>
+        <input type="submit" name="btnReporte" class="btn btn-primary" value="Ver reporte" />
     </div>
 </form>
 
