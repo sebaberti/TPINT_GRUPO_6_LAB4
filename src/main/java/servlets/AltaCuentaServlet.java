@@ -15,7 +15,7 @@ import entidades.Usuario;
 import excepciones.ExcepLimiteCtasActivas;
 import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
-import validaciones.ValidacionesCuentas;
+import validaciones.ValidacionesGenerales;
 
 /**
  * Servlet implementation class AltaCuentaServlet
@@ -24,7 +24,7 @@ import validaciones.ValidacionesCuentas;
 public class AltaCuentaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	private ValidacionesCuentas validarCampo = new ValidacionesCuentas();
+	private ValidacionesGenerales validarCampo = new ValidacionesGenerales();
     /**
      * @see HttpServlet#HttpServlet()
      */
