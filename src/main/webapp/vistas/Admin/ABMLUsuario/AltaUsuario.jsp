@@ -26,6 +26,7 @@ if (!Seguridad.esAdministrador(user)) {
 	<link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
 	rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
@@ -96,6 +97,54 @@ if (!Seguridad.esAdministrador(user)) {
 			</div>
 		</div>
 	</main>
+	
+	<!-- Mostrar modal modificacion éxitosa -->
+	<%
+	Boolean mostrarModal = (Boolean) request.getAttribute("modalMensaje");
+	if (mostrarModal != null && mostrarModal) {
+	%>
+	<script>
+		window.onload = function() {
+			var modal = new bootstrap.Modal(document
+					.getElementById('modalMensaje'));
+			modal.show();
+		};
+	</script>
+	<%
+	}
+	%>
+
+	<!-- Modal modificacion éxitosa -->
+	<div class="modal fade" id="modalMensaje" tabindex="-1"
+		aria-labelledby="modalMensaje" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalMensajeHeader">Operación éxitosa!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Cerrar"></button>
+				</div>
+
+				<div class="modal-body">
+					<%
+					if (request.getAttribute("mensajeInformativo") != null) {
+					%>
+					<p> <%= request.getAttribute("mensajeInformativo") %></p>
+					<%
+					}
+					%>
+				</div>
+				<form method="GET"
+				action="${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/InicioABMLUsuario.jsp">
+					<div class="modal-footer">
+						<button type="submit" name="btnModalClienteModificado" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 
 	<jsp:include page="../../Footer.jsp" />

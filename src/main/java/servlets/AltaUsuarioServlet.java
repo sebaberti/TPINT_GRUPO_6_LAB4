@@ -97,12 +97,14 @@ public class AltaUsuarioServlet extends HttpServlet {
 			}
 			
 			if(exito) {
-				request.setAttribute("mensajeInformativo", "El usuario fue registrado exitosamente");
+				request.setAttribute("mensajeInformativo", "El usuario " + usuario.getNombreUsuario() + " fue registrado exitosamente");
+				request.setAttribute("modalMensaje", true);
 			} else {
 				request.setAttribute("mensajeInformativo", "Ocurrió un error. El usuario no se puedo registrar");
+				request.setAttribute("modalMensaje", true);
 			}
 			
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/MensajesInformativos.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/ABMLUsuario/AltaUsuario.jsp");
 			dispatcher.forward(request, response);
 			return;
 		}		
