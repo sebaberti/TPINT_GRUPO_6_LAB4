@@ -32,17 +32,22 @@ if (!Seguridad.esAdministrador(user)) {
     <h4 class="mb-4 text-center">Consultar Reporte de Cliente</h4>
     <div class="mb-3">
         <label for="dniIngresado" class="form-label">DNI del cliente</label>
-        <input type="text" name="dniIngresado" value="<%= request.getAttribute("dniIngresado") != null ? request.getAttribute("dniIngresado").toString() : "" %>" id="dni" required class="form-control" placeholder="Ingrese el DNI del cliente">
+        <input type="text" name="dniIngresado" value="<%= request.getAttribute("dniIngresado") != null ? request.getAttribute("dniIngresado").toString() : "" %>" 
+        id="dni" required class="form-control <%= request.getAttribute("verificacionDni") != null ? "is-invalid" : "" %>" placeholder="Ingrese el DNI del cliente">
+        <% if (request.getAttribute("verificacionDni") != null) { %>
+            <div class="invalid-feedback">
+                <%= request.getAttribute("verificacionDni") %>
+            </div>
+        <% } %>
     </div>
     <div class="text-center">
-        <input type="submit" name="btnReporte" class="btn btn-primary" value="Ver reporte" />
+        <input type="submit" name="btnReporte" class="btn btn-primary" value="Ver reporte" />        
     </div>
 </form>
 
 <%
     ReporteDeCliente reporte = (ReporteDeCliente) request.getAttribute("reporte");
     ReporteDeCliente reporteMovimientos = (ReporteDeCliente) request.getAttribute("reporteMovimientos");
-    String dni = (String) request.getAttribute("dni");
     int anioActual = Year.now().getValue();
     int anioSeleccionado = anioActual;
     if (request.getAttribute("anioSeleccionado") != null) {
@@ -77,7 +82,6 @@ if (!Seguridad.esAdministrador(user)) {
             </div>
         </div>
 
-        <!-- Selector año + ingresos y egresos -->
         <div class="col-md-6">
             <form method="get" action="ReporteDeClienteServlet" class="mb-4">
                 <div class="row g-2 align-items-end">
@@ -91,8 +95,8 @@ if (!Seguridad.esAdministrador(user)) {
                         </select>
                     </div>
                     <div class="col-6">
-                        <input type="hidden" name="dni" value="<%= dni %>"/>
-                        <button type="submit" class="btn btn-primary w-100" name="btnMovimientos">Ver Movimientos</button>
+                        <input type="hidden" name="dniIngresado" value="<%= request.getAttribute("dniIngresado") != null ? request.getAttribute("dniIngresado").toString() : "" %>"/>
+                        <input type="submit" class="btn btn-primary w-100" name="btnMovimientos" value="Ver Movimientos" />
                     </div>
                 </div>
             </form>

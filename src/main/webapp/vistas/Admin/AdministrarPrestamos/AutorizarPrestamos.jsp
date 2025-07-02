@@ -79,6 +79,7 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 				<th>Plazo (en meses)</th>
 				<th>Importe Mensual</th>
 				<th>Estado</th>
+				<th>Fecha de Alta</th>
 				<th>Reportes</th>
 				<th>Aprobar</th>
 				<th>Rechazar</th>
@@ -106,6 +107,7 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
         <td><%=p.getPlazo().getCantidadCuotas()%></td>
         <td>$<%=formato.format(importeMensual)%></td>
         <td><%=p.getEstadoTexto()%></td>
+        <td><%=(p.getFechaAlta()!=null)?p.getFechaAlta():"-" %>
         <td><input type="submit" name="btnReportes" value="Ver Reporte" class="btn btn-sm btn-outline-primary"></td>
                 <% if (p.getEstado() == 0) { %>
                    <td><input type="submit" name="btnAprobar" value="Aprobar" class="btn btn-sm btn-success"></td>
