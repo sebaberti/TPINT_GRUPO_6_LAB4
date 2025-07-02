@@ -226,4 +226,28 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    
 	    return cuenta;
 	}
+	@Override
+	public int contarCuentas(LocalDate desde, LocalDate hasta) {
+		 
+	int TotalCuentas = cuentaDao.contarCuentas(desde, hasta);
+		
+		return TotalCuentas;
+	}
+
+
+	@Override
+	public int cantidadClientesxPeriodo(LocalDate desde, LocalDate hasta) {
+		int TotalClientes=cuentaDao.cantidadCuentasXcliente(desde, hasta);
+		
+		return TotalClientes;
+	}
+
+
+	@Override
+	public double promedioCuentasXCliente(LocalDate desde, LocalDate hasta) {
+		double promedioCuentasXCliente=cuentaDao.promedioCuentasporCliente(desde, hasta);
+		
+		return promedioCuentasXCliente;
+	}
+	
 }
