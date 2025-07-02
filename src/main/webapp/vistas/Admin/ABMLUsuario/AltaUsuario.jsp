@@ -138,7 +138,7 @@ if (!Seguridad.esAdministrador(user)) {
 				<form method="GET"
 				action="${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/InicioABMLUsuario.jsp">
 					<div class="modal-footer">
-						<button type="submit" name="btnModalClienteModificado" class="btn btn-secondary"
+						<button type="submit" name="btnModal" class="btn btn-secondary"
 						data-bs-dismiss="modal">Cerrar</button>
 					</div>
 				</form>
