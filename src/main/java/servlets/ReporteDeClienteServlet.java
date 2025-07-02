@@ -23,22 +23,22 @@ public class ReporteDeClienteServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(); 
-		String dni = request.getParameter("dni");
+		String dni = request.getParameter("dniIngresado");
 
-		if ((dni == null || dni.trim().isEmpty()) && session.getAttribute("dni") != null) {
-		    dni = session.getAttribute("dni").toString();
-		    request.setAttribute("dni", dni);
-		    session.removeAttribute("dni");  
+		if ((dni == null || dni.trim().isEmpty()) && session.getAttribute("dniBuscado") != null) {
+		    dni = session.getAttribute("dniBuscado").toString();		   
+		    session.removeAttribute("dniBuscado");  
 		}
-		
+		request.setAttribute("dniIngresado", dni);
 		ReporteDeCliente reporte;
 		ReporteDeCliente reporteMovimientos;
 		
 		  if(request.getParameter("btnReporte")!=null) {
 		  if (dni != null && !dni.trim().isEmpty()) {
 	            reporte = rep.obtenerReporteDeCliente(dni);
-	            request.setAttribute("reporte", reporte); 
-		  }		  
+	            request.setAttribute("reporte", reporte); 		  
+		 }		  
+		  
 		 }
 		  
 		  if(request.getParameter("btnMovimientos")!=null) {
