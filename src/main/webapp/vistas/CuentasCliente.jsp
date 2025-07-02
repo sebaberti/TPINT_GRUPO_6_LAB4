@@ -35,7 +35,11 @@
                 return;
             }
         %>
-
+		<form class="d-flex flex-row-reverse" method="post" action="vistas/Inicio.jsp">
+			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+				<i class="bi bi-arrow-return-right me-2"></i>Volver menú
+			</button>
+		</form>
         <div class="table-responsive">
             <table id="tabla_cuentas" class="table table-bordered table-hover text-center">
                 <thead class="table-light">

@@ -31,6 +31,11 @@ Cliente cliente = (Cliente) request.getAttribute("cliente");
 
 	<div class="container mt-5 mb-5">
 		<h2 class="mb-4">Mi Perfil</h2>
+		<form class="d-flex flex-row-reverse" method="post" action="vistas/Inicio.jsp">
+			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+				<i class="bi bi-arrow-return-right me-2"></i>Volver menú
+			</button>
+		</form>
 
 		<!-- DATOS PERSONALES -->
 		<div class="card shadow-sm mb-5">

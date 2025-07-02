@@ -38,7 +38,11 @@
 
     <h1 class="text-center mb-4">Listado de Cuentas</h1>
 
-    
+     <form method="GET" action="${pageContext.request.contextPath}/vistas/Admin/Cuentas/InicioABMLCuentas.jsp" class="d-flex flex-row-reverse">
+		<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+			<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+		</button>
+	</form>
     <div class="mb-4 d-flex justify-content-end">
         <a href="${pageContext.request.contextPath}/AltaCuentaServlet" class="btn btn-primary">
             <i class="bi bi-plus-circle me-2"></i> Nueva Cuenta

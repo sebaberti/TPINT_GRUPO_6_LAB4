@@ -28,7 +28,11 @@
         <h4 class="fw-semibold">Pago de Préstamos</h4>
         <p class="text-muted">Seleccione una cuota pendiente y la cuenta desde la cual se desea pagar.</p>
     </div>
-
+	<form class="d-flex flex-row-reverse" method="post" action="vistas/Inicio.jsp">
+		<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+			<i class="bi bi-arrow-return-right me-2"></i>Volver menú
+		</button>
+	</form>
     <!-- Formulario del filtro -->
     <form method="get" action="PagoCuotasServlet" class="row mb-3">
         <div class="col-md-4">

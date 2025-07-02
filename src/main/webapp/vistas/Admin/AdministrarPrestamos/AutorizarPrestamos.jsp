@@ -35,6 +35,9 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+	rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
 
 <style>
@@ -60,6 +63,11 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
 
 <main class="container mt-5 mb-5">
 	<h1 class="text-center mb-4">Listado de Préstamos Solicitados</h1>
+	<form method="GET" action="vistas/Inicio.jsp" class="d-flex flex-row-reverse">
+				<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+					<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+				</button>
+		</form>
 	<div class="table-responsive mt-5">
 
 	<% if (request.getAttribute("mensaje") != null) { %>

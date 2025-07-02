@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
 <body>
@@ -18,7 +19,11 @@
 
 <main class="container my-5">
     <h1 class="text-center mb-4">Historial de Movimientos</h1>
-
+	<form class="d-flex flex-row-reverse" method="post" action="vistas/Inicio.jsp">
+			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+				<i class="bi bi-arrow-return-right me-2"></i>Volver menú
+			</button>
+	</form>
     <!-- Formulario de filtros -->
     <form method="get" action="MovimientosServlet">
         <div class="row mb-3">

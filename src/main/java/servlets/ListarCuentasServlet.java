@@ -84,9 +84,6 @@ public class ListarCuentasServlet extends HttpServlet {
 				}
 
 			}
-			
-			if(request.getParameter("btnVerTodo") != null && request.getParameter("valorBusqueda") != null) 
-				request.setAttribute("valorBusqueda", "");
 
 			request.setAttribute("listaCuentas", listaCuentas);
 

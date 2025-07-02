@@ -39,6 +39,11 @@
 
 	<!-- Formulario -->
 	<div class="container my-5">
+			<form class="d-flex flex-row-reverse" method="post" action="${pageContext.request.contextPath}/vistas/Admin/Cuentas/InicioABMLCuentas.jsp">
+				<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+					<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+				</button>
+		</form>
 		<form action="${pageContext.request.contextPath}/AltaCuentaServlet"
 			id="formAltaCuenta" method="post" class="form-section">
 			<h5 class="form-title">Buscar Cliente</h5>

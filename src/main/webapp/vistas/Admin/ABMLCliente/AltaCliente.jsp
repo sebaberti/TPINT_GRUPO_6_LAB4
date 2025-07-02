@@ -43,6 +43,11 @@ if (!Seguridad.esAdministrador(user)) {
 		<div class="row text-center">
 			<h2 class="fw-semibold">Alta nuevo Cliente</h2>
 		</div>
+		<form method="GET" action="${pageContext.request.contextPath}/vistas/Admin/ABMLCliente/InicioABMLCliente.jsp" class="d-flex flex-row-reverse">
+				<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+					<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+				</button>
+		</form>
 <%
     Cliente cliente = null;
     Object objCliente = request.getAttribute("nuevoCliente");
@@ -233,6 +238,12 @@ if (!Seguridad.esAdministrador(user)) {
 			</form>
 		</div>
 	</main>
+	
+	<!-- Limito el calendario del input hasta la fecha actaul -->
+	<script>
+	    const hoy = new Date().toISOString().split('T')[0];
+	    document.getElementById('fechaNacimientoCliente').max = hoy;
+	</script>
 
 	<!-- Formatea el campo CUIL a NN-NNNNNNNN-NN -->
 	<script>
