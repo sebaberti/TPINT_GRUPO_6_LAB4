@@ -127,18 +127,16 @@ CREATE TABLE `Transferencias` (
 CREATE TABLE `Movimientos` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `id_cuenta` INT NOT NULL,
-    `id_cliente` INT NOT NULL,
     `id_tipo_movimiento` INT NOT NULL,
     `fecha_movimiento` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `importe` DECIMAL(10,2) NOT NULL,
     `detalle` VARCHAR(255),
     `id_transferencia` INT NULL,
-
     CONSTRAINT `FK_tipo_movimiento` FOREIGN KEY (`id_tipo_movimiento`) REFERENCES `Tipos_Movimientos`(`id`),
     CONSTRAINT `FK_cuenta_movimiento` FOREIGN KEY (`id_cuenta`) REFERENCES `Cuentas`(`id`),
-    CONSTRAINT `FK_cliente_movimiento` FOREIGN KEY (`id_cliente`) REFERENCES `Clientes`(`id`),
     CONSTRAINT `FK_movimiento_transferencia` FOREIGN KEY (`id_transferencia`) REFERENCES `Transferencias`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `Opciones_Plazo` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -388,7 +386,6 @@ CREATE PROCEDURE pagar_cuota (
 BEGIN
     DECLARE v_importe DECIMAL(15,2);
     DECLARE v_saldo DECIMAL(15,2);
-    DECLARE v_id_cliente INT;
     DECLARE v_nro_cuota INT;
 
     -- Obtener importe y número de cuota
@@ -396,8 +393,8 @@ BEGIN
     FROM Cuotas
     WHERE id = p_id_cuota;
 
-    -- Obtener saldo actual y cliente
-    SELECT saldo, id_cliente INTO v_saldo, v_id_cliente
+    -- Obtener saldo actual
+    SELECT saldo INTO v_saldo
     FROM Cuentas
     WHERE id = p_id_cuenta;
 
@@ -413,17 +410,15 @@ BEGIN
             fecha_pago = CURRENT_DATE
         WHERE id = p_id_cuota;
 
-        -- Registrar movimiento
+        -- Registrar movimiento (sin id_cliente)
         INSERT INTO Movimientos (
             id_cuenta,
-            id_cliente,
             id_tipo_movimiento,
             importe,
             detalle,
             id_transferencia
         ) VALUES (
             p_id_cuenta,
-            v_id_cliente,
             3, -- ID tipo movimiento: "Pago de Préstamo"
             -1 * v_importe,
             CONCAT('Pago de cuota nro ', v_nro_cuota),
