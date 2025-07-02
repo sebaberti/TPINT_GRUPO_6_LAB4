@@ -65,27 +65,47 @@ public class AltaCuentaServlet extends HttpServlet {
     			}
     		}
 
-    		// si clickeo la opcion "Crear cuenta":
-            if (btnCrear != null) {
-                try {
-                    if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
-                        request.setAttribute("error", "Primero debe seleccionar un Cliente activo");
-                    } else {
-                        request.getSession().setAttribute("nombreUsuarioAlta", request.getParameter("usuario"));
-                        request.getSession().setAttribute("dniCliente", request.getParameter("DniCliente"));
+    		// si clickeo la opcion "Crear cuenta":  		
+    		if (btnCrear != null) {
+    		    try {
+    		        if (!validarCampo.campoVacio(request.getParameter("usuario"))) {
+    		            request.setAttribute("error", "Primero debe seleccionar un Cliente activo");
+    		        } else {
+    		            request.getSession().setAttribute("nombreUsuarioAlta", request.getParameter("usuario"));
+    		            request.getSession().setAttribute("dniCliente", request.getParameter("DniCliente"));
 
-                        if (request.getParameter("tipoCuenta") != null) {
-                            
-                        	crearCuenta(request, response);  // si lanza excepción, la capturo en el catch
-                        } else {
-                            request.setAttribute("errorTipoCuenta", "Debe seleccionar un tipo de Cuenta");
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    request.setAttribute("mostrarModalCuentaCreada", true);
-                }
-            }
+    		            if (request.getParameter("tipoCuenta") != null) {
+    		                CuentaNegocioImplementacion cuentaNeg = new CuentaNegocioImplementacion();
+    		                Cuenta ctaNueva = new Cuenta();
+    		                ctaNueva.setId(0); //seteo id en 0, si se crea la cta este dato se pisa, lo uso como validacion
+    		                
+    		                ctaNueva = (Cuenta) cuentaNeg.crearCuentaNueva(request);
+
+    		                if (ctaNueva.getId()!=0) {
+    		                	request.setAttribute("cuentaNueva", ctaNueva);
+    		                    request.setAttribute("mostrarModalCuentaCreada", true);
+    		                } else {    		                	
+    		                    request.setAttribute("error", "Error al crear la cuenta.");
+    		                }
+    		            } else {
+    		                request.setAttribute("errorTipoCuenta", "Debe seleccionar un tipo de Cuenta");
+    		            }
+    		        }
+    		    } catch (ExcepLimiteCtasActivas ex) {
+    		    	request.setAttribute("mostrarModalLimiteAlcanzado", true);
+    		        request.setAttribute("errorLimite", ex.getMessage());
+    		        System.out.println("Excepción personalizada capturada: " + ex.getMessage());
+    		        ex.printStackTrace();
+    		        request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
+    		    	return;
+    		    } catch (NumberFormatException e) {
+    		        e.printStackTrace();
+    		        request.setAttribute("error", "Error en el tipo de datos ingresados para el DNI");
+    		    } catch (Exception e) {
+    		        e.printStackTrace();
+    		        request.setAttribute("error", "Error no esperado");
+    		    }
+    		}
 
             request.getRequestDispatcher("/vistas/Admin/Cuentas/AltaCuentas.jsp").forward(request, response);
     	}
@@ -102,72 +122,6 @@ public class AltaCuentaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
 			doGet(request, response);
-    }
-    
-    private void crearCuenta(HttpServletRequest request, HttpServletResponse response)
-    		throws ServletException, IOException {
-    	final double montoInicial = 10000;
-
-    	try {
-    		HttpSession session = request.getSession();
-    		int idCliente = (int) session.getAttribute("idCliente");
-    		int tipoCuentaId = Integer.parseInt(request.getParameter("tipoCuenta"));	
-    		
-    		ClienteNegocioImplementacion c = new ClienteNegocioImplementacion();
-
-    		// Validar la cantidad de cuentas activas del cliente
-    		if (!c.admiteNuevaCuenta(idCliente)) {
-    			request.setAttribute("mostrarModalLimiteAlcanzado", true);
-    			throw new ExcepLimiteCtasActivas();
-    		}
-
-    		Cliente cliente = new Cliente();
-    		Usuario usuario = new Usuario();
-    		String dniCliente = session.getAttribute("dniCliente").toString();
-    		String nombreUsuario = session.getAttribute("nombreUsuarioAlta").toString();
-    		cliente.setId(idCliente);
-    		cliente.setDNI(dniCliente);
-    		
-    		
-    		usuario.setNombreUsuario(nombreUsuario);
-    		cliente.setUsuario(usuario);
-
-    		CuentaTipo tipo = new CuentaTipo();
-    		CuentaTipoNegocioImplementacion tipoDao = new CuentaTipoNegocioImplementacion();
-    		CuentaTipo tipoCuenta = tipoDao.buscarPorId(tipoCuentaId);
-    		String descripcion = tipoCuenta.getDescripcion();
-    		tipo.setId(tipoCuentaId);
-    		tipo.setDescripcion(descripcion);
-
-    		Cuenta cuenta = new Cuenta();
-    		cuenta.setCliente(cliente);
-    		cuenta.setSaldo(montoInicial);
-    		cuenta.setTipoCuenta(tipo);
-
-    		CuentaNegocioImplementacion cta = new CuentaNegocioImplementacion();
-    		boolean cuentaCreada = cta.insertarCuenta(cuenta); // Insertar la cuenta nueva
-
-    		if (cuentaCreada) {
-    			request.setAttribute("mostrarModalCuentaCreada", true);
-    		    request.setAttribute("cuentaNueva", cuenta);
-    		    return;
-    		} else {
-    			request.setAttribute("error", "Error al crear la cuenta.");
-    		}
-    	}
-
-    	 catch (ExcepLimiteCtasActivas ex) {
-            request.setAttribute("errorLimite", ex.getMessage());
-            System.out.println("Excepción personalizada capturada: " + ex.getMessage());
-            ex.printStackTrace();
-         }
-         catch (NumberFormatException e) {
-    		e.printStackTrace();
-    		request.setAttribute("error", "Error en el tipo de datos ingresados para el DNI");
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    		request.setAttribute("error", "Error no esperado");
-    	}
     }
 
 }
