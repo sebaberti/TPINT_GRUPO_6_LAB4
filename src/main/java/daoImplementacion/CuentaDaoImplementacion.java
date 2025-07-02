@@ -248,7 +248,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	  	 	
 	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
 	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
-	       		"cl.id,cl.nombre, cl.apellido, cl.dni, "+
+	       		"cl.id as cliente_id, cl.nombre, cl.apellido, cl.dni, "+
 	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
 	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
 	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.numero_de_cuenta LIKE ?";
@@ -278,7 +278,7 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	  	 	
 	    String query = "SELECT c.id AS cuenta_id, c.fecha_creacion, c.numero_de_cuenta, "+
 	            "c.id_tipo_cuenta AS tipo_cuenta_id, c.cbu, c.saldo, c.estado, "+
-	       		"cl.id AS cliente_id,cl.nombre, cl.apellido, cl.dni, "+
+	       		"cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, "+
 	            "t.descripcion AS tipo_descripcion FROM cuentas c "+
 	            "INNER JOIN Clientes cl ON c.id_cliente = cl.id "+
 	            "INNER JOIN Tipos_Cuentas t ON c.id_tipo_cuenta = t.id WHERE c.cbu LIKE ?";
