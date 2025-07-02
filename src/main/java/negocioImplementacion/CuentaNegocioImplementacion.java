@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import daoImplementacion.CuentaDaoImplementacion;
 import daoImplementacion.MovimientoDaoImplementacion;
 import entidades.Cliente;
@@ -187,4 +190,40 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    return cuentaDao.actualizarEstado(idCuenta, nuevoEstado);
 	}
 
+	
+	public Cuenta crearCuentaNueva(HttpServletRequest request) throws ExcepLimiteCtasActivas, Exception {
+	    final double montoInicial = 10000;
+
+	    HttpSession session = request.getSession();
+	    int idCliente = (int) session.getAttribute("idCliente");
+	    int tipoCuentaId = Integer.parseInt(request.getParameter("tipoCuenta"));
+
+	    // Validar límite de cuentas activas
+	    if (!clienteNeg.admiteNuevaCuenta(idCliente)) {
+	        throw new ExcepLimiteCtasActivas();
+	    }
+
+	    // Datos del cliente
+	    Cliente cliente = new Cliente();
+	    cliente.setId(idCliente);
+	    cliente.setDNI(session.getAttribute("dniCliente").toString());
+
+	    Usuario usuario = new Usuario();
+	    usuario.setNombreUsuario(session.getAttribute("nombreUsuarioAlta").toString());
+	    cliente.setUsuario(usuario);
+
+	    // Datos del tipo de cuenta
+	    CuentaTipoNegocioImplementacion tipoDao = new CuentaTipoNegocioImplementacion();
+	    CuentaTipo tipoCuenta = tipoDao.buscarPorId(tipoCuentaId);
+
+	    // Crear objeto cuenta
+	    Cuenta cuenta = new Cuenta();
+	    cuenta.setCliente(cliente);
+	    cuenta.setSaldo(montoInicial);
+	    cuenta.setTipoCuenta(tipoCuenta);
+
+	    insertarCuenta(cuenta);
+	    
+	    return cuenta;
+	}
 }
