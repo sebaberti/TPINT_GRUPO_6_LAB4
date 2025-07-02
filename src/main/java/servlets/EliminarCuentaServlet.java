@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import entidades.Cliente;
 import entidades.Cuenta;
+import excepciones.ExcepLimiteCtasActivas;
 import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
-import validaciones.ExcepLimiteCtasActivas;
 
 /**
  * Servlet implementation class ManejarCuentaServlet

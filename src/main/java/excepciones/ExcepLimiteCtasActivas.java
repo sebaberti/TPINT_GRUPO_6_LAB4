@@ -1,4 +1,4 @@
-package validaciones;
+package excepciones;
 
 public class ExcepLimiteCtasActivas extends Exception{
 	public ExcepLimiteCtasActivas() {

@@ -17,8 +17,8 @@ import entidades.CuentaTipo;
 import entidades.Movimiento;
 import entidades.MovimientoTipo;
 import entidades.Usuario;
+import excepciones.ExcepLimiteCtasActivas;
 import negocio.CuentaNegocio;
-import validaciones.ExcepLimiteCtasActivas;
 
 public class CuentaNegocioImplementacion implements CuentaNegocio {
 	private CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();

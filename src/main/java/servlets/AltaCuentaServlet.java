@@ -8,16 +8,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import entidades.Cliente;
 import entidades.Cuenta;
-import entidades.CuentaTipo;
 import entidades.Usuario;
+import excepciones.ExcepLimiteCtasActivas;
 import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.CuentaNegocioImplementacion;
-import negocioImplementacion.CuentaTipoNegocioImplementacion;
-import validaciones.ExcepLimiteCtasActivas;
 import validaciones.ValidacionesCuentas;
 
 /**

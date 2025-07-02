@@ -297,6 +297,9 @@
 
 <script>
     $(document).ready(function () {
+    	
+    	$.fn.dataTable.ext.errMode = 'none';
+    	
         $('#tabla_cuentas').DataTable({
             order: [],
             pageLength: 10,

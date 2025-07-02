@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import entidades.Cuenta;
-import validaciones.ExcepLimiteCtasActivas;
+import excepciones.ExcepLimiteCtasActivas;
 
 public interface CuentaNegocio {
 	public boolean insertarCuenta(Cuenta cuenta);
