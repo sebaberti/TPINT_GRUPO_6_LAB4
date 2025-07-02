@@ -12,45 +12,41 @@ import javax.servlet.http.HttpServletResponse;
 import daoImplementacion.ClienteDaoImplementacion;
 import entidades.Cliente;
 
-/**
- * Servlet implementation class ListarUsuariosServlet
- */
 @WebServlet("/ListarUsuariosServlet")
 public class ListarUsuariosServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public ListarUsuariosServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			ClienteDaoImplementacion clienteDao = new ClienteDaoImplementacion();
 
-			List<Cliente> listaClientes = clienteDao.listar();
+			String filtro = request.getParameter("txtDniClientes");
+
+			System.out.println("Filtro: " + filtro);
+			List<Cliente> listaClientes;
+			
+			if (filtro != null && !filtro.trim().isEmpty()) {
+				listaClientes = clienteDao.buscarGenerico(filtro.trim());
+			} else {
+				listaClientes = clienteDao.listar();
+			}
 
 			request.setAttribute("listaClientes", listaClientes);
-
+			request.setAttribute("filtro", filtro); 
 			request.getRequestDispatcher("/vistas/Admin/ABMLUsuario/ListarUsuario.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().println("Error al obtener la lista de usuarios: " + e.getMessage());
+			response.getWriter().println("Error al filtrar usuarios: " + e.getMessage());
 		}
-	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
 		doGet(request, response);
+
 	}
 
 }

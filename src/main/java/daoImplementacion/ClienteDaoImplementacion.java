@@ -533,6 +533,7 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	@Override
 	public Cliente obtenerClientePorId(int id) {
+
 		Cliente cliente = null;
 		Connection conexion = null;
 
@@ -572,4 +573,57 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 		return cliente;
 	}
+	
+	public List<Cliente> buscarGenerico(String filtro) {
+		List<Cliente> lista = new ArrayList<>();
+
+		String query = """
+		    SELECT c.id, c.dni, c.cuil, c.nombre, c.apellido, c.estado, u.nombre_usuario
+		    FROM Clientes c
+		    INNER JOIN Usuarios u ON c.id_usuario = u.id
+		    WHERE c.dni LIKE ? 
+		       OR c.cuil LIKE ?
+		       OR c.nombre LIKE ?
+		       OR c.apellido LIKE ?
+		       OR u.nombre_usuario LIKE ?
+		       OR c.estado LIKE ?
+		""";
+
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement stmt = conexion.prepareStatement(query);
+
+			String patron = "%" + filtro + "%";
+			stmt.setString(1, patron); 
+			stmt.setString(2, patron); 
+			stmt.setString(3, patron); 
+			stmt.setString(4, patron); 
+			stmt.setString(5, patron); 
+			stmt.setString(6, patron); 
+
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Cliente c = new Cliente();
+				c.setId(rs.getInt("id"));
+				c.setDNI(rs.getString("dni"));
+				c.setCUIL(rs.getString("cuil"));
+				c.setNombre(rs.getString("nombre"));
+				c.setApellido(rs.getString("apellido"));
+				c.setEstado(rs.getBoolean("estado"));
+
+				Usuario usuario = new Usuario();
+				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
+				c.setUsuario(usuario);
+
+				lista.add(c);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return lista;
+	}
+
 }
