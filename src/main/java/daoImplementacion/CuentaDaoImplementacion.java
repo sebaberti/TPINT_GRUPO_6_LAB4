@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -443,24 +444,30 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	        return false;
 	    }
 	}
-
+	
 	@Override
-	public int contarCuentas() {
-		int total = 0;
-		String query = "SELECT COUNT(*) AS total FROM cuentas";
+	public int contarCuentas(LocalDate desde, LocalDate hasta) {
+	    int total = 0;
+	    String query = "SELECT COUNT(*) AS cuentas FROM cuentas " +
+	                   "WHERE estado = 1 AND fecha_creacion BETWEEN ? AND ?";
 
-		try (Connection conexion = Conexion.getConexion().getSQLConexion();
-				PreparedStatement statement = conexion.prepareStatement(query);
-				ResultSet rs = statement.executeQuery()) {
+	    try (Connection conexion = Conexion.getConexion().getSQLConexion();
+	         PreparedStatement statement = conexion.prepareStatement(query)) {
 
-			if (rs.next()) {
-				total = rs.getInt("total");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        statement.setDate(1, java.sql.Date.valueOf(desde));
+	        statement.setDate(2, java.sql.Date.valueOf(hasta));
 
-		return total;
+	        try (ResultSet rs = statement.executeQuery()) {
+	            if (rs.next()) {
+	                total = rs.getInt("cuentas");
+	            }
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return total;
 	}
 
 	
@@ -489,4 +496,67 @@ public class CuentaDaoImplementacion implements CuentaDao {
 
 	    return cuenta;
 	}
+
+	@Override
+	public int cantidadCuentasXcliente(LocalDate desde, LocalDate hasta) {
+		
+		 int total = 0;
+		 
+		    String query ="""
+		    	    SELECT COUNT(DISTINCT id_cliente) AS clientes_activos
+		    	    FROM cuentas
+		    	    WHERE fecha_creacion BETWEEN ? AND ?
+		    	      AND estado = 1
+		    	""";
+
+		    try (Connection conexion = Conexion.getConexion().getSQLConexion();
+			         PreparedStatement statement = conexion.prepareStatement(query)) {
+
+			        statement.setDate(1, java.sql.Date.valueOf(desde));
+			        statement.setDate(2, java.sql.Date.valueOf(hasta));
+
+			        try (ResultSet rs = statement.executeQuery()) {
+			            if (rs.next()) {
+			                total = rs.getInt("clientes_activos");
+			            }
+			        }
+
+			    } catch (Exception e) {
+			        e.printStackTrace();
+			    }
+
+			    return total;	
+	}
+
+	@Override
+	public double promedioCuentasporCliente(LocalDate desde, LocalDate hasta) {
+		 double promedio = 0.0;
+		    String query = """
+		        SELECT 
+		            COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT id_cliente), 0) AS promedio
+		        FROM 
+		            cuentas
+		        WHERE 
+		            fecha_creacion BETWEEN ? AND ?
+		    """;
+
+		    try (Connection conexion =  Conexion.getConexion().getSQLConexion();
+		         PreparedStatement stmt = conexion.prepareStatement(query)) {
+
+		        stmt.setDate(1, java.sql.Date.valueOf(desde));
+		        stmt.setDate(2, java.sql.Date.valueOf(hasta));
+
+		        ResultSet rs = stmt.executeQuery();
+		        if (rs.next()) {
+		            promedio = rs.getDouble("promedio");
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    return promedio;
+
+	
+	}
+
 }

@@ -1,6 +1,7 @@
 package dao;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.List;
 
 import entidades.Cuenta;
@@ -17,9 +18,11 @@ public interface CuentaDao {
 	public String obtenerUltimoNumeroCuenta();
 	boolean bajaLogica(int idCuenta);
 	public boolean modificarCuenta(Cuenta cuenta);
-	public int contarCuentas();
+	public int contarCuentas(LocalDate desde,LocalDate hasta);
 	public Boolean tienePrestamoActivo(int idCuenta);
 	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado);
 	public List<Cuenta> listarPorNro(String nro);
 	public List<Cuenta> listarPorCBU(BigInteger cbu);
+	public int cantidadCuentasXcliente (LocalDate desde,LocalDate hasta);
+	public double promedioCuentasporCliente (LocalDate desde,LocalDate hasta);
 }

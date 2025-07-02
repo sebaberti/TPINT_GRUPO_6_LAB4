@@ -1,6 +1,7 @@
 package negocio;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.List;
 
 import entidades.Cuenta;
@@ -21,6 +22,9 @@ public interface CuentaNegocio {
 	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado);
 	public List<Cuenta> listarPorNro(String nro);
 	public List<Cuenta> listarPorCBU(BigInteger cbu);
+	public int contarCuentas(LocalDate desde,LocalDate hasta);
+	public int cantidadClientesxPeriodo(LocalDate desde,LocalDate hasta);
+	public double promedioCuentasXCliente(LocalDate desde,LocalDate hasta);
 }
 
 
