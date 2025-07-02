@@ -37,6 +37,11 @@
 	%>
 		<div class="form-card">
 			<h2 class="form-title">Modificar Cuenta</h2>
+				<form class="d-flex flex-row-reverse" method="post" action="${pageContext.request.contextPath}/ListarCuentasServlet">
+				<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+					<i class="bi bi-arrow-return-right me-2"></i>Volver al listado
+				</button>
+		</form>
 
 			<div class="form-section">
 				<form method="post" action="ModificarCuentaServlet">
