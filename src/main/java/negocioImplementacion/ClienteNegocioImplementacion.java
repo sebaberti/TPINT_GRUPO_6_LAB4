@@ -51,11 +51,17 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 		return clienteNegocio.clientePorDNI(dni);
 	}
 	
-	
+	@Override
 	public Cliente obtenerClientePorIdUsuario(int idUsuario) {
 	    return clienteNegocio.obtenerClientePorIdUsuario(idUsuario);
 	}
 	
+	@Override
+	public Cliente obtenerClientePorId(int id) {
+	    return clienteNegocio.obtenerClientePorId(id);
+	}
+	
+	@Override
 	public Boolean tienePrestamoActivo(int idCliente) {
 		return clienteNegocio.tienePrestamoActivo(idCliente);
 	}

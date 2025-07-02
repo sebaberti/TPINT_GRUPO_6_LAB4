@@ -88,6 +88,26 @@ public class AltaCuentaServlet extends HttpServlet {
     		                    request.setAttribute("error", "Error al crear la cuenta.");
     		                }
     		            } else {
+    		                // Recupero datos del cliente para mantenerlos visibles en la vista
+    		                int idCliente = (int) request.getSession().getAttribute("idCliente");
+    		                cliente = clienteNeg.obtenerClientePorId(idCliente);
+    		                if (cliente != null) {
+    		                    request.setAttribute("cliente", cliente);
+    		                    
+    		                    //recupero usuario tambien
+    		                    String usuarioSession = (String) request.getSession().getAttribute("nombreUsuarioAlta");
+    		                    if (usuarioSession != null) {
+    		                        request.setAttribute("usuario", usuarioSession);
+    		                        Usuario u = new Usuario();
+        		                    u.setNombreUsuario(usuarioSession);
+        		                    cliente.setUsuario(u);
+        		                   
+        		                    String nombreUsuario = (String) request.getSession().getAttribute("nombreUsuarioAlta");
+        		                    request.setAttribute("usuario", nombreUsuario);
+    		                    }
+    		                    
+    		                }
+
     		                request.setAttribute("errorTipoCuenta", "Debe seleccionar un tipo de Cuenta");
     		            }
     		        }

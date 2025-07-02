@@ -67,6 +67,7 @@
 					name="usuario"
 					value="<%=(cliente != null && cliente.getUsuario() != null) ? cliente.getUsuario().getNombreUsuario() : ""%>"
 					readonly>
+					
 			</div>
 
 			<div class="row g-3">

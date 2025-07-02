@@ -15,5 +15,6 @@ public interface ClienteNegocio {
 	public Cliente clientePorDNI(int dni);
 	public Cliente obtenerClientePorIdUsuario(int idUsuario);
 	public Boolean tienePrestamoActivo(int idCliente);
-	boolean admiteNuevaCuenta(int idCliente);
+	public boolean admiteNuevaCuenta(int idCliente);
+	public Cliente obtenerClientePorId(int id);
 }
