@@ -1,203 +1,146 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ page import="java.util.List"%>
-<%@ page import="entidades.Cuenta"%>
-<%@ page import="entidades.CuentaTipo"%>
-<%@ page import="negocioImplementacion.Seguridad"%>
-<%@ page import="utilidades.FormatterUtil"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="entidades.Cuenta" %>
+<%@ page import="negocioImplementacion.Seguridad" %>
+<%@ page import="utilidades.FormatterUtil" %>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!--  <meta charset="UTF-8"> -->
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Listar Cuentas</title>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<!-- jQuery (requerido por DataTables) -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/estiloInicio.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/Cuentas/estiloListarCuentas.css">
+    <meta charset="UTF-8">
+    <title>Listar Cuentas</title>
 
-<script>
-$.fn.dataTable.ext.errMode = 'none';
-	$(document)
-			.ready(
-					function() {
-						$('#tabla_cuentas')
-								.DataTable(
-										{
-											searching : false,
-											language : {
-												url : "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-											}
-										});
-					});
-</script>
+    <!-- Bootstrap & DataTables -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estiloInicio.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Cuentas/estiloListarCuentas.css">
 </head>
-
 <body>
-	<jsp:include page="/vistas/Header.jsp" />
 
-	<main class="container mt-5 mb-5">
-		<%
-		Object user = session.getAttribute("usuario");
+<jsp:include page="/vistas/Header.jsp" />
 
-		if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
-			response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
-			return;
-		}
-
-		List<Cuenta> listaCuentas = (List<Cuenta>) request.getAttribute("listaCuentas");
-		%>
-
-		<h1 class="text-center mb-4">Listado de Cuentas</h1>
-
-		<!-- Botón Nueva Cuenta -->
-		<div class="mb-4 d-flex justify-content-end">
-			<button type="button" class="btn btn-primary btn-nueva-cuenta"
-				onclick="location.href='${pageContext.request.contextPath}/AltaCuentaServlet'">
-				<i class="bi bi-plus-circle me-2"></i> Nueva Cuenta
-			</button>
-		</div>
-
-		<!-- Formulario de búsqueda -->
+<main class="container mt-5 mb-5">
 <%
+    Object user = session.getAttribute("usuario");
+
+    if (!Seguridad.sesionActiva(user) || !Seguridad.esAdministrador(user)) {
+        response.sendRedirect(request.getContextPath() + "/vistas/Login.jsp");
+        return;
+    }
+
+    List<Cuenta> listaCuentas = (List<Cuenta>) request.getAttribute("listaCuentas");
     String criterioSeleccionado = request.getParameter("criterioBusqueda") != null ? request.getParameter("criterioBusqueda") : "dni";
     String valorBusqueda = request.getParameter("valorBusqueda") != null ? request.getParameter("valorBusqueda") : "";
 %>
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <form action="${pageContext.request.contextPath}/ListarCuentasServlet" method="post">
+    <h1 class="text-center mb-4">Listado de Cuentas</h1>
 
-            <!-- Criterio de búsqueda -->
-            <div class="mb-3">
-                <label for="criterioBusqueda" class="form-label">Filtrar por</label>
-                <select class="form-select" name="criterioBusqueda" id="criterioBusqueda">
-                    <option value="dni" <%= "dni".equals(criterioSeleccionado) ? "selected" : "" %>>DNI del Cliente</option>
-                    <option value="nroCuenta" <%= "nroCuenta".equals(criterioSeleccionado) ? "selected" : "" %>>Nro de Cuenta</option>
-                    <option value="cbu" <%= "cbu".equals(criterioSeleccionado) ? "selected" : "" %>>CBU</option>
-                </select>
-            </div>
-
-            <!-- Valor a buscar -->
-            <div class="mb-3">
-                <label for="valorBusqueda" class="form-label">Valor</label>
-                <input type="text" class="form-control shadow-sm" id="valorBusqueda"
-                    name="valorBusqueda" placeholder="Ingrese el valor..."
-                    value="<%=valorBusqueda%>">
-
-                <% if (request.getAttribute("errorBusqueda") != null) { %>
-                    <div class="alert alert-danger mt-2"><%=request.getAttribute("errorBusqueda")%></div>
-                <% } %>
-            </div>
-
-            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
-                <button type="submit" name="btnBuscar" class="btn btn-success">
-                    <i class="bi bi-search me-1"></i> Buscar
-                </button>
-                <button type="submit" name="btnVerTodo" class="btn btn-secondary">
-                    <i class="bi bi-eye me-1"></i> Ver Todo
-                </button>
-            </div>
-        </form>
+     <form method="GET" action="${pageContext.request.contextPath}/vistas/Admin/Cuentas/InicioABMLCuentas.jsp" class="d-flex flex-row-reverse">
+		<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+			<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+		</button>
+	</form>
+    <div class="mb-4 d-flex justify-content-end">
+        <a href="${pageContext.request.contextPath}/AltaCuentaServlet" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i> Nueva Cuenta
+        </a>
     </div>
-</div>
 
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="${pageContext.request.contextPath}/ListarCuentasServlet" method="post">
+                <div class="mb-3">
+                    <label for="criterioBusqueda" class="form-label">Filtrar por</label>
+                    <select class="form-select" name="criterioBusqueda" id="criterioBusqueda">
+                        <option value="dni" <%= "dni".equals(criterioSeleccionado) ? "selected" : "" %>>DNI del Cliente</option>
+                        <option value="nroCuenta" <%= "nroCuenta".equals(criterioSeleccionado) ? "selected" : "" %>>Nro de Cuenta</option>
+                        <option value="cbu" <%= "cbu".equals(criterioSeleccionado) ? "selected" : "" %>>CBU</option>
+                    </select>
+                </div>
 
+                <div class="mb-3">
+                    <label for="valorBusqueda" class="form-label">Valor</label>
+                    <input type="text" class="form-control" name="valorBusqueda" id="valorBusqueda" value="<%=valorBusqueda%>" placeholder="Ingrese el valor...">
+                    <% if (request.getAttribute("errorBusqueda") != null) { %>
+                        <div class="alert alert-danger mt-2"><%=request.getAttribute("errorBusqueda")%></div>
+                    <% } %>
+                </div>
 
-		<!-- Tabla de cuentas -->
-		<div class="table-responsive mt-5">
-			<table id="tabla_cuentas"
-				class="table table-bordered table-hover align-middle text-center tabla-cuentas">
-				<thead class="table-light">
-					<tr>
-						<th>Nro de Cuenta</th>
-						<th>DNI Cliente</th>
-						<th>Tipo de Cuenta</th>
-						<th>CBU</th>
-						<th>Saldo</th>
-						<th>Estado</th>
-						<th>Modificar</th>
-						<th>Activar/Desactivar</th>
-					</tr>
-				</thead>
-				<tbody>
-					<%
-					if (listaCuentas != null && !listaCuentas.isEmpty()) {
-						for (Cuenta c : listaCuentas) {
-					%>
-					<tr>
-						<td><%=c.getNumeroCuenta()%></td>
-						<td><%=c.getCliente().getDNI()%></td>
-						<td><%=c.getTipoCuenta().getDescripcion()%></td>
-						<td><%=c.getCBU()%></td>
-						<td>$ <%=FormatterUtil.formatearMiles(c.getSaldo())%></td>
-						<%
-						if (c.isEstado()) {
-						%>
-						<td>Activo</td>
-						<%
-						} else {
-						%>
-						<td>Inactivo</td>
-						<%
-						}
-						%>
-						<td>
-							<form method="get" action="ModificarCuentaServlet">
-								<input type="hidden" name="idCuenta" value="<%=c.getId()%>">
-								<button type="submit" class="btn btn-warning btn-sm">
-									<i class="bi bi-pencil-square"></i>
-								</button>
-							</form>
-						</td>
-						<td>
-							<form method="post" action="ManejarCuentaServlet">
-								<input type="hidden" name="idCuenta" value="<%=c.getId()%>">
-								<%
-								if (c.isEstado()) {
-								%>
-								<!-- Botón para eliminar -->
-								<button type="submit" name="btnEliminar" value="eliminar"
-									class="btn btn-danger btn-sm" title="Eliminar">
-									<i class="bi bi-trash"></i>
-								</button>
-								<%
-								} else {
-								%>
-								<!-- Botón para reactivar -->
-								<button type="submit" name="btnReactivar" value="reactivar"
-									class="btn btn-success btn-sm" title="Reactivar">
-									<i class="bi bi-arrow-clockwise"></i>
-								</button>
-								<%
-								}
-								%>
-							</form>
-						</td>
-					</tr>
-					<%
-					}
-					} else {
-					%>
-					<tr>
-						<td colspan="100%">No hay cuentas cargadas.</td>
-					</tr>
-					<%
-					}
-					%>
-				</tbody>
-			</table>
-		</div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" name="btnBuscar" class="btn btn-success">
+                        <i class="bi bi-search me-1"></i> Buscar
+                    </button>
+                    <button type="submit" name="btnVerTodo" class="btn btn-secondary">
+                        <i class="bi bi-eye me-1"></i> Ver Todo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    
+    <div class="table-responsive mt-5">
+        <table id="tabla_cuentas" class="table table-striped table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nro de Cuenta</th>
+                    <th>DNI Cliente</th>
+                    <th>Tipo de Cuenta</th>
+                    <th>CBU</th>
+                    <th>Saldo</th>
+                    <th>Estado</th>
+                    <th>Modificar</th>
+                    <th>Activar/Desactivar</th>
+                </tr>
+            </thead>
+            <tbody>
+            <%
+                if (listaCuentas != null && !listaCuentas.isEmpty()) {
+                    for (Cuenta c : listaCuentas) {
+            %>
+                <tr>
+                    <td><%=c.getNumeroCuenta()%></td>
+                    <td><%=c.getCliente().getDNI()%></td>
+                    <td><%=c.getTipoCuenta().getDescripcion()%></td>
+                    <td><%=c.getCBU()%></td>
+                    <td>$ <%=FormatterUtil.formatearMiles(c.getSaldo())%></td>
+                    <td><%=c.isEstado() ? "Activo" : "Inactivo"%></td>
+                    <td>
+                        <form method="get" action="ModificarCuentaServlet">
+                            <input type="hidden" name="idCuenta" value="<%=c.getId()%>">
+                            <button class="btn btn-warning btn-sm" type="submit"><i class="bi bi-pencil-square"></i></button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="ManejarCuentaServlet">
+                            <input type="hidden" name="idCuenta" value="<%=c.getId()%>">
+                            <% if (c.isEstado()) { %>
+                                <button type="submit" name="btnEliminar" value="eliminar" class="btn btn-danger btn-sm" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            <% } else { %>
+                                <button type="submit" name="btnReactivar" value="reactivar" class="btn btn-success btn-sm" title="Reactivar">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            <% } %>
+                        </form>
+                    </td>
+                </tr>
+            <%
+                    }
+                } else {
+            %>
+                <tr><td colspan="8">No hay cuentas cargadas.</td></tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
 
-		<!-- Modal si se quiere desactivar/reactivar-->
+   <!-- Modal si se quiere desactivar/reactivar-->
 		<%
 		Boolean mostrarModal = (Boolean) request.getAttribute("mostrarModalEliminar");
 		Cuenta cuentaAEliminar = (Cuenta) request.getAttribute("cuentaAElim");
@@ -343,14 +286,30 @@ $.fn.dataTable.ext.errMode = 'none';
 
 	</main>
 
-	<jsp:include page="/vistas/Footer.jsp" />
-	<!-- DataTables -->
-	<script
-		src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-	<script
-		src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<jsp:include page="/vistas/Footer.jsp" />
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#tabla_cuentas').DataTable({
+            order: [],
+            pageLength: 10,
+            lengthMenu: [5, 10, 25, 50],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+            },
+            autoWidth: false,
+            responsive: true
+        });
+    });
+</script>
+
 </body>
+</html>
 </html>

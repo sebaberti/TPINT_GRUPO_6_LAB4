@@ -43,6 +43,11 @@ if (!Seguridad.esAdministrador(user)) {
 		<div class="row text-center">
 			<h2 class="fw-semibold">Alta nuevo Cliente</h2>
 		</div>
+		<form method="GET" action="${pageContext.request.contextPath}/vistas/Admin/ABMLCliente/InicioABMLCliente.jsp" class="d-flex flex-row-reverse">
+				<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+					<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+				</button>
+		</form>
 <%
     Cliente cliente = null;
     Object objCliente = request.getAttribute("nuevoCliente");
@@ -76,20 +81,21 @@ if (!Seguridad.esAdministrador(user)) {
 
 					</div>
 					<div class="col mb-3">
-						<label for="nombreCliente" class="form-label">Nombre/s</label> <input
-							type="text" class="form-control" id="nombreCliente"
-							name="nombreCliente" placeholder="Ingrese su nombre" required
-							pattern=".*[A-Za-zÁÉÍÓÚáéíóúÑñ].*"
-							title="Debe contener al menos una letra. Solo se permiten letras y espacios"
-							value="<%=cliente != null && cliente.getNombre() != null ? cliente.getNombre() : ""%>">
+						<label for="nombreCliente" class="form-label">Nombre/s</label>
+						<input type="text" class="form-control" id="nombreCliente"
+						name="nombreCliente" placeholder="Ingrese su nombre" required
+						pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+						title="Solo se permiten letras y espacios"
+						value="<%=cliente != null && cliente.getNombre() != null ? cliente.getNombre() : ""%>">
 					</div>
+					
 					<div class="col mb-3">
 						<label for="apellidoCliente" class="form-label">Apellido/s</label>
 						<input type="text" class="form-control" id="apellidoCliente"
-							name="apellidoCliente" placeholder="Ingrese su apellido" required
-							pattern=".*[A-Za-zÁÉÍÓÚáéíóúÑñ].*"
-							title="Debe contener al menos una letra. Solo se permiten letras y espacios"
-							value="<%=cliente != null && cliente.getApellido() != null ? cliente.getApellido() : ""%>">
+						name="apellidoCliente" placeholder="Ingrese su apellido" required
+						pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+						title="Solo se permiten letras y espacios"
+						value="<%=cliente != null && cliente.getApellido() != null ? cliente.getApellido() : ""%>">
 					</div>
 
 					<div class="col mb-3">
@@ -217,9 +223,9 @@ if (!Seguridad.esAdministrador(user)) {
 					<div class="col mb-3">
 						<label for="telefonoCliente" class="form-label">Teléfono</label>
 						<input type="text" class="form-control" id="telefonoCliente"
-							name="telefonoCliente" placeholder="Ej: 1126440749" required
-							pattern="^\d+$" title="Solo se permiten números"
-							value="<%= cliente != null && cliente.getTelefono()!=null ? cliente.getTelefono() :"" %>">
+						name="telefonoCliente" placeholder="Ej: 1126440749" required
+						pattern="^\d+$" title="Solo se permiten números"
+						value="<%= cliente != null && cliente.getTelefono()!=null ? cliente.getTelefono() :"" %>">
 					</div>
 				</div>
 				<div class="row">
@@ -232,6 +238,12 @@ if (!Seguridad.esAdministrador(user)) {
 			</form>
 		</div>
 	</main>
+	
+	<!-- Limito el calendario del input hasta la fecha actaul -->
+	<script>
+	    const hoy = new Date().toISOString().split('T')[0];
+	    document.getElementById('fechaNacimientoCliente').max = hoy;
+	</script>
 
 	<!-- Formatea el campo CUIL a NN-NNNNNNNN-NN -->
 	<script>
@@ -267,7 +279,18 @@ if (!Seguridad.esAdministrador(user)) {
 	
 	    e.target.value = digitsOnly;
 	});
+		
+		document.getElementById("telefonoCliente").addEventListener("input", function (e) {
+		    let digitsOnly = e.target.value.replace(/\D/g, '');
+		    
+		    if (digitsOnly.length >11) {
+		        digitsOnly = digitsOnly.slice(0, 11);
+		    }
+		
+		    e.target.value = digitsOnly;
+		});
 	</script>
+	
 
 	<jsp:include page="../../Footer.jsp" />
 	<script

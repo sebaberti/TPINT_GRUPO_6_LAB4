@@ -9,4 +9,5 @@ public interface CuotaNegocio {
 	public List<Cuota> cuotasPorClienteYEstado(int idCliente, boolean estado);
 	public List<Cuota> cuotasPorCliente(int idCliente);
 	public Cuota obtenerCuotaPorId(int idCuota);
+	public boolean adeudaCuotaPrevia(int idPrestamo, int nroCuotaActual);
 }

@@ -116,15 +116,35 @@ public class PagoCuotasServlet extends HttpServlet {
 			        Cuota cuotaSeleccionada = cuotaNeg.obtenerCuotaPorId(idCuota);
 			        int nroCuota = cuotaSeleccionada.getNumeroCuota();
 			        
-					boolean pagado = cuotaNeg.pagarCuota(idCuota, idCuenta);
+//					boolean pagado = cuotaNeg.pagarCuota(idCuota, idCuenta);
+//
+//					if (pagado) {
+//						request.setAttribute("titulo", "Operación realizada");
+//						request.setAttribute("mensaje",  "La cuota N° " + nroCuota + " fue abonada correctamente.");
+//					} else {
+//						request.setAttribute("titulo", "Operación no permitida");
+//						request.setAttribute("mensaje", "La cuenta no tiene saldo suficiente para abonar la cuota.");
+//					}
+			        
 
-					if (pagado) {
-						request.setAttribute("titulo", "Operación realizada");
-						request.setAttribute("mensaje",  "La cuota N° " + nroCuota + " fue abonada correctamente.");
-					} else {
-						request.setAttribute("titulo", "Operación no permitida");
-						request.setAttribute("mensaje", "La cuenta no tiene saldo suficiente para abonar la cuota.");
-					}
+			        int idPrestamo = cuotaSeleccionada.getPrestamoId();
+
+			        // Verificamos si hay cuotas anteriores impagas
+			        if (cuotaNeg.adeudaCuotaPrevia(idPrestamo, nroCuota)) {
+			            request.setAttribute("titulo", "Operación no permitida");
+			            request.setAttribute("mensaje", "No puede pagar esta cuota hasta abonar las que tienen un vencimiento anterior.");
+			        } else {
+			            boolean pagado = cuotaNeg.pagarCuota(idCuota, idCuenta);
+
+			            if (pagado) {
+			                request.setAttribute("titulo", "Operación realizada");
+			                request.setAttribute("mensaje", "La cuota N° " + nroCuota + " fue abonada correctamente.");
+			            } else {
+			                request.setAttribute("titulo", "Operación no permitida");
+			                request.setAttribute("mensaje", "La cuenta no tiene saldo suficiente para abonar la cuota.");
+			            }
+			        }
+
 
 				} else {
 					request.setAttribute("titulo", "Atención!");

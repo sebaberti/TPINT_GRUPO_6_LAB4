@@ -29,6 +29,9 @@ if (session != null && session.getAttribute("clienteActivo") != null) {
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloPrestamos.css">
 <title>Préstamos</title>
@@ -38,6 +41,11 @@ if (session != null && session.getAttribute("clienteActivo") != null) {
 
 	<div class="container mt-5 mb-5">
 		<h2 class="mb-4">Simulá tu Prestamo Personal</h2>
+		<form class="d-flex flex-row-reverse" method="post" action="vistas/Inicio.jsp">
+			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+				<i class="bi bi-arrow-return-right me-2"></i>Volver menú
+			</button>
+		</form>
 
 		<div class="card">
 			<div class="card-body">

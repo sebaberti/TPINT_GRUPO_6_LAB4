@@ -23,6 +23,9 @@ if (!Seguridad.esAdministrador(user)) {
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+	<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+	rel="stylesheet">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
@@ -31,6 +34,11 @@ if (!Seguridad.esAdministrador(user)) {
 		<main>
 		<div class="container mt-5">
 			<h2 class="text-center mb-4">Crear nuevo usuario</h2>
+			  <form method="GET" action="${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/InicioABMLUsuario.jsp" class="d-flex flex-row-reverse">
+					<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+						<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+					</button>
+			</form>
 			<div class="row justify-content-center">
 				<div class="col-md-6">		
 				<%if(request.getAttribute("mensajeError")!=null){%>

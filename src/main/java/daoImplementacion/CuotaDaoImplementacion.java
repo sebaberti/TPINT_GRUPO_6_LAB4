@@ -214,4 +214,29 @@ public class CuotaDaoImplementacion implements CuotaDao {
 		return total;
 	}
 
+	@Override
+	public boolean adeudaCuotaPrevia(int idPrestamo, int nroCuotaActual) {
+		    Connection conexion = null;
+		    PreparedStatement stmt = null;
+		    ResultSet rs = null;
+
+		    String query = "SELECT COUNT(*) FROM Cuotas " +
+		                   "WHERE id_prestamo = ? AND estado = 0 AND nro_cuota < ?";
+
+		    try {
+		        conexion = Conexion.getConexion().getSQLConexion();
+		        stmt = conexion.prepareStatement(query);
+		        stmt.setInt(1, idPrestamo);
+		        stmt.setInt(2, nroCuotaActual);
+		        rs = stmt.executeQuery();
+
+		        if (rs.next()) {
+		            int cantidad = rs.getInt(1);
+		            return cantidad > 0;
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    return false;
+	}
 }

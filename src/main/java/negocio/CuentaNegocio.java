@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import entidades.Cuenta;
+import validaciones.ExcepLimiteCtasActivas;
 
 public interface CuentaNegocio {
 	public boolean insertarCuenta(Cuenta cuenta);
@@ -19,7 +20,7 @@ public interface CuentaNegocio {
 	public int cuentasActivas(int idCliente);
 	public boolean actualizarEstado(int idCuenta, boolean nuevoEstado);
 	public List<Cuenta> listarPorNro(String nro);
-	public List<Cuenta> listarPorCBU(BigInteger cbu);	
+	public List<Cuenta> listarPorCBU(BigInteger cbu);
 }
 
 
