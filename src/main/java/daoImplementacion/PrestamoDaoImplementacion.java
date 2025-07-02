@@ -155,5 +155,50 @@ public class PrestamoDaoImplementacion implements PrestamoDao{
 		return lista;
 	
 	}
+	
+	public List<Prestamo> listarPrestamosPorCliente(int idCliente) {
+	    List<Prestamo> lista = new ArrayList<>();
+	    String query = """
+	        SELECT id, id_cliente, id_cuenta, fecha_alta, importe_pedido, id_opcion_plazo, estado
+	        FROM prestamos
+	        WHERE id_cliente = ?
+	        ORDER BY fecha_alta DESC
+	    """;
+
+	    try (Connection conexion = Conexion.getConexion().getSQLConexion();
+	         PreparedStatement stmt = conexion.prepareStatement(query)) {
+	        
+	        stmt.setInt(1, idCliente);
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            Prestamo p = new Prestamo();
+	            p.setId(rs.getInt("id"));
+
+	            ClienteDaoImplementacion clDao = new ClienteDaoImplementacion();
+	            p.setCliente(clDao.obtenerClientePorId(rs.getInt("id_cliente")));
+
+	            CuentaDaoImplementacion cuentaDao = new CuentaDaoImplementacion();
+	            p.setCuenta(cuentaDao.obtenerCuentaPorId(rs.getInt("id_cuenta")));
+
+	            Date fecha = rs.getDate("fecha_alta");
+	            p.setFechaAlta(fecha != null ? fecha.toLocalDate() : null);
+
+	            p.setImportePedido(rs.getBigDecimal("importe_pedido"));
+
+	            PlazoDaoImplementacion plazoDao = new PlazoDaoImplementacion();
+	            p.setPlazo(plazoDao.obtenerPlazoPorId(rs.getInt("id_opcion_plazo")));
+
+	            p.setEstado(rs.getInt("estado"));
+
+	            lista.add(p);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
+	}
 
 }

@@ -116,6 +116,7 @@
 
 <script>
     $(document).ready(function () {
+    	$.fn.dataTable.ext.errMode = 'none';
         $('#tabla_usuarios').DataTable({
             order: [],  // sin orden inicial
             pageLength: 10,

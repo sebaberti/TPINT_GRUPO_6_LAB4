@@ -80,6 +80,12 @@ public class PrestamoNegocioImplementacion implements PrestamoNegocio{
 		return pdi.listar();
 	}
 	
+	@Override
+	public List<Prestamo> listarPrestamosPorCliente(int idCliente){
+		PrestamoDaoImplementacion pdi= new PrestamoDaoImplementacion();
+		return pdi.listarPrestamosPorCliente(idCliente);
+	}
+	
 	public void validarMonto(BigDecimal monto) throws MontoInvalidoException {
 	    BigDecimal MONTO_MINIMO = new BigDecimal("500000");
 	    BigDecimal MONTO_MAXIMO = new BigDecimal("150000000");

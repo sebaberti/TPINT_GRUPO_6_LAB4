@@ -132,6 +132,7 @@
 <!-- Activar DataTables -->
 <script>
     $(document).ready(function () {
+    	$.fn.dataTable.ext.errMode = 'none';
         $('#tabla_clientes').DataTable({
             order: [],
             pageLength: 10,

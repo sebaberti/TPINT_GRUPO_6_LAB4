@@ -10,4 +10,5 @@ public interface PrestamoDao {
 	public boolean rechazarPrestamo(int idPrestamo);
 	public BigDecimal obtenerCuotaDesdeBD(BigDecimal monto, int idPlazo);
 	public List<Prestamo> listar();
+	public List<Prestamo> listarPrestamosPorCliente(int idCliente);
 }

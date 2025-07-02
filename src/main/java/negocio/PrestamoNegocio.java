@@ -14,5 +14,6 @@ public interface PrestamoNegocio {
 	public BigDecimal calcularCuota(BigDecimal monto, int idPlazo);
 	public List<Prestamo> listarPrestamos();
 	public void validarMonto(BigDecimal monto) throws MontoInvalidoException;
+	public List<Prestamo> listarPrestamosPorCliente(int idCliente);
 	
 }

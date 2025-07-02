@@ -106,7 +106,11 @@ DecimalFormat formato = new DecimalFormat("#,##0.00", simbolos);
         <td>$<%=formato.format(p.getImportePedido())%></td>
         <td><%=p.getPlazo().getCantidadCuotas()%></td>
         <td>$<%=formato.format(importeMensual)%></td>
-        <td><%=p.getEstadoTexto()%></td>
+        <td>
+        <span class="badge bg-<%= p.getEstado() == 1 ? "success" : (p.getEstado() == 2 ? "danger" : "warning") %>">
+              <%= p.getEstado() == 1 ? "Aprobado" : (p.getEstado() == 2 ? "Rechazado" : "Pendiente") %>
+        </span>
+        </td>
         <td><%=(p.getFechaAlta()!=null)?p.getFechaAlta():"-" %>
         <td><input type="submit" name="btnReportes" value="Ver Reporte" class="btn btn-sm btn-outline-primary"></td>
                 <% if (p.getEstado() == 0) { %>
