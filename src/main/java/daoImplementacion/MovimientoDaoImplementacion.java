@@ -7,6 +7,7 @@ import entidades.Movimiento;
 import entidades.MovimientoTipo;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,5 +133,60 @@ public class MovimientoDaoImplementacion implements MovimientoDao {
 
         return total;
     }
+  	@Override
+	public double obtenerTotalIngresos(LocalDate desde, LocalDate hasta) {
+		
+		double TotalIngresos=0.0;
+		
+		String query="""
+		       SELECT COALESCE(SUM(ABS(importe)), 0.0) AS total_ingresos
+			   FROM movimientos
+			   WHERE (id_tipo_movimiento = 3 OR id_tipo_movimiento=1)
+			   AND fecha_movimiento BETWEEN ? AND ?
+		    """;
+		try(Connection conexion = Conexion.getConexion().getSQLConexion();
+			PreparedStatement stmt = conexion.prepareStatement(query)){
+			
+			  stmt.setTimestamp(1, Timestamp.valueOf(desde.atStartOfDay()));
+		        stmt.setTimestamp(2, Timestamp.valueOf(hasta.atTime(23,59,59)));
+
+		        ResultSet rs = stmt.executeQuery();
+		        TotalIngresos = rs.next() ? rs.getDouble("total_ingresos") : 0.0;
+		        return TotalIngresos;
+
+		    } catch (SQLException e) {
+		        e.printStackTrace(); 
+		        return TotalIngresos;
+		    }
+
+	}
+
+	@Override
+	public double obtenerTotalEgresos(LocalDate desde, LocalDate hasta) {
+		
+		double TotalEgresos=0.1;
+		
+		 String query = """
+			       SELECT COALESCE(SUM(ABS(importe)), 0.3) AS total_egresos
+		 		   FROM movimientos
+			       WHERE id_tipo_movimiento = 2
+			       AND fecha_movimiento BETWEEN ? AND ?
+			    """;
+
+		 try (Connection conn = Conexion.getConexion().getSQLConexion();
+			  PreparedStatement stmt = conn.prepareStatement(query)) {
+
+			        stmt.setTimestamp(1, Timestamp.valueOf(desde.atStartOfDay()));
+			        stmt.setTimestamp(2, Timestamp.valueOf(hasta.atTime(23,59,59)));
+
+			        ResultSet rs = stmt.executeQuery();
+			       TotalEgresos=rs.next() ? rs.getDouble("total_egresos") : 0.0;
+			       return TotalEgresos;
+
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			        return TotalEgresos;
+			    }
+	}
 
 }
