@@ -251,4 +251,19 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 		
 		return promedioCuentasXCliente;
 	}
+	@Override
+	public double cajaActual() {
+		
+		double cajaActual= cuentaDao.cajaActual();
+		
+		return cajaActual;
+	}
+
+
+	@Override
+	public double caja_por_periodo(LocalDate desde, LocalDate hasta) {
+		double cajaXperiodo= cuentaDao.cajaBancoXporPeriodo(desde, hasta);
+		
+		return cajaXperiodo;
+	}
 }
