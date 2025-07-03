@@ -581,27 +581,25 @@ public class CuentaDaoImplementacion implements CuentaDao {
 	}
 
 	@Override
-	public double cajaBancoXporPeriodo(LocalDate desde, LocalDate hasta) {
-	 
-		double cajaActual=0;
+	public double cajaBancoXporPeriodo(LocalDate desde, LocalDate hasta) { 
+	double caja_por_periodo=0;
 		
-		String query="""
-				SELECT SUM(saldo) AS caja_actual 
-				FROM cuentas""";
-                       
+		String query= """
+		        SELECT SUM(saldo) AS caja_periodo
+		        FROM cuentas
+		        WHERE fecha_creacion BETWEEN ? AND ?
+		    """;                
         try(Connection conexion=Conexion.getConexion().getSQLConexion();
-        PreparedStatement stmt= conexion.prepareStatement(query)) {
-        	
-		     
-		     ResultSet rs = stmt.executeQuery();
-		        if (rs.next()) {
-		            cajaActual = rs.getDouble("caja_actual");
+        PreparedStatement stmt= conexion.prepareStatement(query)) {	     
+		ResultSet rs = stmt.executeQuery();
+		if (rs.next()) {
+		        caja_por_periodo = rs.getDouble("caja_por_periodo");
 		        }
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		    }
-		
-			return cajaActual;
+		    } 
+	catch (SQLException e) {
+		 e.printStackTrace();
 	}
-
+		
+	return caja_por_periodo;
+	}
 }
