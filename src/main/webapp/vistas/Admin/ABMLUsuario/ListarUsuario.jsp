@@ -67,7 +67,7 @@
                     <th>CUIL</th>
                     <th>Nombre/s</th>
                     <th>Apellido/s</th>
-                    <th>Estado</th>
+                    <th>Estado de usuario</th>
                     <th>Modificar</th>
                 </tr>
             </thead>
@@ -83,7 +83,7 @@
                     <td><%= c.getCUIL() %></td>
                     <td><%= c.getNombre() %></td>
                     <td><%= c.getApellido() %></td>
-                    <td><%= (c.getEstado() != null && c.getEstado()) ? "Activo" : "Inactivo" %></td>
+                    <td> <%= (c.getUsuario() != null && c.getUsuario().isEstado()) ? "Activo" : "Inactivo" %></td>
                     <td>
                         <button type="button" class="btn btn-warning btn-sm"
                                 onclick="location.href='${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp?nombreUsuario=<%=c.getUsuario().getNombreUsuario()%>&estado=<%=c.getEstado()%>'">
