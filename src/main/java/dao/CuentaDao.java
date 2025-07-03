@@ -25,4 +25,6 @@ public interface CuentaDao {
 	public List<Cuenta> listarPorCBU(BigInteger cbu);
 	public int cantidadCuentasXcliente (LocalDate desde,LocalDate hasta);
 	public double promedioCuentasporCliente (LocalDate desde,LocalDate hasta);
+	public double cajaActual();
+	public double cajaBancoXporPeriodo(LocalDate desde,LocalDate hasta);
 }
