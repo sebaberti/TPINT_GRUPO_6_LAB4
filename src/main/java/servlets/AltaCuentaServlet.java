@@ -53,7 +53,8 @@ public class AltaCuentaServlet extends HttpServlet {
     				cliente = clienteNeg.clientePorDNI(dni);
     				if(cliente!=null) {
         				request.setAttribute("cliente", cliente);
-        				request.getSession().setAttribute("idCliente", cliente.getId()); //lo guardo en session para no perderlo
+        				request.getSession().setAttribute("idCliente", cliente.getId());
+					request.getSession().setAttribute("DniCliente", dni); //lo guardo en session para no perderlo
     				}else {
     					request.setAttribute("error", "El DNI ingresado no es válido.");
     				}
