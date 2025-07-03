@@ -56,19 +56,26 @@ public class DashboardServlet extends HttpServlet {
 		 int totalClientes= cuentaNegocio.cantidadClientesxPeriodo(desde, hasta);
 		 double promedioCuentasXcliente=cuentaNegocio.promedioCuentasXCliente(desde, hasta);
 		 
-		 //Rentabilidad
+		 //Ingresos Egresos
 		 double totalIngresos= movNegocio.obtenerIngresos(desde, hasta);
 		 double totalEgresos = movNegocio.obtenerEgresos(desde, hasta);
+		 
+		 //Caja y rentabilidad
+		 double caja=cuentaNegocio.cajaActual();
+		 
 		 double rentabilidad= calcularRentabilidad(totalIngresos,totalEgresos);
+		 double cajaActual=calcularFlujoCaja(caja,totalIngresos,totalEgresos);
 		
 		request.setAttribute("totalCuentas", totalCuentas);
 		request.setAttribute("totalClientes", totalClientes);
 		request.setAttribute("promedioCuentasXcliente",promedioCuentasXcliente);
 		
-		//Rentabilidad
+		
 		request.setAttribute("totalIngresos",totalIngresos);
 		request.setAttribute("totalEgresos",totalEgresos);
+		//Rentabilidad y caja
 		request.setAttribute("rentabilidad",rentabilidad);
+		request.setAttribute("caja",caja);
 		
 		request.getRequestDispatcher("/vistas/Admin/Reportes/reportes.jsp").forward(request, response);
 	}
@@ -81,5 +88,15 @@ public class DashboardServlet extends HttpServlet {
 		
 		return Rentabilidad;
 		
-	}			
+	}
+	
+	private double calcularFlujoCaja(double cajaActual,double ingresos,double egresos) {
+		
+		double FlujoCaja=0.0;
+		
+		FlujoCaja+=ingresos-egresos;
+		
+		return FlujoCaja;
+	}
+			
 }
