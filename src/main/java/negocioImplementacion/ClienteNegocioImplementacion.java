@@ -72,4 +72,9 @@ public class ClienteNegocioImplementacion implements ClienteNegocio {
 	    int cuentasActivas = cuentas.cuentasActivas(idCliente);
 	    return cuentasActivas < 3;
 	}
+
+	@Override
+	public boolean reactivarCliente(String dni, String cuil) {
+		return clienteNegocio.reactivarCliente(dni, cuil);
+	}
 }

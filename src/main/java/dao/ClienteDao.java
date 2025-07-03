@@ -16,4 +16,5 @@ public interface ClienteDao {
 	public Cliente obtenerClientePorIdUsuario(int idUsuario);
 	public Cliente obtenerClientePorId(int id);
 	public Boolean tienePrestamoActivo(int idCliente);
+	public Boolean reactivarCliente(String dni, String cuil);
 }

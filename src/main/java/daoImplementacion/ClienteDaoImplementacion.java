@@ -628,4 +628,29 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		return lista;
 	}
 
+	@Override
+	public Boolean reactivarCliente(String dni, String cuil) {
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			CallableStatement preparedCall;
+			preparedCall = conexion.prepareCall("CALL SP_REACTIVAR_CLIENTE(?, ?)");
+			preparedCall.setString(1, dni);
+			preparedCall.setString(2, cuil);
+			preparedCall.execute();
+
+			ResultSet resultSet = preparedCall.getResultSet();
+
+			if (!resultSet.next())
+				return false;
+
+			int resultado = resultSet.getInt(1);
+			
+			if(resultado == 2)
+				return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

@@ -17,4 +17,5 @@ public interface ClienteNegocio {
 	public Boolean tienePrestamoActivo(int idCliente);
 	public boolean admiteNuevaCuenta(int idCliente);
 	public Cliente obtenerClientePorId(int id);
+	public boolean reactivarCliente(String dni, String cuil);
 }

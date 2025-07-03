@@ -17,6 +17,8 @@ if (!Seguridad.esAdministrador(user)) {
 
 String nombreUsuario = request.getParameter("nombreUsuario");
 String estadoParam = request.getParameter("estado");
+String dni = request.getParameter("dni");
+String cuil = request.getParameter("cuil");
 boolean estado = "true".equals(estadoParam);
 %>
 
@@ -45,6 +47,8 @@ boolean estado = "true".equals(estadoParam);
 							<div class="d-flex gap-2">
 								<input	type="text" class="form-control" name="lblUsuario" value="<%= nombreUsuario %>" required disabled>
 								<input type="hidden" name="nombreUsuario" value="<%= nombreUsuario %>">
+								<input type="hidden" name="dni" value="<%= dni %>">
+								<input type="hidden" name="cuil" value="<%= cuil %>">
 							</div>
 						</div>
 						<div class="col mb-3">
