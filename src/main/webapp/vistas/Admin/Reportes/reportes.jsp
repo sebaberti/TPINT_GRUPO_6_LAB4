@@ -24,6 +24,7 @@ if (!Seguridad.esAdministrador(user)) {
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+	 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
@@ -54,6 +55,11 @@ if (!Seguridad.esAdministrador(user)) {
   </form>
 	<main class="container py-4">
     <h2 class="fw-bold text-center mb-4">Panel de Reportes General</h2>
+	<form method="GET" action="${pageContext.request.contextPath}/vistas/Inicio.jsp" class="d-flex flex-row-reverse">
+			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+				<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+			</button>
+	</form>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
 

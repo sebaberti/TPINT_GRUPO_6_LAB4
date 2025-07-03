@@ -65,6 +65,7 @@ public class ModificarCuentaServlet extends HttpServlet {
             if (cuenta != null && tipoCuenta != null) {
                 
                 boolean seQuiereReactivar = !cuenta.isEstado() && estado;
+                boolean seQuiereDesactivar = cuenta.isEstado() && !estado;
 
                 if (seQuiereReactivar) {
                     int cuentasActivas = cuentaNegocio.cuentasActivas(cuenta.getCliente().getId());
@@ -73,6 +74,20 @@ public class ModificarCuentaServlet extends HttpServlet {
                         request.setAttribute("mostrarModalMsj", true);
                         request.setAttribute("mensaje", "No se puede reactivar la cuenta. El cliente ya tiene 3 cuentas activas.");
                         
+                        List<Cuenta> listaCuentas = cuentaNegocio.listarCuentas();
+                        request.setAttribute("listaCuentas", listaCuentas);
+
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/Admin/Cuentas/ListarCuentas.jsp");
+                        dispatcher.forward(request, response);
+                        return;
+                    }
+                }
+                
+                if (seQuiereDesactivar) {
+                    if (cuentaNegocio.tienePrestamoActivo(cuenta.getId())) {
+                        request.setAttribute("mostrarModalMsj", true);
+                        request.setAttribute("mensaje", "No se puede desactivar la cuenta. Tiene un préstamo activo.");
+
                         List<Cuenta> listaCuentas = cuentaNegocio.listarCuentas();
                         request.setAttribute("listaCuentas", listaCuentas);
 
