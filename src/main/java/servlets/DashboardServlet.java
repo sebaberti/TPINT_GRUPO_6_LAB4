@@ -28,22 +28,29 @@ public class DashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		 String fechaDesde = request.getParameter("fechaDesde");
-		 String fechaHasta = request.getParameter("fechaHasta");
-		 LocalDate desde;
-		 LocalDate hasta;
-		 
-		 if(fechaDesde!=null && fechaHasta!=null) {
-				 
-			 	 desde = LocalDate.parse(fechaDesde);
-				 hasta = LocalDate.parse(fechaHasta);
-		 
-		 }
-		 else{
-			 	LocalDate hoy = LocalDate.now();			 	
-			    desde = hoy;
-			    hasta = hoy;
-		 }
+		String fechaDesde = request.getParameter("fechaDesde");
+		String fechaHasta = request.getParameter("fechaHasta");
+
+		LocalDate desde;
+		LocalDate hasta;
+
+		// Si alguno es null → usar fecha actual
+		if (fechaDesde == null || fechaHasta == null) {
+		    LocalDate hoy = LocalDate.now();
+		    desde = hoy;
+		    hasta = hoy;
+		}
+		// Si llegan vacíos (""), mostrar mensaje de error
+		else if (fechaDesde.trim().isEmpty() || fechaHasta.trim().isEmpty()) {
+		    request.setAttribute("error", "Debe completar ambas fechas para generar el reporte.");
+		    request.getRequestDispatcher("/vistas/Admin/Reportes/reportes.jsp").forward(request, response);
+		    return;
+		}
+		// Si todo está OK, parsear normalmente
+		else {
+		    desde = LocalDate.parse(fechaDesde);
+		    hasta = LocalDate.parse(fechaHasta);
+		}
 		 //Resumen promedio cuentas por cliente
 		 int totalCuentas = cuentaNegocio.contarCuentas(desde, hasta);
 		 int totalClientes= cuentaNegocio.cantidadClientesxPeriodo(desde, hasta);
@@ -74,8 +81,5 @@ public class DashboardServlet extends HttpServlet {
 		
 		return Rentabilidad;
 		
-	}
-	
-	
-		
+	}			
 }
