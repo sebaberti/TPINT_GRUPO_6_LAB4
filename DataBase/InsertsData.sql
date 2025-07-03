@@ -107,17 +107,17 @@ INSERT INTO `Domicilios` (`direccion`, `id_localidad`, `id_provincia`)
 VALUES
 ('Pedro Goyena 1543', 1, 1),             -- Tres de Febrero
 ('Av. Boulogne Sur Mer 837', 2, 1),      -- Pacheco
-('Calle 49 entre 8 y 9 Nº1023', 3, 1),   -- La Plata
-('Oliden 1190', 4, 1),                   -- Lomas de Zamora
-('Calle Rivadavia 2234', 5, 1),          -- Mar del Plata
-('Donado 1200', 6, 1),                   -- Bahía Blanca
-('Paz 731', 7, 1),                       -- Tandil
-('España 416', 8, 1),                    -- San Nicolás
-('Av. Aristóbulo del Valle 4800', 9, 20),-- Santa Fe
-('Av. Pellegrini 1032', 10, 20),         -- Rosario
-('Bv. Lehmann 1470', 11, 20),            -- Rafaela
-('Calle Belgrano 236', 12, 20),          -- Venado Tuerto
-('Gral. Obligado 889', 13, 20);          -- Reconquista
+('Calle 49 entre 8 y 9 Nº1023', 3, 2),   -- La Plata
+('Oliden 1190', 4, 2),                   -- Lomas de Zamora
+('Calle Rivadavia 2234', 5, 3),          -- Mar del Plata
+('Donado 1200', 6, 3),                   -- Bahía Blanca
+('Paz 731', 7, 4),                       -- Tandil
+('España 416', 8, 4),                    -- San Nicolás
+('Av. Aristóbulo del Valle 4800', 9, 5),-- Santa Fe
+('Av. Pellegrini 1032', 16, 8),         -- Rosario
+('Bv. Lehmann 1470', 11, 6),            -- Rafaela
+('Calle Belgrano 236', 12, 6),          -- Venado Tuerto
+('Gral. Obligado 889', 25, 13);          -- Reconquista
 
 
 INSERT INTO `Clientes` 
