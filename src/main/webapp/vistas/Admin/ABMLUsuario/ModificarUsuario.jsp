@@ -19,6 +19,7 @@ String nombreUsuario = request.getParameter("nombreUsuario");
 String estadoParam = request.getParameter("estado");
 String dni = request.getParameter("dni");
 String cuil = request.getParameter("cuil");
+String idCliente= request.getParameter("idCliente");
 boolean estado = "true".equals(estadoParam);
 %>
 
@@ -49,6 +50,7 @@ boolean estado = "true".equals(estadoParam);
 								<input type="hidden" name="nombreUsuario" value="<%= nombreUsuario %>">
 								<input type="hidden" name="dni" value="<%= dni %>">
 								<input type="hidden" name="cuil" value="<%= cuil %>">
+								<input type="hidden" name="idCliente" value="<%= idCliente %>">
 							</div>
 						</div>
 						<div class="col mb-3">

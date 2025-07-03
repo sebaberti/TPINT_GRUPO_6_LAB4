@@ -23,7 +23,11 @@ public class ClienteDaoImplementacion implements ClienteDao {
 	private String insertQuery = "INSERT INTO Clientes(dni, cuil ,nombre, apellido, sexo, id_nacionalidad, fecha_nacimiento, id_domicilio, correo_electronico, telefono, id_usuario, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	private String validarDNIQuery = "SELECT * FROM CLIENTES WHERE DNI = ?";
 	private String validarCUILQuery = "SELECT * FROM Clientes WHERE CUIL = ?";
-	private String tienePrestamoQuery = "SELECT COUNT(id_cliente) FROM Prestamos WHERE id_cliente = ? AND estado = 1;";
+	private String tienePrestamoQuery = 
+		    "SELECT COUNT(pr.id) " +
+		    "FROM prestamos pr " +
+		    "INNER JOIN cuotas ctas ON ctas.id_prestamo = pr.id " +
+		    "WHERE pr.id_cliente = ? AND pr.estado = 1 AND ctas.fecha_pago IS NULL";
 	private String bajaQuery = "UPDATE Clientes SET estado = 0 WHERE id=?";
 
 	public Boolean insertar(Cliente cliente) {
@@ -518,11 +522,10 @@ public class ClienteDaoImplementacion implements ClienteDao {
 			statement.setInt(1, idCliente);
 			resultSet = statement.executeQuery();
 
-			if (!resultSet.next())
-				return false;
-
-			count = resultSet.getInt(1);
-			return count > 0;
+			if (resultSet.next()) {
+	            count = resultSet.getInt(1);
+	            return count > 0;
+	        }
 
 		} catch (Exception e) {
 			e.printStackTrace();

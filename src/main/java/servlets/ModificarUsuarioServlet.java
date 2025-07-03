@@ -39,18 +39,27 @@ public class ModificarUsuarioServlet extends HttpServlet {
 		try {
 			UsuarioNegocio usuarioNegocio = new UsuarioNegocioImpl();
 			ClienteNegocioImplementacion cni= new ClienteNegocioImplementacion();
-			
+			int idCliente=0;
 			String dni = request.getParameter("dni");
 		    String cuil = request.getParameter("cuil");
 		    
+		    if(request.getParameter("idCliente")!=null){
+		    	idCliente= Integer.parseInt(request.getParameter("idCliente"));
+		    }
 		    boolean actualizado=false;
 		    
 		    if(!estado) {
+		    	if(cni.tienePrestamoActivo(idCliente)) {
+		    		request.setAttribute("mensajeInformativo", "El usuario no puede ser dado de baja porque tiene préstamos activos.");
+		    		RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/MensajesInformativos.jsp");
+		    		dispatcher.forward(request, response); 
+		    		return;
+		    	}
 		    	actualizado= cni.bajaLogica(dni, cuil);	        
 		    }else {
 		    	actualizado= cni.reactivarCliente(dni, cuil);
 		    }
-			
+		
 			System.out.println("🔎 nombreUsuario recibido: " + nombreUsuario);
 			System.out.println("🔎 estado recibido: " + estado);
 									

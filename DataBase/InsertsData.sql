@@ -91,15 +91,17 @@ VALUES
 ('user1', 'user1', 2, TRUE), -- clientes
 ('user2', 'user2', 2, TRUE),
 ('user3', 'user3', 2, TRUE),
-('user4', 'user4', 2, FALSE),
+('user4', 'user4', 2, TRUE),
 ('user5', 'user5', 2, TRUE),
 ('user6', 'user6', 2, TRUE),
-('user7', 'user7', 2, FALSE),
-('user8', 'user8', 2, FALSE),
+('user7', 'user7', 2, TRUE),
+('user8', 'user8', 2, TRUE),
 ('user9', 'user9', 2, TRUE),
 ('user10', 'user10', 2, TRUE),
-('user11', 'user11', 2, FALSE);
-
+('user11', 'user11', 2, TRUE),
+('user12', 'user12', 2, TRUE),
+('user13', 'user13', 2, TRUE),
+('user14', 'user13', 2, TRUE);
 
 INSERT INTO `Domicilios` (`direccion`, `id_localidad`, `id_provincia`) 
 VALUES
@@ -121,19 +123,19 @@ VALUES
 INSERT INTO `Clientes` 
 (`dni`, `cuil`, `nombre`, `apellido`, `sexo`, `id_nacionalidad`, `fecha_nacimiento`, `id_domicilio`, `correo_electronico`, `telefono`, `id_usuario`) 
 VALUES
-('30111222', '20-30111222-5', 'Lucía', 'Giménez', 'F', 1, '1990-04-15', 1, 'lucia.gimenez@mail.com', '1122334455', 1),
-('28444555', '20-28444555-7', 'Carlos', 'Lopez', 'M', 1, '1985-09-10', 2, 'carlos.lopez@mail.com', '1177889944', 2),
-('31222333', '27-31222333-3', 'Martina', 'Ruiz', 'F', 1, '1993-01-22', 3, 'martina.ruiz@mail.com', '1147856985', 3),
-('27666111', '23-27666111-4', 'Pablo', 'Fernandez', 'M', 1, '1980-07-30', 4, 'pablo.fernandez@mail.com', '1125369694', 4),
-('32555123', '20-32555123-9', 'Natalia', 'Soria', 'F', 1, '1995-11-05', 5, 'natalia.soria@mail.com', '1154879865', 5),
-('29888999', '20-29888999-1', 'Emiliano', 'Peralta', 'M', 1, '1992-03-18', 6, 'emiliano.peralta@mail.com', '1125468978', 6),
-('31111777', '20-31111777-0', 'Mariela', 'Nuñez', 'F', 1, '1987-12-01', 7, 'mariela.nunez@mail.com', '1130205060', 7),
-('30999111', '20-30999111-2', 'Julieta', 'Ramírez', 'F', 1, '1991-06-23', 8, 'julieta.ramirez@mail.com', '1164568975', 8),
-('27777333', '20-27777333-5', 'Leonardo', 'Mendoza', 'M', 1, '1982-02-14', 9, 'leonardo.mendoza@mail.com', '1166553397', 9),
-('32222444', '27-32222444-6', 'Camila', 'Vega', 'F', 1, '1996-10-09', 10, 'camila.vega@mail.com', '1145454545', 10),
-('28888555', '20-28888555-8', 'Matías', 'Ibarra', 'M', 1, '1990-05-17', 11, 'matias.ibarra@mail.com', '1178956987', 11),
-('30000333', '23-30000333-4', 'Florencia', 'Benítez', 'F', 1, '1989-11-28', 12, 'florencia.benitez@mail.com', '1147586932', 11),
-('26666111', '20-26666111-3', 'Gonzalo', 'Herrera', 'M', 1, '1984-08-05', 13, 'gonzalo.herrera@mail.com', '1124587541', 10);
+('30111222', '20-30111222-5', 'Lucía', 'Giménez', 'F', 1, '1990-04-15', 1, 'lucia.gimenez@mail.com', '1122334455', 2),
+('28444555', '20-28444555-7', 'Carlos', 'Lopez', 'M', 1, '1985-09-10', 2, 'carlos.lopez@mail.com', '1177889944', 3),
+('31222333', '27-31222333-3', 'Martina', 'Ruiz', 'F', 1, '1993-01-22', 3, 'martina.ruiz@mail.com', '1147856985', 4),
+('27666111', '23-27666111-4', 'Pablo', 'Fernandez', 'M', 1, '1980-07-30', 4, 'pablo.fernandez@mail.com', '1125369694', 5),
+('32555123', '20-32555123-9', 'Natalia', 'Soria', 'F', 1, '1995-11-05', 5, 'natalia.soria@mail.com', '1154879865', 6),
+('29888999', '20-29888999-1', 'Emiliano', 'Peralta', 'M', 1, '1992-03-18', 6, 'emiliano.peralta@mail.com', '1125468978', 7),
+('31111777', '20-31111777-0', 'Mariela', 'Nuñez', 'F', 1, '1987-12-01', 7, 'mariela.nunez@mail.com', '1130205060', 8),
+('30999111', '20-30999111-2', 'Julieta', 'Ramírez', 'F', 1, '1991-06-23', 8, 'julieta.ramirez@mail.com', '1164568975',9),
+('27777333', '20-27777333-5', 'Leonardo', 'Mendoza', 'M', 1, '1982-02-14', 9, 'leonardo.mendoza@mail.com', '1166553397', 10),
+('32222444', '27-32222444-6', 'Camila', 'Vega', 'F', 1, '1996-10-09', 10, 'camila.vega@mail.com', '1145454545', 11),
+('28888555', '20-28888555-8', 'Matías', 'Ibarra', 'M', 1, '1990-05-17', 11, 'matias.ibarra@mail.com', '1178956987', 12),
+('30000333', '23-30000333-4', 'Florencia', 'Benítez', 'F', 1, '1989-11-28', 12, 'florencia.benitez@mail.com', '1147586932', 13),
+('26666111', '20-26666111-3', 'Gonzalo', 'Herrera', 'M', 1, '1984-08-05', 13, 'gonzalo.herrera@mail.com', '1124587541', 14);
 
 
 INSERT INTO `Cuentas` 

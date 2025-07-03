@@ -86,10 +86,10 @@
                     <td><%= c.getApellido() %></td>
                     <td> <%= (c.getUsuario() != null && c.getUsuario().isEstado()) ? "Activo" : "Inactivo" %></td>
                     <td>
-                        <button type="button" class="btn btn-warning btn-sm"
-                                onclick="location.href='${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp?nombreUsuario=<%=c.getUsuario().getNombreUsuario()%>&estado=<%=c.getEstado()%>&dni=<%=c.getDNI()%>&cuil=<%=c.getCUIL()%>'">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
+            		<button type="button" class="btn btn-warning btn-sm"
+    					onclick="location.href='${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp?nombreUsuario=<%=c.getUsuario().getNombreUsuario()%>&estado=<%=c.getEstado()%>&dni=<%=c.getDNI()%>&cuil=<%=c.getCUIL()%>&idCliente=<%=c.getId()%>'">
+   						 <i class="bi bi-pencil-square"></i>
+					</button>
                     </td>
                 </tr>
             <%
