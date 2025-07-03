@@ -207,7 +207,7 @@ public class CuentaNegocioImplementacion implements CuentaNegocio {
 	    // Datos del cliente
 	    Cliente cliente = new Cliente();
 	    cliente.setId(idCliente);
-	    cliente.setDNI(session.getAttribute("dniCliente").toString());
+	    cliente.setDNI(session.getAttribute("DniCliente").toString());
 
 	    Usuario usuario = new Usuario();
 	    usuario.setNombreUsuario(session.getAttribute("nombreUsuarioAlta").toString());
