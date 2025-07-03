@@ -67,6 +67,13 @@
 				</div>
 			</div>
 		</div>
+		<div class="d-flex justify-content-center">
+    	<form method="GET" action="${pageContext.request.contextPath}/vistas/Inicio.jsp">
+        <button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
+            <i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+        </button>
+    	</form>
+		</div>
 	</main>
 
 	<jsp:include page="/vistas/Footer.jsp" />

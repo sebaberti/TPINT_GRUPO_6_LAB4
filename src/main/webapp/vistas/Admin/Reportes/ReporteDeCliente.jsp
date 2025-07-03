@@ -27,9 +27,9 @@ if (!Seguridad.esAdministrador(user)) {
 
 <jsp:include page="/vistas/Header.jsp" />
 
-    <form method="GET" action="${pageContext.request.contextPath}/vistas/Inicio.jsp" class="d-flex flex-row-reverse">
+    <form method="GET" action="${pageContext.request.contextPath}/vistas/Admin/Reportes/InicioReportes.jsp" class="d-flex flex-row-reverse">
 			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mt-10 mr-10 mb-3">
-				<i class="bi bi-arrow-return-right me-2"></i>Volver al inicio
+				<i class="bi bi-arrow-return-right me-2"></i>Volver al Menú
 			</button>
 	</form>
 <form action="${pageContext.request.contextPath}/ReporteDeClienteServlet" method="get"
