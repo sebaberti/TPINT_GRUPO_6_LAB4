@@ -86,7 +86,8 @@ if (!Seguridad.esAdministrador(user)) {
 						name="nombreCliente" placeholder="Ingrese su nombre" required
 						pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
 						title="Solo se permiten letras y espacios"
-						value="<%=cliente != null && cliente.getNombre() != null ? cliente.getNombre() : ""%>">
+						value="<%=cliente != null && cliente.getNombre() != null ? cliente.getNombre() : ""%>"
+						onkeypress="return soloLetras(event);">
 					</div>
 					
 					<div class="col mb-3">
@@ -95,7 +96,8 @@ if (!Seguridad.esAdministrador(user)) {
 						name="apellidoCliente" placeholder="Ingrese su apellido" required
 						pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
 						title="Solo se permiten letras y espacios"
-						value="<%=cliente != null && cliente.getApellido() != null ? cliente.getApellido() : ""%>">
+						value="<%=cliente != null && cliente.getApellido() != null ? cliente.getApellido() : ""%>"
+						onkeypress="return soloLetras(event);">
 					</div>
 
 					<div class="col mb-3">
@@ -269,7 +271,7 @@ if (!Seguridad.esAdministrador(user)) {
 		});
 	</script>
 
-	<script>
+<script>
 		document.getElementById("DNICliente").addEventListener("input", function (e) {
 	    let digitsOnly = e.target.value.replace(/\D/g, '');
 	    
@@ -289,6 +291,19 @@ if (!Seguridad.esAdministrador(user)) {
 		
 		    e.target.value = digitsOnly;
 		});
+		
+		function soloLetras(e) {
+		    var tecla = e.key;
+		    var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+		    // Permite letras, espacios y teclas especiales como Backspace
+		    if (regex.test(tecla) || e.keyCode === 8) {
+		        return true;
+		    } else {
+		        return false;
+		    }
+		}
+
 	</script>
 	
 
