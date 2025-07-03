@@ -25,6 +25,8 @@ public interface CuentaNegocio {
 	public int contarCuentas(LocalDate desde,LocalDate hasta);
 	public int cantidadClientesxPeriodo(LocalDate desde,LocalDate hasta);
 	public double promedioCuentasXCliente(LocalDate desde,LocalDate hasta);
+	public double cajaActual();
+	public double caja_por_periodo(LocalDate desde, LocalDate hasta);
 }
 
 
