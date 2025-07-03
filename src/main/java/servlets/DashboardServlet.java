@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -63,40 +64,52 @@ public class DashboardServlet extends HttpServlet {
 		 //Caja y rentabilidad
 		 double caja=cuentaNegocio.cajaActual();
 		 
-		 double rentabilidad= calcularRentabilidad(totalIngresos,totalEgresos);
-		 double cajaActual=calcularFlujoCaja(caja,totalIngresos,totalEgresos);
+		 String rentabilidad=formatearCampos(calcularRentabilidad(totalIngresos,totalEgresos));
+		 String cajaActual=formatearCampos(calcularFlujoCaja(caja,totalIngresos,totalEgresos));
 		
 		request.setAttribute("totalCuentas", totalCuentas);
 		request.setAttribute("totalClientes", totalClientes);
 		request.setAttribute("promedioCuentasXcliente",promedioCuentasXcliente);
 		
+		String ingresosFmt=formatearCampos(totalIngresos);
+		String EgresosFmt=formatearCampos(totalEgresos);
 		
-		request.setAttribute("totalIngresos",totalIngresos);
-		request.setAttribute("totalEgresos",totalEgresos);
+		request.setAttribute("totalIngresos",ingresosFmt);
+		request.setAttribute("totalEgresos",EgresosFmt);
 		//Rentabilidad y caja
 		request.setAttribute("rentabilidad",rentabilidad);
-		request.setAttribute("caja",caja);
+		request.setAttribute("caja",cajaActual);
 		
 		request.getRequestDispatcher("/vistas/Admin/Reportes/reportes.jsp").forward(request, response);
 	}
 	
 	private double calcularRentabilidad (double ingresos, double egresos) {
 		
-		double Rentabilidad=0.0;
+		double GananciasNetas=0.0;
 		
-		Rentabilidad=ingresos-egresos;
+			 if (egresos == 0) {
+			        
+			   return ingresos > 0 ? Double.POSITIVE_INFINITY : 0;
+
+			 }
 		
-		return Rentabilidad;
-		
+		return ((ingresos-egresos)/egresos)*100;		
 	}
 	
 	private double calcularFlujoCaja(double cajaActual,double ingresos,double egresos) {
 		
 		double FlujoCaja=0.0;
 		
-		FlujoCaja+=ingresos-egresos;
+		FlujoCaja= cajaActual+ingresos-egresos;
 		
 		return FlujoCaja;
 	}
+	
+	private String formatearCampos(double valor) {
 			
+		DecimalFormat df = new DecimalFormat("#,###.00");
+		String totalFormateado = df.format(valor);
+		
+		return totalFormateado;
+	}			
 }
