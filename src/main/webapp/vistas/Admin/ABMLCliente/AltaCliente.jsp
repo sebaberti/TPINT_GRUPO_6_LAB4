@@ -291,7 +291,38 @@ if (!Seguridad.esAdministrador(user)) {
 		});
 	</script>
 	
-
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+	    const cbuInput = document.getElementById("telefonoCliente");
+	
+	    // Solo permitir teclas numéricas
+	    cbuInput.addEventListener("keydown", function (e) {
+	        const tecla = e.key;
+	
+	        // Permitir teclas de control como backspace, delete, tab, etc.
+	        if (
+	            tecla === "Backspace" || tecla === "Delete" || tecla === "ArrowLeft" ||
+	            tecla === "ArrowRight" || tecla === "Tab"
+	        ) {
+	            return;
+	        }
+	
+	        // Bloquear todo lo que no sea número
+	        if (!/^[0-9]$/.test(tecla)) {
+	            e.preventDefault();
+	        }
+	    });
+	
+	    // Evitar pegar contenido no numérico
+	    cbuInput.addEventListener("paste", function (e) {
+	        const textoPegado = (e.clipboardData || window.clipboardData).getData("text");
+	        if (!/^\d+$/.test(textoPegado)) {
+	            e.preventDefault();
+	        }
+	    });
+	});
+	</script>
+	
 	<jsp:include page="../../Footer.jsp" />
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
