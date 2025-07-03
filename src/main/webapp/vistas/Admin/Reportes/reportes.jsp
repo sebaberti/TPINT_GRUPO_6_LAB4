@@ -92,13 +92,14 @@ if (!Seguridad.esAdministrador(user)) {
           </div>
 
     <h2 class="fw-bold text-center mb-4 mt-5">Panel de Reportes Rentabilidad</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
       <!-- Total de cuentas -->
         <div class="col">
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
                     <h5 class="card-title">Total ingresos del periodo</h5>
-                    <p class="fs-4 fw-bold mb-0">${totalCuentas}</p>
+                    <p class="p-3 border rounded bg-light text-success fw-bold">${totalIngresos}</p>
                 </div>
             </div>
         </div>
@@ -109,21 +110,22 @@ if (!Seguridad.esAdministrador(user)) {
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
                     <h5 class="card-title">Total de egresos del periodo</h5>
-                    <p class="fs-4 fw-bold mb-0">${totalClientes}</p>
+                    <p class="p-3 border rounded bg-light text-danger fw-bold">${totalEgresos}</p>
                 </div>
             </div>
-        </div>
-         <h2 class="fw-bold text-center mb-4 mt-5">Panel de Reporte General de Prestamos</h2>
+        </div>   
       <!-- Total de cuentas -->
         <div class="col">
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
-                    <h5 class="card-title">Total Prestamos por provincia</h5>
-                    <p class="fs-4 fw-bold mb-0">${totalCuentas}</p>
+                    <h5 class="card-title">Rentabilidad</h5>
+                    <p class="fs-4 fw-bold mb-0">${rentabilidad}</p>
                 </div>
             </div>
         </div>
+        </div>
+          <h2 class="fw-bold text-center mb-4 mt-5">Panel de Reporte Ganancias </h2>
 
       
 </main>
@@ -134,4 +136,3 @@ if (!Seguridad.esAdministrador(user)) {
 		
 </body>
 </html>
-
