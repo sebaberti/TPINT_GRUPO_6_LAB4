@@ -27,13 +27,23 @@ public class DashboardServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 		 String fechaDesde = request.getParameter("fechaDesde");
 		 String fechaHasta = request.getParameter("fechaHasta");
+		 LocalDate desde;
+		 LocalDate hasta;
 		 
-		 LocalDate desde = LocalDate.parse(fechaDesde);
-		 LocalDate hasta = LocalDate.parse(fechaHasta);
+		 if(fechaDesde!=null && fechaHasta!=null) {
+				 
+			 	 desde = LocalDate.parse(fechaDesde);
+				 hasta = LocalDate.parse(fechaHasta);
 		 
+		 }
+		 else{
+			 	LocalDate hoy = LocalDate.now();			 	
+			    desde = hoy;
+			    hasta = hoy;
+		 }
 		 //Resumen promedio cuentas por cliente
 		 int totalCuentas = cuentaNegocio.contarCuentas(desde, hasta);
 		 int totalClientes= cuentaNegocio.cantidadClientesxPeriodo(desde, hasta);
@@ -65,5 +75,7 @@ public class DashboardServlet extends HttpServlet {
 		return Rentabilidad;
 		
 	}
+	
+	
 		
 }
