@@ -94,6 +94,7 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   <script>
         $(document).ready(function () {
+        	$.fn.dataTable.ext.errMode = 'none';
             $('#tabla_prestamos').DataTable({
                 order: [],
                 pageLength: 5,

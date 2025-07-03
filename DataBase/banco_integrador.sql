@@ -169,25 +169,7 @@ CREATE TABLE `Cuotas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DELIMITER $$
 
-CREATE TRIGGER `verificar_saldo_transferencia`
-BEFORE INSERT ON `Transferencias`
-FOR EACH ROW
-BEGIN
-    DECLARE saldo_actual DECIMAL(15,2);
-
-    SELECT saldo INTO saldo_actual
-    FROM Cuentas
-    WHERE id = NEW.cuenta_origen;
-
-    IF saldo_actual < NEW.monto THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Saldo insuficiente en la cuenta de origen.';
-    END IF;
-END$$
-
-DELIMITER ;
 
 DELIMITER $$
 
