@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import daoImplementacion.UsuarioDaoImpl;
 import negocio.UsuarioNegocio;
+import negocioImplementacion.ClienteNegocioImplementacion;
 import negocioImplementacion.UsuarioNegocioImpl;
 
 
@@ -37,7 +38,18 @@ public class ModificarUsuarioServlet extends HttpServlet {
 		
 		try {
 			UsuarioNegocio usuarioNegocio = new UsuarioNegocioImpl();
-	        boolean actualizado = usuarioNegocio.modificarEstado(nombreUsuario, estado);
+			ClienteNegocioImplementacion cni= new ClienteNegocioImplementacion();
+			
+			String dni = request.getParameter("dni");
+		    String cuil = request.getParameter("cuil");
+		    
+		    boolean actualizado=false;
+		    
+		    if(!estado) {
+		    	actualizado= cni.bajaLogica(dni, cuil);	        
+		    }else {
+		    	actualizado= cni.reactivarCliente(dni, cuil);
+		    }
 			
 			System.out.println("🔎 nombreUsuario recibido: " + nombreUsuario);
 			System.out.println("🔎 estado recibido: " + estado);

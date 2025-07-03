@@ -327,6 +327,49 @@ END$$
 
 DELIMITER $$
 
+DELIMITER $$
+CREATE PROCEDURE SP_REACTIVAR_CLIENTE(IN dni_cliente VARCHAR(8), IN cuil_cliente VARCHAR(20))
+BEGIN
+    DECLARE id_usuario INT;
+    DECLARE id_cliente INT;
+    DECLARE id_domicilio INT;
+    DECLARE fila_cliente INT DEFAULT 0;
+    DECLARE fila_usuario INT DEFAULT 0;
+    DECLARE resultado INT DEFAULT 0;
+
+	START TRANSACTION;
+
+    IF EXISTS (SELECT 1 FROM Clientes WHERE dni = dni_cliente AND cuil = cuil_cliente) THEN 
+		
+        SELECT C.id, C.id_domicilio, C.id_usuario 
+		INTO id_cliente, id_domicilio, id_usuario
+		FROM Clientes AS C 
+		WHERE C.dni = dni_cliente AND C.cuil = cuil_cliente;
+
+        IF EXISTS(SELECT 1 FROM Usuarios WHERE id = id_usuario) THEN
+
+			UPDATE Clientes SET estado = TRUE WHERE dni = dni_cliente AND cuil = cuil_cliente;
+            SET fila_cliente = ROW_COUNT();
+			UPDATE Usuarios SET estado = TRUE WHERE id = id_usuario;
+            SET fila_usuario = ROW_COUNT();
+            UPDATE Domicilios AS D SET estado = TRUE WHERE D.id = id_domicilio;
+		ELSE
+			ROLLBACK;
+            
+		END IF;
+
+	COMMIT;
+
+    SET resultado = fila_cliente + fila_usuario;
+    SELECT resultado;
+
+    ELSE
+		ROLLBACK;
+	END IF;
+END$$
+
+DELIMITER $$
+
 CREATE PROCEDURE sp_AgregarClienteConUsuario(
 	IN p_nombre_usuario varchar(50),
     IN p_contrasenia varchar(50),

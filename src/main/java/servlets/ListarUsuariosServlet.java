@@ -25,7 +25,7 @@ public class ListarUsuariosServlet extends HttpServlet {
 
 			String filtro = request.getParameter("txtDniClientes");
 
-			System.out.println("Filtro: " + filtro);
+    		System.out.println("Filtro: " + filtro);
 			List<Cliente> listaClientes;
 			
 			if (filtro != null && !filtro.trim().isEmpty()) {

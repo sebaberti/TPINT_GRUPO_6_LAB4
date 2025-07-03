@@ -67,11 +67,12 @@
                     <th>CUIL</th>
                     <th>Nombre/s</th>
                     <th>Apellido/s</th>
-                    <th>Estado</th>
+                    <th>Estado de usuario</th>
                     <th>Modificar</th>
                 </tr>
             </thead>
             <tbody>
+            
             <%
                 List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
                 if (listaClientes != null && !listaClientes.isEmpty()) {
@@ -83,10 +84,10 @@
                     <td><%= c.getCUIL() %></td>
                     <td><%= c.getNombre() %></td>
                     <td><%= c.getApellido() %></td>
-                    <td><%= (c.getEstado() != null && c.getEstado()) ? "Activo" : "Inactivo" %></td>
+                    <td> <%= (c.getUsuario() != null && c.getUsuario().isEstado()) ? "Activo" : "Inactivo" %></td>
                     <td>
                         <button type="button" class="btn btn-warning btn-sm"
-                                onclick="location.href='${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp?nombreUsuario=<%=c.getUsuario().getNombreUsuario()%>&estado=<%=c.getEstado()%>'">
+                                onclick="location.href='${pageContext.request.contextPath}/vistas/Admin/ABMLUsuario/ModificarUsuario.jsp?nombreUsuario=<%=c.getUsuario().getNombreUsuario()%>&estado=<%=c.getEstado()%>&dni=<%=c.getDNI()%>&cuil=<%=c.getCUIL()%>'">
                             <i class="bi bi-pencil-square"></i>
                         </button>
                     </td>

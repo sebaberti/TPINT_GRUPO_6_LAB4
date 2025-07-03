@@ -81,9 +81,11 @@ public class SolicitarPrestamosServlet extends HttpServlet {
 		        boolean exito = pni.solicitarPrestamo(clienteActivo.getId(), idCuenta, monto, idPlazo);
 		      
 		        if (exito) {
-		            request.setAttribute("mensajeInformativo", "Su solicitud de préstamo fue registrada correctamente.");
+		            request.setAttribute("mensajeInformativo", "Su solicitud de préstamo por $" + monto + " fue registrada correctamente.");
+		            request.setAttribute("modalMensaje", true);
 		        } else {
 		            request.setAttribute("mensajeInformativo", "Ocurrió un error al procesar su solicitud.");
+		            request.setAttribute("modalMensaje", true);
 		        }
 
 		    } catch (Exception e) {
@@ -91,7 +93,7 @@ public class SolicitarPrestamosServlet extends HttpServlet {
 		        e.printStackTrace();
 		    }
 		    		    
-		    RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/MensajesInformativos.jsp");
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/vistas/SolicitarPrestamos.jsp");
 			dispatcher.forward(request, response);
 		    return;
 		}

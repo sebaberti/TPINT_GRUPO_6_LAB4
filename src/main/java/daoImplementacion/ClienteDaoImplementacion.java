@@ -1,5 +1,6 @@
 package daoImplementacion;
 
+import java.awt.Cursor;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -153,8 +154,8 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 	public List<Cliente> listar() {
 		List<Cliente> lista = new ArrayList<>();
-		String query = "SELECT c.id, c.dni, c.cuil, c.nombre, c.apellido, c.estado, " + "u.nombre_usuario "
-				+ "FROM Clientes c " + "INNER JOIN Usuarios u ON c.id_usuario = u.id";
+		String query = "SELECT c.id as cliente_id, c.dni, c.cuil, c.nombre, c.apellido, c.estado as cliente_estado, u.nombre_usuario, u.estado as usuario_estado"
+				+ " FROM Clientes c INNER JOIN Usuarios u ON c.id_usuario = u.id";
 
 		try {
 			Connection conexion = Conexion.getConexion().getSQLConexion();
@@ -163,15 +164,16 @@ public class ClienteDaoImplementacion implements ClienteDao {
 
 			while (rs.next()) {
 				Cliente c = new Cliente();
-				c.setId(rs.getInt("id"));
+				c.setId(rs.getInt("cliente_id"));
 				c.setDNI(rs.getString("dni"));
 				c.setCUIL(rs.getString("cuil"));
 				c.setNombre(rs.getString("nombre"));
 				c.setApellido(rs.getString("apellido"));
-				c.setEstado(rs.getBoolean("estado"));
+				c.setEstado(rs.getBoolean("cliente_estado"));
 
 				Usuario usuario = new Usuario();
 				usuario.setNombreUsuario(rs.getString("nombre_usuario"));
+				usuario.setEstado(rs.getBoolean("usuario_estado"));
 				c.setUsuario(usuario);
 
 				lista.add(c);
@@ -626,4 +628,29 @@ public class ClienteDaoImplementacion implements ClienteDao {
 		return lista;
 	}
 
+	@Override
+	public Boolean reactivarCliente(String dni, String cuil) {
+		try {
+			Connection conexion = Conexion.getConexion().getSQLConexion();
+			CallableStatement preparedCall;
+			preparedCall = conexion.prepareCall("CALL SP_REACTIVAR_CLIENTE(?, ?)");
+			preparedCall.setString(1, dni);
+			preparedCall.setString(2, cuil);
+			preparedCall.execute();
+
+			ResultSet resultSet = preparedCall.getResultSet();
+
+			if (!resultSet.next())
+				return false;
+
+			int resultado = resultSet.getInt(1);
+			
+			if(resultado == 2)
+				return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

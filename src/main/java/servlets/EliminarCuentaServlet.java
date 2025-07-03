@@ -18,7 +18,7 @@ import negocioImplementacion.CuentaNegocioImplementacion;
 /**
  * Servlet implementation class ManejarCuentaServlet
  */
-@WebServlet("/ManejarCuentaServlet")
+@WebServlet("/EliminarCuentaServlet")
 public class EliminarCuentaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -45,11 +45,12 @@ public class EliminarCuentaServlet extends HttpServlet {
 			btnEliminar = request.getParameter("btnEliminar");
 			String idCuentaStr = request.getParameter("idCuenta");
 			int idCuenta = 0;
-
+			if(request.getParameter("idCuenta")!=null){
+				idCuenta = Integer.parseInt(idCuentaStr);
+			}
 			// Si se clickeo para eliminar:
 			if (btnEliminar != null && idCuentaStr != null) {
-				try {
-					idCuenta = Integer.parseInt(idCuentaStr);
+				try {					
 					cuenta = cuentaNeg.obtenerCuentaPorId(idCuenta);
 					request.setAttribute("cuenta", cuenta);
 					request.getSession().setAttribute("idCuenta", cuenta.getId()); // lo guardo en session para no
@@ -63,8 +64,7 @@ public class EliminarCuentaServlet extends HttpServlet {
 
 			// Si se confirma eliminar
 				String btnEliminarConfirmado = request.getParameter("btnEliminarConfirmado");
-				HttpSession session = request.getSession();
-				idCuenta = (int) session.getAttribute("idCuenta");
+				HttpSession session = request.getSession();			
 
 				if (btnEliminarConfirmado != null) {
 					request.setAttribute("mostrarModalEliminar", false);

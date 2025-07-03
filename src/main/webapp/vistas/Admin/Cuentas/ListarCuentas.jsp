@@ -116,7 +116,7 @@
                         </form>
                     </td>
                     <td>
-                        <form method="post" action="ManejarCuentaServlet">
+                        <form method="post" action="EliminarCuentaServlet">
                             <input type="hidden" name="idCuenta" value="<%=c.getId()%>">
                             <% if (c.isEstado()) { %>
                                 <button type="submit" name="btnEliminar" value="eliminar" class="btn btn-danger btn-sm" title="Eliminar">
@@ -204,7 +204,7 @@
 					</div>
 
 					<div class="modal-footer">
-						<form method="post" action="ManejarCuentaServlet">
+						<form method="post" action="EliminarCuentaServlet">
 							<input type="hidden" name="idCuenta"
 								value="<%=cuentaAEliminar.getId()%>">
 							<%

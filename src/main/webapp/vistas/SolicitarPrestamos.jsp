@@ -242,9 +242,60 @@ if (session != null && session.getAttribute("clienteActivo") != null) {
 			</div>
 			</form>
 		</div>
+		
+		<!-- Mostrar modal -->
+	<%
+	Boolean mostrarModal = (Boolean) request.getAttribute("modalMensaje");
+	if (mostrarModal != null && mostrarModal) {
+	%>
+	<script>
+		window.onload = function() {
+			var modal = new bootstrap.Modal(document
+					.getElementById('modalMensaje'));
+			modal.show();
+		};
+	</script>
+	<%
+	}
+	%>
+
+	<!-- Modal modificacion éxitosa -->
+	<div class="modal fade" id="modalMensaje" tabindex="-1"
+		aria-labelledby="modalMensaje" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalMensajeHeader">Operación éxitosa!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Cerrar"></button>
+				</div>
+
+				<div class="modal-body">
+					<%
+					if (request.getAttribute("mensajeInformativo") != null) {
+					%>
+					<p> <%= request.getAttribute("mensajeInformativo") %></p>
+					<%
+					}
+					%>
+				</div>
+				<form method="GET"
+				action="${pageContext.request.contextPath}/vistas/Inicio.jsp">
+					<div class="modal-footer">
+						<button type="submit" name="btnModal" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cerrar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+		
+		
+		
+
 
 	<jsp:include page="Footer.jsp" />
-
 	<script>
 		document.getElementById("Monto").addEventListener("input", function(e) {
 			let valor = e.target.value;
