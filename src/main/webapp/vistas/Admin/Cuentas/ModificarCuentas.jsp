@@ -4,6 +4,7 @@
 <%@ page import="entidades.CuentaTipo" %>
 <%@ page import="negocioImplementacion.Seguridad"%>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="utilidades.FormatterUtil" %>
 
 <%
     Cuenta cuenta = (Cuenta) request.getAttribute("cuenta");
@@ -75,7 +76,8 @@
 
     <div class="mb-3">
         <label for="saldo">Saldo</label>
-        <input type="text" id="saldo" name="saldo" class="form-control" value="<%= cuenta.getSaldo() %>">
+        <input type="text" id="saldo" name="saldo" class="form-control" value="<%= FormatterUtil.formatearMiles(cuenta.getSaldo()) %>">
+       
     </div>
 
     <div class="mb-3">

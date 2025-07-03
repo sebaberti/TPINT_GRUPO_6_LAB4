@@ -44,7 +44,8 @@ public class TransferenciaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession sesion = request.getSession();
-        Integer idCliente = (Integer) sesion.getAttribute("usuarioId");
+        Integer idUsuario = (Integer) sesion.getAttribute("usuarioId");
+        Integer idCliente = clienteNegocio.obtenerClientePorIdUsuario(idUsuario).getId();
 
         try {
             int cuentaOrigenId = Integer.parseInt(request.getParameter("cuentaOrigen"));
