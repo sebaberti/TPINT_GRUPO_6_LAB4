@@ -24,7 +24,6 @@ if (!Seguridad.esAdministrador(user)) {
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
-	 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/estiloInicio.css">
 </head>
@@ -48,6 +47,15 @@ if (!Seguridad.esAdministrador(user)) {
                value="${param.fechaHasta}" />
       </div>
     </div>
+    	<%
+  			String error = (String) request.getAttribute("error");
+		%>
+
+		<% if (error != null) { %>
+  	<div class="alert alert-danger mt-3" role="alert">
+    		<%= error %>
+  	</div>
+		<% } %>
 
     <div class="text-center mt-4">
   <input type="submit" class="btn btn-primary" value="Buscar Reporte" />
@@ -55,11 +63,6 @@ if (!Seguridad.esAdministrador(user)) {
   </form>
 	<main class="container py-4">
     <h2 class="fw-bold text-center mb-4">Panel de Reportes General</h2>
-	<form method="GET" action="${pageContext.request.contextPath}/vistas/Admin/Reportes/InicioReportes.jsp" class="d-flex flex-row-reverse">
-			<button type="submit" name="btnVolverALInicio" class="btn btn-secondary btn-abml mb-3">
-				<i class="bi bi-arrow-return-right me-2"></i>Volver al Menú
-			</button>
-	</form>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
@@ -97,42 +100,55 @@ if (!Seguridad.esAdministrador(user)) {
         </div>
           </div>
 
-    <h2 class="fw-bold text-center mb-4 mt-5">Panel de Reportes Rentabilidad</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      <!-- Total de cuentas -->
-        <div class="col">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
-                    <h5 class="card-title">Total ingresos del periodo</h5>
-                    <p class="p-3 border rounded bg-light text-success fw-bold">${totalIngresos}</p>
-                </div>
-            </div>
-        </div>
+   		  <h2 class="fw-bold text-center mb-4 mt-5">Ingresos y Egresos</h2>
+<div class="row justify-content-center row-cols-1 row-cols-md-3 g-4">
+  <!-- Ingresos -->
+  <div class="col-md-4 d-flex justify-content-center">
+    <div class="card text-center shadow-sm h-100">
+      <div class="card-body d-flex flex-column justify-content-center">
+        <i class="bi bi-cash-stack display-4 text-success mb-2"></i>
+        <h5 class="card-title">Total ingresos del periodo</h5>
+        <p class="p-3 border rounded bg-light text-success fw-bold">${totalIngresos}</p>
+      </div>
+    </div>
+  </div>
 
-        <!-- Total de clientes únicos -->
-        <div class="col">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
-                    <h5 class="card-title">Total de egresos del periodo</h5>
-                    <p class="p-3 border rounded bg-light text-danger fw-bold">${totalEgresos}</p>
-                </div>
-            </div>
-        </div>   
-      <!-- Total de cuentas -->
-        <div class="col">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
-                    <h5 class="card-title">Rentabilidad</h5>
-                    <p class="fs-4 fw-bold mb-0">${rentabilidad}</p>
-                </div>
-            </div>
-        </div>
-        </div>
-          <h2 class="fw-bold text-center mb-4 mt-5">Panel de Reporte Ganancias </h2>
+  <!-- Egresos -->
+  <div class="col-md-4 d-flex justify-content-center">
+    <div class="card text-center shadow-sm h-100">
+      <div class="card-body d-flex flex-column justify-content-center">
+        <i class="bi bi-cash display-4 text-danger mb-2"></i>
+        <h5 class="card-title">Total de egresos del periodo</h5>
+        <p class="p-3 border rounded bg-light text-danger fw-bold">${totalEgresos}</p>
+      </div>
+    </div>
+  </div>
+</div>
 
+<h2 class="fw-bold text-center mb-4 mt-5">Caja y Rentabilidad</h2>
+<div class="row justify-content-center row-cols-1 row-cols-md-3 g-4">
+  <!-- Rentabilidad -->
+  <div class="col-md-4 d-flex justify-content-center">
+    <div class="card text-center shadow-sm h-100">
+      <div class="card-body d-flex flex-column justify-content-center">
+        <i class="bi bi-bar-chart-line display-4 text-primary mb-2"></i>
+        <h5 class="card-title">Rentabilidad</h5>
+        <p class="fs-4 fw-bold mb-0">${rentabilidad}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Caja Banco -->
+  <div class="col-md-4 d-flex justify-content-center">
+    <div class="card text-center shadow-sm h-100">
+      <div class="card-body d-flex flex-column justify-content-center">
+        <i class="bi bi-bank2 display-4 text-primary mb-2"></i>
+        <h5 class="card-title">Total Caja</h5>
+        <p class="fs-4 fw-bold mb-0">${caja}</p>
+      </div>
+    </div>
+  </div>
+</div>
       
 </main>
 
