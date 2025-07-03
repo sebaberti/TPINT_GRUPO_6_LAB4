@@ -555,8 +555,53 @@ public class CuentaDaoImplementacion implements CuentaDao {
 		    }
 
 		    return promedio;
+	}
+		@Override
+	public double cajaActual() {
+		
+		double cajaActual=0;
+		
+		String query="""
+				SELECT SUM(saldo) AS caja_actual 
+				FROM cuentas""";
+                       
+        try(Connection conexion=Conexion.getConexion().getSQLConexion();
+        PreparedStatement stmt= conexion.prepareStatement(query)) {
+        	
+		     
+		     ResultSet rs = stmt.executeQuery();
+		        if (rs.next()) {
+		            cajaActual = rs.getDouble("caja_actual");
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		
+			return cajaActual;
+	}
 
-	
+	@Override
+	public double cajaBancoXporPeriodo(LocalDate desde, LocalDate hasta) {
+	 
+		double cajaActual=0;
+		
+		String query="""
+				SELECT SUM(saldo) AS caja_actual 
+				FROM cuentas""";
+                       
+        try(Connection conexion=Conexion.getConexion().getSQLConexion();
+        PreparedStatement stmt= conexion.prepareStatement(query)) {
+        	
+		     
+		     ResultSet rs = stmt.executeQuery();
+		        if (rs.next()) {
+		            cajaActual = rs.getDouble("caja_actual");
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		
+			return cajaActual;
 	}
 
 }
