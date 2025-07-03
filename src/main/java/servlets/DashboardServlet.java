@@ -34,17 +34,36 @@ public class DashboardServlet extends HttpServlet {
 		 LocalDate desde = LocalDate.parse(fechaDesde);
 		 LocalDate hasta = LocalDate.parse(fechaHasta);
 		 
+		 //Resumen promedio cuentas por cliente
 		 int totalCuentas = cuentaNegocio.contarCuentas(desde, hasta);
 		 int totalClientes= cuentaNegocio.cantidadClientesxPeriodo(desde, hasta);
-		 
 		 double promedioCuentasXcliente=cuentaNegocio.promedioCuentasXCliente(desde, hasta);
+		 
+		 //Rentabilidad
+		 double totalIngresos= movNegocio.obtenerIngresos(desde, hasta);
+		 double totalEgresos = movNegocio.obtenerEgresos(desde, hasta);
+		 double rentabilidad= calcularRentabilidad(totalIngresos,totalEgresos);
 		
 		request.setAttribute("totalCuentas", totalCuentas);
 		request.setAttribute("totalClientes", totalClientes);
 		request.setAttribute("promedioCuentasXcliente",promedioCuentasXcliente);
 		
+		//Rentabilidad
+		request.setAttribute("totalIngresos",totalIngresos);
+		request.setAttribute("totalEgresos",totalEgresos);
+		request.setAttribute("rentabilidad",rentabilidad);
+		
 		request.getRequestDispatcher("/vistas/Admin/Reportes/reportes.jsp").forward(request, response);
+	}
+	
+	private double calcularRentabilidad (double ingresos, double egresos) {
+		
+		double Rentabilidad=0.0;
+		
+		Rentabilidad=ingresos-egresos;
+		
+		return Rentabilidad;
+		
 	}
 		
 }
-
